@@ -99,7 +99,7 @@ async function getAllFiles(dir) {
                 BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
             }
 
-            match = content.search(/[\t ]*<!-- STYLE \[.*\] -->/);
+            match = content.search(/[\t ]*<!-- STYLES \[.*\] -->/);
 
             if(match !== -1){
                 BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
@@ -107,7 +107,7 @@ async function getAllFiles(dir) {
                 content = replaceSource(content,match,CSS_MAPER,CSS_SOURCES);
 
             } else {
-                BUFFER.push(`[INFO] ${file} does not contain STYLE directive`);
+                BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
             }
 
             await fs.promises.writeFile(
