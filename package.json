@@ -1,0 +1,19 @@
+{
+  "name": "mo54",
+  "version": "0.1.1",
+  "scripts": {
+    "build": "node ./Scripts/devEnv.js HTML JS CSS"
+  },
+  "dependencies": {
+    "as-wasi": "^0.4.6",
+    "assemblyscript": "^0.19.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "@babel/runtime": "^7.15.4",
+    "jshint": "^2.13.4",
+    "uglify-js": "^3.14.2"
+  }
+}
