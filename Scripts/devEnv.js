@@ -13,14 +13,17 @@ const path = require("path");
 
 /** This function will find every file in the given directory and his subdirectories and return an array of all the file names.
  * 
- * @param {String} dir then name of the directory to iterate through.
+ * @param {String} dir the name of the directory to iterate through.
  */
 async function getAllFiles(dir) {
     return fs.promises.readdir(dir).then(files => {
         const allFiles = [];
         for (let file of files) {
 
-            if (fs.statSync(path.join(dir, file)).isDirectory()) {
+            if (await (
+                    fs.promises.stat(path.join(dir, file))
+                        .then(stats => stats.isDirectory())
+            )) {
                 allFiles.concat(
                     await ( getAllFiles(path.join(dir, file)) )
                 );
@@ -39,13 +42,11 @@ async function getAllFiles(dir) {
     const BUILD_DIR = "build";
     const LOG_DIR = path.join(BUILD_DIR,"log");
     const DEV_DIR = path.join(BUILD_DIR,"dev");
-    const PROD_DIR = path.join(BUILD_DIR,"prod");
 
     await Promise.all([
         fs.promises.mkdir(BUILD_DIR,{ recursive: true }),
         fs.promises.mkdir(LOG_DIR  ,{ recursive: true }),
-        fs.promises.mkdir(DEV_DIR  ,{ recursive: true }),
-        fs.promises.mkdir(PROD_DIR ,{ recursive: true })
+        fs.promises.mkdir(DEV_DIR  ,{ recursive: true })
     ]);
 
     const LOG = await fs.promises.open(path.join(LOG_DIR, (new Date(Date.now())).toISOString().replace(/:/g,"_") + "_dev_env_setup.log"),"w");
@@ -56,8 +57,6 @@ async function getAllFiles(dir) {
         // We use path.relative to remove the root folder from the file name.
         const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3],file));
         const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4],file));
-
-        let content = "", match = 0, indent = "", regexp = null;
 
         // The filtering/mapping functions are declared here to avoid the overhead of creating new lambdas every time.
         const FILTER = (source) => regexp.test(source);
@@ -81,6 +80,8 @@ async function getAllFiles(dir) {
                 source.filter(FILTER).map(mapper).join("")
             ); // Replacing the matched section with the new content
         };
+        
+        let content = "", match = 0, indent = "", regexp = null, filename;
 
         for(let file of HTML_SOURCES){
             BUFFER.push(`[INFO] processing ${file}`);
@@ -110,11 +111,14 @@ async function getAllFiles(dir) {
                 BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
             }
 
+            // writing the new file.
+            filename = path.join(DEV_DIR ,path.relative(process.argv[2],file));
+
+            // ensuring that the directory exists.
+            await fs.promises.mkdir(path.dirname(filename),{ recursive: true });
+
             await fs.promises.writeFile(
-                path.join(
-                    DEV_DIR ,
-                    path.relative(process.argv[2],file)
-                ),
+                filename,
                 content
             );
         }
@@ -145,7 +149,7 @@ async function getAllFiles(dir) {
     } catch(e) {
         console.error(e);
         LOG.write(BUFFER.join("\n"));
-        LOG.write("\nUnexpedted while producing dev env\n ");
+        LOG.write("\nUnexpeted while producing dev env\n ");
         LOG.write(e.stack);
         process.exit(1);
     }
