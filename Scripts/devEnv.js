@@ -149,7 +149,7 @@ async function getAllFiles(dir) {
     } catch(e) {
         console.error(e);
         LOG.write(BUFFER.join("\n"));
-        LOG.write("\nUnexpeted while producing dev env\n ");
+        LOG.write("\nUnexpected while producing dev env\n ");
         LOG.write(e.stack);
         process.exit(1);
     }
