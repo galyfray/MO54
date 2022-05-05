@@ -2,11 +2,12 @@
   "name": "mo54",
   "version": "0.1.1",
   "scripts": {
-    "build": "node ./Scripts/devEnv.js HTML JS CSS"
+    "build": "node ./Scripts/devEnv.js HTML JS CSS AS",
+    "test": "asc -v "
   },
   "dependencies": {
     "as-wasi": "^0.4.6",
-    "assemblyscript": "^0.19.9"
+    "assemblyscript": "^0.20.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",

@@ -3,20 +3,22 @@
  * 
  * @file this file contains the functions that will be used to create the dev environment.
  * 
- * @param {String} html the root folder of the html file to be parsed
- * @param {String} js the root folder of the js file to be included in the html
- * @param {String} css the root folder of the css file to be included in the html
+ * @param {String} html the root folder of the html files to be parsed.
+ * @param {String} js the root folder of the js files to be included in the html.
+ * @param {String} css the root folder of the css files to be included in the html.
+ * @param {String} as the root folder of the assembly scripts files to be compiled.
  */
 
 const fs = require("fs");
 const path = require("path");
+
 
 /** This function will find every file in the given directory and his subdirectories and return an array of all the file names.
  * 
  * @param {String} dir the name of the directory to iterate through.
  */
 async function getAllFiles(dir) {
-    return fs.promises.readdir(dir).then(files => {
+    return fs.promises.readdir(dir).then(async files => {
         const allFiles = [];
         for (let file of files) {
 
@@ -38,6 +40,15 @@ async function getAllFiles(dir) {
 (async ()=>{
     "use strict;";
 
+    // TODO: change to assemblyscript/asc when this shit get fixed + move it back to the beginning of the file.
+    const asc = await import("assemblyscript/dist/asc.js");
+
+    // 4 arguments + two string that are always there : "node" and the script file name
+    if(process.argv.length < 4+2){
+        console.log("Usage: node devEnv.js <html> <js> <css> <as>");
+        process.exit(1);
+    }
+
     const START = Date.now();
     const BUILD_DIR = "build";
     const LOG_DIR = path.join(BUILD_DIR,"log");
@@ -55,8 +66,34 @@ async function getAllFiles(dir) {
     try{
         const HTML_SOURCES = await getAllFiles(process.argv[2]);
         // We use path.relative to remove the root folder from the file name.
-        const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3],file));
+        const JS_SOURCES  = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3],file));
         const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4],file));
+        const AS_SOURCES  = await getAllFiles(process.argv[5]);
+
+        /*== Compilig AssemblyScript files ==*/
+
+        let result, errorFlag = false;
+
+        for (let file of AS_SOURCES) {
+            result = await asc.main([
+                file,
+                "--outFile", path.join(DEV_DIR,path.relative(process.argv[5],file).replace(/\.ts$/,".wasm")),
+            ]);
+            if (result.error) {
+                errorFlag = true;
+                console.log("Compilation failed: " + file);
+                BUFFER.push(`[ERROR] Compilation failed: ${file}`);
+                BUFFER.push(`[ERROR] ${result.error.message}`);
+                BUFFER.push(result.stderr.toString().replace(/\n/g,"\n[ERROR] "));
+            }
+
+        }
+
+        if (errorFlag) {
+            throw new Error("Compilation failed");
+        }
+
+        /*== Evaluating and replacing source tags in the HTML files ==*/
 
         // The filtering/mapping functions are declared here to avoid the overhead of creating new lambdas every time.
         const FILTER = (source) => regexp.test(source);
@@ -82,29 +119,28 @@ async function getAllFiles(dir) {
         };
         
         let content = "", match = 0, indent = "", regexp = null, filename;
-
+        
+        // We iterate through the html files and replace the sources tag with the asked sources.
         for(let file of HTML_SOURCES){
             BUFFER.push(`[INFO] processing ${file}`);
 
             await fs.promises.access(file,fs.constants.R_OK);
             content = await fs.promises.readFile(file,"utf8");
 
+            // replacing the js sources tag with the asked sources.
             match = content.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
-
             if(match !== -1){
                 BUFFER.push(`[INFO][${file}] extracting script regexp`);
-                
                 content = replaceSource(content,match,JS_MAPER,JS_SOURCES);
 
             } else {
                 BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
             }
 
+            // replacing the css sources tag with the asked sources.
             match = content.search(/[\t ]*<!-- STYLES \[.*\] -->/);
-
             if(match !== -1){
                 BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
-                
                 content = replaceSource(content,match,CSS_MAPER,CSS_SOURCES);
 
             } else {
@@ -149,7 +185,7 @@ async function getAllFiles(dir) {
     } catch(e) {
         console.error(e);
         LOG.write(BUFFER.join("\n"));
-        LOG.write("\nUnexpected while producing dev env\n ");
+        LOG.write("\nUnexpected error while producing dev env\n ");
         LOG.write(e.stack);
         process.exit(1);
     }
