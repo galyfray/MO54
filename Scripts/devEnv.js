@@ -101,8 +101,8 @@ async function getAllFiles(dir) {
         const CSS_MAPER = (source) => `${indent}<link rel="stylesheet" href="${source}">\n`;
 
         const replaceSource = (fileContent,match,mapper,source)=>{
-            match = content.substring(match,content.indexOf("\n",match) + 1 ); // isolating the matched section
-            indent = match.substring(0,match.indexOf("<")); // isolating the indentation
+            match = fileContent.substring(match,fileContent.indexOf("\n",match) + 1 ); // Isolating the matched section
+            indent = match.substring(0,match.indexOf("<")); // Isolating the indentation
 
             regexp = new RegExp(
                 match.substring(
@@ -112,7 +112,7 @@ async function getAllFiles(dir) {
                 "g"
             ); // Creating the regexp to match the filenames
 
-            return content.replace(
+            return fileContent.replace(
                 match,
                 source.filter(FILTER).map(mapper).join("")
             ); // Replacing the matched section with the new content
@@ -127,7 +127,7 @@ async function getAllFiles(dir) {
             await fs.promises.access(file,fs.constants.R_OK);
             content = await fs.promises.readFile(file,"utf8");
 
-            // replacing the js sources tag with the asked sources.
+            // Replacing the js sources tag with the asked sources.
             match = content.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
             if(match !== -1){
                 BUFFER.push(`[INFO][${file}] extracting script regexp`);
@@ -137,7 +137,7 @@ async function getAllFiles(dir) {
                 BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
             }
 
-            // replacing the css sources tag with the asked sources.
+            // Replacing the css sources tag with the asked sources.
             match = content.search(/[\t ]*<!-- STYLES \[.*\] -->/);
             if(match !== -1){
                 BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
@@ -147,10 +147,10 @@ async function getAllFiles(dir) {
                 BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
             }
 
-            // writing the new file.
+            // Writing the new file.
             filename = path.join(DEV_DIR ,path.relative(process.argv[2],file));
 
-            // ensuring that the directory exists.
+            // Ensuring that the directory exists.
             await fs.promises.mkdir(path.dirname(filename),{ recursive: true });
 
             await fs.promises.writeFile(
@@ -159,7 +159,7 @@ async function getAllFiles(dir) {
             );
         }
 
-        // copying all the files to the build folder
+        // Copying all the files to the build folder
         let pending = [];
         
         JS_SOURCES.forEach(source => {
