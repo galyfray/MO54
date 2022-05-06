@@ -3,12 +3,32 @@
     font-family: 'Lato', sans-serif;
     background-color: rgb(253,253,253);
 }
+/*Customization of h1, h2 (price of the article), h3 (name of the article) and h4 (brand of the article)*/
 h1{
     width: 90%;
     margin: auto;
     padding: 20px;
     font-weight: 700;
 }
+h2 {
+    color: rgb(180, 150, 180);
+}
+h3 {
+    font-size: 16px;
+}
+
+h4 {
+    font-weight: 100;
+}
+
+
+
+
+/*
+    This code is used to give properties to the div containing all the articles. 
+    Here, the css code create 5 columns -> we have 5 articles by line.
+    -> It will change according to the width of the device used (see the media querry part)
+*/
 #div_container_all_article{
     display: grid;
     grid-gap: 70px 20px;
@@ -17,6 +37,12 @@ h1{
     margin: auto;
     padding-bottom: 40px;
 }
+/*
+    We defined the box properties:
+    - shadow with the cursos hover or not
+    - the border radius of an article "box" : div in which there are the name, price, brand and image of an article
+    We also defined the properties of the image of an article with a border radius.
+*/
 #box {
     width: 100%;
     background-color: rgb(240,240,240);
@@ -36,17 +62,17 @@ h1{
     padding: 0 15px;
 }
 
-h3{
-    font-size: 16px;
-}
-h4{
-    font-weight: 100;
-}
-h2{
-    color: rgb(180, 150, 180);
-}
 
-/* ----------------------------- MEDIA QUERY --------------------------- */
+
+/* 
+    Media query:
+    - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page
+    -> width>= 850px : 5 columns of articles (grid-template-columns: repeat(5, 1fr);)
+    -> width>= 505px &  width< 850px : 3 columns of articles (grid-template-columns: repeat(3, 1fr);)
+    -> width< 505px : 2 columns of articles (grid-template-columns: repeat(2, 1fr);)
+    -> the font-size & width of h1 is redefined according to the device width
+    -> the width of the div is redefined as well
+*/
 
 @media(max-width: 1070px)
 {
@@ -60,12 +86,10 @@ h2{
 }
 @media(max-width: 850px)
 {
-    h1 
-    {
+    h1{
         width: 80%;
     }
-    #div_container_all_article
-    {
+    #div_container_all_article{
         display: grid;
         grid-gap: 70px 20px;
         grid-template-columns: repeat(3, 1fr);
