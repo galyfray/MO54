@@ -1,0 +1,36 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+        "@typescript-eslint/no-this-alias": "off"
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.d.ts"
+            ],
+            "rules": {
+                // Often required to achieve compatibility with TypeScript
+                "@typescript-eslint/no-explicit-any": "off",
+      
+                // Interfaces can be stubs here, i.e. not yet fully implemented
+                "@typescript-eslint/no-empty-interface": "off",
+      
+                // Definitions make use of `object` to model rather unusual constraints
+                "@typescript-eslint/ban-types": "off",
+                
+                // Namespaces are quite useful in AssemblyScript
+                "@typescript-eslint/no-namespace": "off",
+                
+                "@typescript-eslint/no-array-constructor": "off"
+            }
+        }
+
+    ]
+}
