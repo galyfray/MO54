@@ -96,5 +96,64 @@
         "template-tag-spacing": ["warn", "always"],
         "wrap-iife": ["warn", "inside"],
         "yield-star-spacing": ["warn", "after"]
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.ts"
+            ],
+            "parser": "@typescript-eslint/parser",
+            "plugins": [
+                "@typescript-eslint"
+            ],
+            "extends": [
+                "plugin:@typescript-eslint/eslint-recommended",
+                "plugin:@typescript-eslint/recommended"
+            ],
+            "rules": {
+                "@typescript-eslint/no-array-constructor": "off",
+                "@typescript-eslint/no-this-alias": "off"
+            }
+        },
+        {
+            "files": [
+                "*.d.ts"
+            ],
+            "rules": {
+                // Often required to achieve compatibility with TypeScript
+                "@typescript-eslint/no-explicit-any": "off",
+      
+                // Interfaces can be stubs here, i.e. not yet fully implemented
+                "@typescript-eslint/no-empty-interface": "off",
+      
+                // Definitions make use of `object` to model rather unusual constraints
+                "@typescript-eslint/ban-types": "off",
+                
+                // Namespaces are quite useful in AssemblyScript
+                "@typescript-eslint/no-namespace": "off"
+            }
+        },
+        {
+            "files": ["*.html"],
+            "plugins": ["@html-eslint"],
+            "parser": "@html-eslint/parser",
+            "rules": {
+                "@html-eslint/require-doctype": "warn",
+                "@html-eslint/no-duplicate-id": "error",
+                "@html-eslint/require-li-container": "error",
+                "@html-eslint/no-obsolete-tags": "error",
+                "@html-eslint/require-closing-tags": "warn",
+                "@html-eslint/no-duplicate-attrs": "error",
+                "@html-eslint/require-title": "error",
+                "@html-eslint/no-multiple-h1": "error",
+                "@html-eslint/require-img-alt": "error",
+                "@html-eslint/no-extra-spacing-attrs": "warn",
+                "@html-eslint/indent": "warn",
+                "@html-eslint/quotes": ["warn","double"],
+                "@html-eslint/no-multiple-empty-lines": "warn",
+                "capitalized-comments": "off"
+            }
+        }
+
+    ]
 }
