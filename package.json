@@ -14,9 +14,11 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/runtime": "^7.15.4",
+    "@html-eslint/eslint-plugin": "^0.13.1",
+    "@html-eslint/parser": "^0.13.1",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
-    "eslint": "^8.14.0",
+    "eslint": "^8.15.0",
     "typescript": "^4.6.4",
     "uglify-js": "^3.14.2"
   }

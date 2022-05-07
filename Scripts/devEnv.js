@@ -79,11 +79,11 @@ async function getAllFiles(dir) {
     const BUFFER = [];
 
     try {
-        const HTML_SOURCES = await getAllFiles(process.argv[2]);
+        const HTML_SOURCES = (await getAllFiles(process.argv[2])).filter(file => file.endsWith(".html"));
 
         // We use path.relative to remove the root folder from the file name.
         const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
-        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
+        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file)).filter(file => file.endsWith(".css"));
         const AS_SOURCES = (await getAllFiles(process.argv[5])).filter(file => file.endsWith(".ts"));
 
         /*== Linting all of the files before doing anything ==*/
@@ -92,8 +92,9 @@ async function getAllFiles(dir) {
         const FORMATTER = await LINTER.loadFormatter("stylish");
 
         const LINT_RESULTS = await LINTER.lintFiles([
-            process.argv[3] + "/*.js",
-            process.argv[5] + "/*.ts"
+            process.argv[2] + "/**/*.html",
+            process.argv[3] + "/**/*.js",
+            process.argv[5] + "/**/*.ts"
         ]);
 
         BUFFER.push("[INFO][LINT] Linting results:");
@@ -101,7 +102,11 @@ async function getAllFiles(dir) {
 
         await ESLint.outputFixes(LINT_RESULTS);
 
-        if (LINT_RESULTS.some(result => result.fatalErrorCount > 0)) {
+        if (
+            LINT_RESULTS.some(result => {
+                return result.fatalErrorCount > 0 || result.warningCount > result.fixableWarningCount;
+            })
+        ) {
             BUFFER.push("[ERROR][LINT] Linting failed.");
             console.log("[ERROR][LINT] Linter failed to fix all problem, see log file for details.");
             throw new Error("Linting failed");

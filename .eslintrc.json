@@ -18,7 +18,10 @@
         "consistent-this": ["warn", "that"],
         "capitalized-comments": [
             "warn",
-            "always"
+            "always",
+            {
+                "ignoreConsecutiveComments": true
+            }
         ],
         "no-extra-bind": "error",
         "array-bracket-newline" : [

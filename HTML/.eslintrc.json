@@ -1,0 +1,25 @@
+{
+    "plugins": ["@html-eslint"],
+    "overrides": [
+        {
+            "files": ["*.html"],
+            "parser": "@html-eslint/parser",
+            "rules": {
+                "@html-eslint/require-doctype": "warn",
+                "@html-eslint/no-duplicate-id": "error",
+                "@html-eslint/require-li-container": "error",
+                "@html-eslint/no-obsolete-tags": "error",
+                "@html-eslint/require-closing-tags": "warn",
+                "@html-eslint/no-duplicate-attrs": "error",
+                "@html-eslint/require-title": "error",
+                "@html-eslint/no-multiple-h1": "error",
+                "@html-eslint/require-img-alt": "error",
+                "@html-eslint/no-extra-spacing-attrs": "warn",
+                "@html-eslint/indent": "warn",
+                "@html-eslint/quotes": ["warn","double"],
+                "@html-eslint/no-multiple-empty-lines": "warn",
+                "capitalized-comments": "off"
+            }
+        }
+    ]
+}
