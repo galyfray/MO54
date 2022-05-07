@@ -9,6 +9,7 @@
  * @param {String} as the root folder of the assembly scripts files to be compiled.
  */
 
+const {ESLint} = require("eslint");
 const fs = require("fs");
 const path = require("path");
 
@@ -84,6 +85,27 @@ async function getAllFiles(dir) {
         const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
         const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
         const AS_SOURCES = (await getAllFiles(process.argv[5])).filter(file => file.endsWith(".ts"));
+
+        /*== Linting all of the files before doing anything ==*/
+
+        const LINTER = new ESLint({fix: true});
+        const FORMATTER = await LINTER.loadFormatter("stylish");
+
+        const LINT_RESULTS = await LINTER.lintFiles([
+            process.argv[3] + "/*.js",
+            process.argv[5] + "/*.ts"
+        ]);
+
+        BUFFER.push("[INFO][LINT] Linting results:");
+        BUFFER.push(FORMATTER.format(LINT_RESULTS).replace(/\n/g, "\n[INFO][LINT] "));
+
+        await ESLint.outputFixes(LINT_RESULTS);
+
+        if (LINT_RESULTS.some(result => result.fatalErrorCount > 0)) {
+            BUFFER.push("[ERROR][LINT] Linting failed.");
+            console.log("[ERROR][LINT] Linter failed to fix all problem, see log file for details.");
+            throw new Error("Linting failed");
+        }
 
         /*== Compilig AssemblyScript files ==*/
 
