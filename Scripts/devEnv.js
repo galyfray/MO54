@@ -79,12 +79,12 @@ async function getAllFiles(dir) {
     const BUFFER = [];
 
     try {
-        const HTML_SOURCES = (await getAllFiles(process.argv[2])).filter(file => file.endsWith(".html"));
+        const HTML_SOURCES = (await getAllFiles(process.argv[2]));
 
         // We use path.relative to remove the root folder from the file name.
         const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
-        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file)).filter(file => file.endsWith(".css"));
-        const AS_SOURCES = (await getAllFiles(process.argv[5])).filter(file => file.endsWith(".ts"));
+        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
+        const AS_SOURCES = (await getAllFiles(process.argv[5]));
 
         /*== Linting all of the files before doing anything ==*/
 
