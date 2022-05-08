@@ -54,7 +54,7 @@ SERVER.use((req, res, next) => {
     HTTPS.createServer(
         {
             key: KEY,
-            cert: CERT,
+            cert: CERT
         },
         SERVER
     )

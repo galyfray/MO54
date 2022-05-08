@@ -8,4 +8,4 @@ class Indexe{
     }
 }
 
-module.exports = new Indexe();;
+module.exports = new Indexe();
