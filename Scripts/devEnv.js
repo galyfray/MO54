@@ -25,7 +25,7 @@ async function getAllFiles(dir) {
         // For each element we check if it is a directory or a file.
         // If it is a file then we add it to the array and return nothing, the promise.all will stop at the enclosing .then.
         // If it is a directory we call the function again with the new directory
-        // We then return the new promse which once resolved will add all files to the array.
+        // We then return the new promise which once resolved will add all files to the array.
         await Promise.all(
             files.map(file => {
                 return fs.promises.stat(path.join(dir, file))
