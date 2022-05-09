@@ -12,7 +12,9 @@
     <!-- The page is named-->
     <title>Mon panier</title>
     <!-- We create a link between the HTML file and the css, js files-->
+    <link rel="stylesheet" href="../CSS/menu_left_side_css.css">
     <link rel="stylesheet" href="../CSS/cart_css2.css">
+
     <!--<script src="../JS/cart.js"></script>
     -->
 
@@ -273,8 +275,6 @@
          * grid_article_in_cart: the grid that contains all the information for an article
          * img : the image of the article
          * img_cart_div : the div that contains the image of the article
-         * del : the icon of a trash can
-         * del_cart_div : the div that contains the icon of the trash can
          * name : the name of the article
          * name_cart_div : the div that contains the name of the article
          * info_cart_div : the div that contains the other informations about an article (brand, price, quantity)
@@ -425,19 +425,11 @@
         grid_article_in_cart.appendChild(info_cart_div);
 
         cart_div.appendChild(grid_article_in_cart);
-        /*let line = document.createElement('div');
-        line.style = "background-color:black; padding : 1px;";
-        let space1 = document.createElement('div');
-        space1.style = "background-color:white; padding : 2px;";
-        cart_div.appendChild(space1);
-        */
+        
         let line = document.createElement('div');
         line.style = "padding : 10px;";
         cart_div.appendChild(line);
-        /*let space2 = document.createElement('div');
-        space2.style = "background-color:white; padding : 2px;";
-        cart_div.appendChild(space2);
-        */
+       
         return cart_div
     }
 </script>
