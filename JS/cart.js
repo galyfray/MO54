@@ -1,6 +1,5 @@
 
     let boxArticleDiv = document.createElement('div');
-    //cart_div.style = "padding: 10px; background-color:gray;";
     boxArticleDiv.id = 'boxContainer';
 
     /*It is here to test the function. In the future, the function createCart will directly use a file*/
@@ -65,13 +64,11 @@
         let brand = document.createTextNode(ob.brand);
 
         let brand_div = document.createElement('div');
-        //let brand = document.createTextNode("Marque: " + ob.brand);
         brand_div.style = "text-align: left;"
 
 
         let prix = document.createTextNode(ob.price * nbArticle + "€");
         let prix_div = document.createElement('div');
-        //let prix = document.createTextNode("Le prix : " + ob.price * nbArticle + "€ (unité : " + ob.price + "€)");
         prix_div.style = "text-align: left;";
 
 
@@ -80,13 +77,6 @@
            let description = document.createTextNode("Description : " + ob.description);
            text3_div.style = "text-align: left;";
            */
-
-
-       /* let quantite_div = document.createElement('div');
-        let quantite = document.createTextNode("Quantite : " + nbArticle);
-        quantite_div.appendChild(quantite);
-        */
-
 
         let quantite_div = document.createElement('div');
         quantite_div.style = "content-align : left;";
@@ -101,29 +91,15 @@
         label_quantite.style = "display: inline-block; text-align: left;";
         quantite_div.appendChild(label_quantite);
         quantite_div.appendChild(quantite);
-
-        /*
-        let quantite_input = document.createElement('input');
-        quantite_input.type = "number";
-        quantite_input.style = "text-align: center; width : 20%;"
-        quantite_input.min = "1";
-        quantite_input.value = nbArticle;
-        */
-
         quantite_div.style = "align-content: left;";
         boxArticleDiv.style = "padding-bottom: 3px;";
 
-
-
         grid_article_in_cart.appendChild(img_cart_div);
-        //text3_div.appendChild(description);
         brand_div.appendChild(brand);
         prix_div.appendChild(prix);
-        //info_cart_div.appendChild(text3_div);
         info_cart_div.appendChild(brand_div);
         info_cart_div.appendChild(prix_div);
         info_cart_div.appendChild(quantite_div);
-        //info_cart_div.appendChild(quantite_input);
         grid_article_in_cart.appendChild(del_cart_div);
         grid_article_in_cart.appendChild(name_cart_div);
         grid_article_in_cart.appendChild(info_cart_div);
