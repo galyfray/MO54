@@ -44,11 +44,271 @@ async function getAllFiles(dir) {
     });
 }
 
-(async() => {
-    "use strict;";
+/**
+ * @typedef {Object} DirOutput
+ * @property {fs.promises.FileHandle} LOG The log file.
+ * @property {String} WEB_DIR The relative path to the web directory.
+ * @property {String} SERVER_DIR The relative path to the server directory.
+ */
+/**
+ * @param {number} START The time at which the script started.
+ * @returns {DirOutput} An object containing the log file, the web directory and the server directory.
+ */
+async function buildDirs(START) {
 
+    // Making all the paths relative to this file.
+    const BUILD_DIR = "build";
+    const LOG_DIR = path.join(BUILD_DIR, "log");
+    const DEV_DIR = path.join(BUILD_DIR, "dev");
+    const WEB_DIR = path.join(DEV_DIR, "web");
+    const SERVER_DIR = path.join(DEV_DIR, "server");
+
+    try {
+        await fs.promises.access(DEV_DIR, fs.constants.F_OK).then(() => {
+            fs.promises.rmdir(DEV_DIR, {recursive: true});
+        });
+    } catch (e) {
+        // Do nothing
+    }
+
+    await Promise.all([
+        fs.promises.mkdir(LOG_DIR, {recursive: true}),
+        fs.promises.mkdir(WEB_DIR, {recursive: true}),
+        fs.promises.mkdir(SERVER_DIR, {recursive: true})
+    ]);
+
+    const LOG = await fs.promises.open(
+        path.join(
+            LOG_DIR,
+            new Date(START)
+                .toISOString()
+                .replace(/:/g, "_") +
+                "_dev_env_setup.log"),
+        "w"
+    );
+
+    return {
+        LOG,
+        WEB_DIR,
+        SERVER_DIR
+    };
+}
+
+/**
+ * Lint the given files with eslint and applies all posssible fixes.
+ * @param {Array} BUFFER a buffer to push the logs to.
+ * @param  {...string} files the files to lint.
+ */
+async function lintFiles(BUFFER, ...files) {
+    const LINTER = new ESLint({fix: true});
+    const FORMATTER = await LINTER.loadFormatter("stylish");
+
+    const LINT_RESULTS = await LINTER.lintFiles(files);
+
+    BUFFER.push("[INFO][LINT] Linting results:");
+    BUFFER.push(FORMATTER.format(LINT_RESULTS).replace(/\n/g, "\n[INFO][LINT] "));
+
+    await ESLint.outputFixes(LINT_RESULTS);
+
+    if (
+        LINT_RESULTS.some(result => {
+            return result.fatalErrorCount > 0 || result.warningCount > result.fixableWarningCount;
+        })
+    ) {
+        BUFFER.push("[ERROR][LINT] Linting failed.");
+        console.log("[ERROR][LINT] Linter failed to fix all problem, see log file for details.");
+        throw new Error("Linting failed");
+    } else {
+        BUFFER.push("[INFO][LINT] Linting successful.");
+    }
+}
+
+/** This function aims to go from a source file to a destination file.
+ * @callback sourceTransformerCallback
+ * @param {String} file the filename to transform.
+ * @returns {String} the transformed filename.
+ */
+/**
+ * This function will compile the given AssemblyScripts files.
+ * @param {Array} BUFFER a buffer to push the logs to.
+ * @param {string[]} SOURCES the filenames of the files to compile.
+ * @param {sourceTransformerCallback} TRANSFORM the function used to transform the source filenames to the destination filenames.
+ * @see {@link sourceTransformerCallback}
+ */
+async function compileAS(BUFFER, SOURCES, TRANSFORM) {
     // TODO: change to assemblyscript/asc when this shit get fixed + move it back to the beginning of the file.
     const asc = await import("assemblyscript/dist/asc.js");
+
+    let errorFlag = false;
+
+    BUFFER.push("[INFO][AS] Compiling assembly scripts...");
+
+    await Promise.all(SOURCES.map(async file => {
+        const result = await asc.main([
+            file,
+            "--outFile",
+            TRANSFORM(file.replace(/\.ts$/, ".wasm"))
+        ]);
+        if (result.error) {
+            errorFlag = true;
+            console.log("Compilation failed: " + file);
+            BUFFER.push(`[ERROR] Compilation failed: ${file}`);
+            BUFFER.push(`[ERROR] ${result.error.message}`);
+            BUFFER.push(result.stderr.toString().replace(/\n/g, "\n[ERROR] "));
+        }
+    }));
+
+    if (errorFlag) {
+        throw new Error("Compilation failed");
+    } else {
+        BUFFER.push("[INFO][AS] Compilation successful.");
+    }
+}
+
+/**
+ * This function will parse the HTML file to find tags that indicate the files to include.
+ * Once the tags are found, the files are included in the HTML file,
+ * the tags are removed and the HTML file is saved to the destination folder.
+ *
+ * @param {Array} BUFFER a buffer to push the logs to.
+ * @param {string[]} HTML_SOURCES the list of all the HTML source files
+ * @param {string[]} CSS_SOURCES the list of all the CSS source files
+ * @param {string[]} JS_SOURCES the list of all the JS source files
+ * @param {string} WEB_DIR the destination folder for the parsed HTML files.
+ */
+async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR) {
+    BUFFER.push("[INFO][HTML] Mapping sources into html files...");
+    const JS_MAPER = indent => {
+        return source => `${indent}<script src="${source}"></script>\n`;
+    };
+    const CSS_MAPER = indent => {
+        return source => `${indent}<link rel="stylesheet" href="${source}">\n`;
+    };
+
+    const replaceSource = (fileContent, match, mapper, source) => {
+        match = fileContent.substring(match, fileContent.indexOf("\n", match) + 1); // Isolating the matched section
+        let indent = match.substring(0, match.indexOf("<")); // Isolating the indentation
+
+        // Creating the regexp to match the filenames
+        let regexp = new RegExp(
+            match.substring(
+                match.indexOf("[") + 1,
+                match.lastIndexOf("]")
+            ),
+            "g"
+        );
+
+        // Replacing the matched section with the new content
+        return fileContent.replace(
+            match,
+            source.filter(
+                file => regexp.test(file)
+            ).map(mapper(indent))
+                .join("")
+        );
+    };
+
+    await Promise.all(HTML_SOURCES.map(async file => {
+        BUFFER.push(`[INFO] processing ${file}`);
+        return fs.promises.readFile(file, "utf8").then(fileContent => {
+
+            // Replacing the js sources tag with the asked sources.
+            let match = fileContent.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
+
+            if (match !== -1) {
+                BUFFER.push(`[INFO][${file}] extracting script regexp`);
+                fileContent = replaceSource(fileContent, match, JS_MAPER, JS_SOURCES);
+            } else {
+                BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
+            }
+
+            // Replacing the css sources tag with the asked sources.
+            match = fileContent.search(/[\t ]*<!-- STYLES \[.*\] -->/);
+
+            if (match !== -1) {
+                BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
+                fileContent = replaceSource(fileContent, match, CSS_MAPER, CSS_SOURCES);
+            } else {
+                BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
+            }
+
+            // Returning the new file content
+            return fileContent;
+        })
+            .then(async fileContent => {
+                let filename = path.join(WEB_DIR, path.relative(process.argv[2], file));
+                await fs.promises.mkdir(path.dirname(filename), {recursive: true});
+                return fs.promises.writeFile(filename, fileContent);
+            });
+    }));
+    BUFFER.push("[INFO][HTML] Mapping successful.");
+}
+
+/**
+ * This function will copy the given files to their destination.
+ * Their destination is define by the TRANSFORM function.
+ * @param {Array} BUFFER a buffer to push the logs to.
+ * @param {sourceTransformerCallback} TRANSFORM the function used to transform the source filenames to the destination filenames.
+ * @param  {...string} SOURCES the filenames of the files to copy.
+ * @see {@link sourceTransformerCallback}
+ */
+async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
+    BUFFER.push("[INFO][COPY] Copying files...");
+    await Promise.all(SOURCES.map(async file => {
+        fs.promises.copyFile(
+            file,
+            TRANSFORM(file)
+        );
+    }));
+    BUFFER.push("[INFO][COPY] Copying successful.");
+}
+
+/**
+ * This function will do everything needed to build the web site part of the project.
+ * @param {Array} BUFFER a buffer to push the logs to.
+ * @param {string} WEB_DIR the destination folder for the builded web pages, scripts and CSS.
+ */
+async function buildWeb(BUFFER, WEB_DIR) {
+    BUFFER.push("[INFO][WEB] Building web...");
+    const HTML_SOURCES = await getAllFiles(process.argv[2]);
+
+    // We use path.relative to remove the root folder from the file name.
+    const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
+    const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
+    const AS_SOURCES = await getAllFiles(process.argv[5]);
+
+    await lintFiles(
+        BUFFER,
+        process.argv[2] + "/**/*.html",
+        process.argv[3] + "/**/*.js",
+        process.argv[5] + "/**/*.ts"
+    );
+
+    await compileAS(
+        BUFFER,
+        AS_SOURCES,
+        file => path.join(WEB_DIR, path.relative(process.argv[5], file))
+    );
+
+    await mapSources(
+        BUFFER,
+        HTML_SOURCES,
+        CSS_SOURCES,
+        JS_SOURCES,
+        WEB_DIR
+    );
+
+    await copyAll(
+        BUFFER,
+        file => path.join(WEB_DIR, file),
+        ...JS_SOURCES.map(file => path.relative(process.argv[3], file)),
+        ...CSS_SOURCES.map(file => path.relative(process.argv[4], file))
+    );
+    BUFFER.push("[INFO][WEB] Building successful.");
+}
+
+(async() => {
+    "use strict;";
 
     // 4 arguments + two string that are always there : "node" and the script file name
     if (process.argv.length < 4 + 2) {
@@ -57,173 +317,17 @@ async function getAllFiles(dir) {
     }
 
     const START = Date.now();
-    const BUILD_DIR = "build";
-    const LOG_DIR = path.join(BUILD_DIR, "log");
-    const DEV_DIR = path.join(BUILD_DIR, "dev");
+    const {
+        LOG,
+        WEB_DIR,
+        // eslint-disable-next-line no-unused-vars
+        SERVER_DIR
+    } = await buildDirs(START);
 
-    await Promise.all([
-        fs.promises.mkdir(BUILD_DIR, {recursive: true}),
-        fs.promises.mkdir(LOG_DIR, {recursive: true}),
-        fs.promises.mkdir(DEV_DIR, {recursive: true})
-    ]);
-
-    const LOG = await fs.promises.open(
-        path.join(
-            LOG_DIR,
-            new Date(Date.now())
-                .toISOString()
-                .replace(/:/g, "_") +
-                "_dev_env_setup.log"),
-        "w"
-    );
     const BUFFER = [];
 
     try {
-        const HTML_SOURCES = await getAllFiles(process.argv[2]);
-
-        // We use path.relative to remove the root folder from the file name.
-        const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
-        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
-        const AS_SOURCES = await getAllFiles(process.argv[5]);
-
-        /*== Linting all of the files before doing anything ==*/
-
-        const LINTER = new ESLint({fix: true});
-        const FORMATTER = await LINTER.loadFormatter("stylish");
-
-        const LINT_RESULTS = await LINTER.lintFiles([
-            process.argv[2] + "/**/*.html",
-            process.argv[3] + "/**/*.js",
-            process.argv[5] + "/**/*.ts"
-        ]);
-
-        BUFFER.push("[INFO][LINT] Linting results:");
-        BUFFER.push(FORMATTER.format(LINT_RESULTS).replace(/\n/g, "\n[INFO][LINT] "));
-
-        await ESLint.outputFixes(LINT_RESULTS);
-
-        if (
-            LINT_RESULTS.some(result => {
-                return result.fatalErrorCount > 0 || result.warningCount > result.fixableWarningCount;
-            })
-        ) {
-            BUFFER.push("[ERROR][LINT] Linting failed.");
-            console.log("[ERROR][LINT] Linter failed to fix all problem, see log file for details.");
-            throw new Error("Linting failed");
-        }
-
-        /*== Compilig AssemblyScript files ==*/
-
-        let errorFlag = false;
-
-        await Promise.all(AS_SOURCES.map(async file => {
-            const result = await asc.main([
-                file,
-                "--outFile",
-                path.join(DEV_DIR, path.relative(process.argv[5], file).replace(/\.ts$/, ".wasm"))
-            ]);
-            if (result.error) {
-                errorFlag = true;
-                console.log("Compilation failed: " + file);
-                BUFFER.push(`[ERROR] Compilation failed: ${file}`);
-                BUFFER.push(`[ERROR] ${result.error.message}`);
-                BUFFER.push(result.stderr.toString().replace(/\n/g, "\n[ERROR] "));
-            }
-        }));
-
-        if (errorFlag) {
-            throw new Error("Compilation failed");
-        }
-
-        /*== Evaluating and replacing source tags in the HTML files ==*/
-
-        const JS_MAPER = indent => {
-            return source => `${indent}<script src="${source}"></script>\n`;
-        };
-        const CSS_MAPER = indent => {
-            return source => `${indent}<link rel="stylesheet" href="${source}">\n`;
-        };
-
-        const replaceSource = (fileContent, match, mapper, source) => {
-            match = fileContent.substring(match, fileContent.indexOf("\n", match) + 1); // Isolating the matched section
-            let indent = match.substring(0, match.indexOf("<")); // Isolating the indentation
-
-            // Creating the regexp to match the filenames
-            let regexp = new RegExp(
-                match.substring(
-                    match.indexOf("[") + 1,
-                    match.lastIndexOf("]")
-                ),
-                "g"
-            );
-
-            // Replacing the matched section with the new content
-            return fileContent.replace(
-                match,
-                source.filter(
-                    file => regexp.test(file)
-                ).map(mapper(indent))
-                    .join("")
-            );
-        };
-
-        await Promise.all(HTML_SOURCES.map(async file => {
-            BUFFER.push(`[INFO] processing ${file}`);
-            return fs.promises.readFile(file, "utf8").then(fileContent => {
-
-                // Replacing the js sources tag with the asked sources.
-                let match = fileContent.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
-                if (match !== -1) {
-                    BUFFER.push(`[INFO][${file}] extracting script regexp`);
-                    fileContent = replaceSource(fileContent, match, JS_MAPER, JS_SOURCES);
-
-                } else {
-                    BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
-                }
-
-                // Replacing the css sources tag with the asked sources.
-                match = fileContent.search(/[\t ]*<!-- STYLES \[.*\] -->/);
-                if (match !== -1) {
-                    BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
-                    fileContent = replaceSource(fileContent, match, CSS_MAPER, CSS_SOURCES);
-
-                } else {
-                    BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
-                }
-
-                // Returning the new file content
-                return fileContent;
-            })
-                .then(async fileContent => {
-                    let filename = path.join(DEV_DIR, path.relative(process.argv[2], file));
-                    await fs.promises.mkdir(path.dirname(filename), {recursive: true});
-                    return fs.promises.writeFile(filename, fileContent);
-                });
-        }));
-
-        // Copying all the files to the build folder
-        let pending = [];
-
-        JS_SOURCES.forEach(source => {
-            pending.push(
-                fs.promises.copyFile(
-                    path.join(process.argv[3], source),
-                    path.join(DEV_DIR, source)
-                )
-            );
-        });
-
-        CSS_SOURCES.forEach(source => {
-            pending.push(
-                fs.promises.copyFile(
-                    path.join(process.argv[4], source),
-                    path.join(DEV_DIR, source)
-                )
-            );
-        });
-
-        await Promise.all(pending);
-
+        await buildWeb(BUFFER, WEB_DIR);
     } catch (e) {
         console.error(e);
         LOG.write(BUFFER.join("\n"));
@@ -237,4 +341,11 @@ async function getAllFiles(dir) {
     console.log(last);
     LOG.write(last);
 
-})(); // IIFE to avoid global scope pollution and being able to use await
+})(); // IIFE to be able to use await
+
+/* TODO: add a build for the server
+ * Abstract the HTML, CSS, AS and JS folder.
+ * Create a folder for the web stie.
+ * create a ressource folder for the web pages.
+ * Improove the mapSources function to be more genric-ish.
+*/
