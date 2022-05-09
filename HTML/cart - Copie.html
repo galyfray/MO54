@@ -299,15 +299,9 @@
         img_cart_div.className = "img_cart";
         img_cart_div.appendChild(img);
 
-        let del = document.createElement('i');
-        del.className = "fa fa-trash";
-        del.style = "font-size: 20px;";
-        del.className = "del_cart";
+      
 
-        let del_cart_div = document.createElement('div');
-        del_cart_div.className = "del_cart";
-        del_cart_div.appendChild(del);
-        del_cart_div.style = "background-color:red";
+       
 
         let name = document.createTextNode(ob.name);
         let name_cart_div = document.createElement('div');
@@ -427,7 +421,6 @@
         
 
 
-        grid_article_in_cart.appendChild(del_cart_div);
         grid_article_in_cart.appendChild(name_cart_div);
         grid_article_in_cart.appendChild(info_cart_div);
 
