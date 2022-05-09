@@ -1,25 +1,28 @@
-
-<!DOCTYPE html>
-<html lang="en">
-
+﻿<!DOCTYPE html>
+<html>
 <head>
+    <!-- SCRIPTS [.*\.js] -->
+    <!-- STYLES [.*\.css] -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="hc-offcanvas-nav.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- The page is named-->
-    <title>Site web</title>
+    <title>Mon panier</title>
     <!-- We create a link between the HTML file and the css, js files-->
-    <link rel="stylesheet" href="../CSS/Site_web_page_all_article_cssV2.css">
-    <script src="../JS/Site_web_page_all_article_JSV2.js"></script>
+    <link rel="stylesheet" href="../CSS/cart_css2.css">
+    <!--<script src="../JS/cart.js"></script>
+    -->
+
 
 </head>
 
-
 <body class="body_menu">
+
     <div id="container">
-        <header style="background-color: rgb(230,230,230);">
+        <header>
             <div class="wrapper cf">
                 <nav id="main-nav">
                     <ul>
@@ -30,16 +33,15 @@
                                     <a href="#">Trouver un pneu</a>
                                     <ul>
                                         <li><a href="Site_web_page_all_articleV2.html">Pneus été</a></li>
-                                        <li><a href="#">Pneus 4 saisons</a></li>
-                                        <li><a href="#">Pneus hiver</a></li>
-                                        <li><a href="#">Pneu 4x4 et SUV</a></li>
-                                        <li><a href="#">Pneus voiture de collection</a></li>
+                                        <li><a href="Site_web_page_all_articleV2.html">Pneus 4 saisons</a></li>
+                                        <li><a href="Site_web_page_all_articleV2.html">Pneus hiver</a></li>
+                                        <li><a href="Site_web_page_all_articleV2.html">Pneu 4x4 et SUV</a></li>
+                                        <li><a href="Site_web_page_all_articleV2.html">Pneus voiture de collection</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a href="#">Pneu moto, scooter</a>
                                 </li>
-
                                 <li>
                                     <a href="#">Jantes et accessoires</a>
                                     <ul>
@@ -53,7 +55,6 @@
 
                                     </ul>
                                 </li>
-
                                 <li>
                                     <a href="#">Equipement neige</a>
                                     <ul>
@@ -61,7 +62,6 @@
                                         <li><a href="#">Chaussette à neige</a></li>
                                     </ul>
                                 </li>
-
                                 <li>
                                     <a href="#">Accessoires pneus</a>
                                     <ul>
@@ -74,7 +74,6 @@
 
                                     </ul>
                                 </li>
-
                                 <li>
                                     <a href="#">Prestations et services</a>
                                     <ul>
@@ -87,7 +86,6 @@
                                         <li><a href="#">Garantie pneu</a></li>
                                     </ul>
                                 </li>
-
                                 <li>
                                     <a href="#">Gardiennage pneu</a>
                                 </li>
@@ -114,9 +112,7 @@
                                     </ul>
                                 </li>
                             </ul>
-
                         </li>
-
                         <li>
                             <a href="#">Pièce auto</a>
                             <ul>
@@ -222,42 +218,201 @@
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                 <a href="cart.html">
                     <i class="fa" style="font-size: 24px; float: right; color: teal; padding: 2px;">&#xf07a;</i>
-                    <span id='nb_article_in_cart' style="font-size: 12px; background: orange; color: white; padding: 0 5px; vertical-align: top; margin-left: -10px; float: right; border-radius: 5px;"> 15 </span>
+                    <span id='nb_article_in_cart'> 5 </span>
                 </a>
-                <span id='web_site_name' style="font-size: 20px" ; color: teal; text-align: center; vertical-align: central; float: central;><h2> Our website </h2></span>
-
+                <span id='web_site_name'><h2> Our website </h2></span>
             </div>
-
         </header>
-
-
-
-        <!--The following div contain a title part (h1) and a div in which the code will create dynamically some article for a random page-->
-        <div id="mainContainer">
-            <h1>Tout les pneus</h1>
-            <div id="div_container_all_article"></div>
+        <!--The following div contain the cart and will be fulfilled with the js code-->
+        <div id="cartContainer">
+            <!--The id in h1 will be useful when the backend will be done.
+                It will be used to show how many articles are in the cart.
+                The next div will contain the articles.
+             -->
+            <h1 id="nb_object_in_cart">Votre panier(5)</h1>
+            <div id="div_container_all_article_in_cart"></div>
         </div>
-
-
-        <script>
-            (function ($) {
-                'use strict';
-                var Nav = new hcOffcanvasNav('#main-nav', {
-                    disableAt: false,
-                    customToggle: '.menu_icon',
-                    levelSpacing: 40,
-                    navTitle: 'All',
-                    levelTitles: true,
-                    levelTitleAsBack: true,
-                    pushContent: '#container',
-                    labelClose: false
-                });
-            })(jQuery);
-        </script>
     </div>
-</body>
-</html>
-<script>
-    let div_container_all_article = document.getElementById("div_container_all_article");
 
+
+
+
+</body>
+
+
+
+<script>
+    let cart_div = document.getElementById('div_container_all_article_in_cart');
+    cart_div.style = "padding: 10px;";
+    let nb_article_by_createCart = 0;
+    /*It is here to test the function. In the future, the function createCart will directly use a file*/
+    createCart({ "id": "1", "name": "Jante alu RACER TARGET 7x17 5x108 ET46 aoiaoiauzoiauzoaiuz", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Un pneu", "brand": "Michelin", "price": 49.99 }, 2);
+    createCart({ "id": "2", "name": "AUTORADIO KENWOOD KDC-BT450DABNA", "preview": "https://bcdn.1001pneus.fr/media/catalog/category/MICHELIN_ALPIN_5.jpg", "description": "Pneu Michelin", "brand": "Continental", "price": 419 }, 8);
+    createCart({ "id": "3", "name": "PNEU CONTINENTAL ECOCONTACT 6 195/55 R16 87 H RENAULT", "preview": "https://voyage-onirique.com/wp-content/uploads/2020/02/647220.jpg", "description": "Un chat inconnu", "brand": "Renault", "price": 110.50 }, 3);
+    createCart({ "id": "4", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 }, 2);
+    createCart({ "id": "5", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 }, 1);
+    createCart({ "id": "6", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 }, 5);
+
+
+
+    
+    /**
+     * This function is used to create the cart. We create all the different html component that are needed.
+     
+     * @param ob : the object we are working on. It has for now those properties: name, image, description, brand and price.
+     * @param nbArticle : the quantity asked by the user for an article.
+     */
+    function createCart(ob, nbArticle) {
+        /*
+         * To be changed : it counts the number of articles in the cart (it works but will surely change)
+         */
+        nb_article_by_createCart = nb_article_by_createCart + 1;
+        document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + nb_article_by_createCart + ")";
+        nb_article_in_cart.textContent = nb_article_by_createCart;
+        /* 
+         * grid_article_in_cart: the grid that contains all the information for an article
+         * img : the image of the article
+         * img_cart_div : the div that contains the image of the article
+         * del : the icon of a trash can
+         * del_cart_div : the div that contains the icon of the trash can
+         * name : the name of the article
+         * name_cart_div : the div that contains the name of the article
+         * info_cart_div : the div that contains the other informations about an article (brand, price, quantity)
+         * brand : the brand of the article
+         * brand_div : the div that contains the brand of the article
+         * prix : the price of the article
+         * prix_div : the div that contains the price of the article
+         * quantite_div : the div that contains the component for the quantity of the article
+         * quantite : the input that contains the quantity of the article
+         * label_quantite : the label that print "Quantité : "   
+         */
+        let grid_article_in_cart = document.createElement('div');
+        grid_article_in_cart.className = "grid-container";
+        //grid_article_in_cart.style = "background-color:rgb(230,230,230); ";
+        grid_article_in_cart.style = "border: 2px solid rgb(230,230,230);  border-radius : 20px; ";
+        let img = document.createElement('img')
+        img.src = ob.preview;
+        img.className = "img_cart";
+        
+
+        let img_cart_div = document.createElement('div');
+        img_cart_div.className = "img_cart";
+        img_cart_div.appendChild(img);
+
+        let del = document.createElement('i');
+        del.className = "fa fa-trash";
+        del.style = "font-size: 20px;";
+        del.className = "del_cart";
+
+        let del_cart_div = document.createElement('div');
+        del_cart_div.className = "del_cart";
+        del_cart_div.appendChild(del);
+
+        let name = document.createTextNode(ob.name);
+        let name_cart_div = document.createElement('div');
+        name_cart_div.className = "name_cart";
+        name_cart_div.appendChild(name);
+
+        let info_cart_div = document.createElement('div');
+        info_cart_div.className = "info_cart";
+
+        let brand = document.createTextNode(ob.brand);
+
+        let brand_div = document.createElement('div');
+        brand_div.style = "text-align: left;"
+        brand_div.className = "brand_div_cart";
+
+
+        let prix = document.createTextNode(ob.price * nbArticle + "€");
+        let prix_div = document.createElement('div');
+        prix.id = "price_id" + ob.id;
+        
+        prix_div.style = "text-align: left;";
+        prix_div.className = "prix_cart";
+
+
+
+        let quantite_div = document.createElement('div');
+        quantite_div.style = "content-align : left;";
+        let quantite = document.createElement('input');
+        quantite.type = "number";
+        quantite.id = "quantite_id" + ob.id;
+
+        quantite.oninput = function () {
+            var intermediaire = document.getElementById('quantite_id' + ob.id).value;
+            prix_div.removeChild(prix);
+            prix = document.createTextNode((ob.price * intermediaire).toFixed(2) + "€");
+            prix_div.appendChild(prix);
+        };
+
+        quantite.style = "text-align: center; width : 30px;";
+        quantite_div.className = "quantite_div_cart";
+        quantite.className = "quantite_cart";
+        quantite.min = "1";
+        quantite.value = nbArticle;
+
+
+ 
+
+
+
+
+        let label_quantite = document.createElement('label');
+        label_quantite.textContent = "Quantité : ";
+        label_quantite.style = "display: inline-block; text-align: left;";
+        label_quantite.className = "label_quantite_cart";
+        quantite_div.appendChild(label_quantite);
+        quantite_div.appendChild(quantite);
+        quantite_div.style = "align-content: left;";
+
+
+
+
+
+
+
+
+        
+        grid_article_in_cart.appendChild(img_cart_div);
+        brand_div.appendChild(brand);
+        prix_div.appendChild(prix);
+        info_cart_div.appendChild(brand_div);
+        info_cart_div.appendChild(prix_div);
+        info_cart_div.appendChild(quantite_div);
+        grid_article_in_cart.appendChild(del_cart_div);
+        grid_article_in_cart.appendChild(name_cart_div);
+        grid_article_in_cart.appendChild(info_cart_div);
+
+        cart_div.appendChild(grid_article_in_cart);
+        /*let line = document.createElement('div');
+        line.style = "background-color:black; padding : 1px;";
+        let space1 = document.createElement('div');
+        space1.style = "background-color:white; padding : 2px;";
+        cart_div.appendChild(space1);
+        */
+        let line = document.createElement('div');
+        line.style = "padding : 10px;";
+        cart_div.appendChild(line);
+        /*let space2 = document.createElement('div');
+        space2.style = "background-color:white; padding : 2px;";
+        cart_div.appendChild(space2);
+        */
+        return cart_div
+    }
+</script>
+
+<script>
+    (function ($) {
+        'use strict';
+        var Nav = new hcOffcanvasNav('#main-nav', {
+            disableAt: false,
+            customToggle: '.menu_icon',
+            levelSpacing: 40,
+            navTitle: 'All',
+            levelTitles: true,
+            levelTitleAsBack: true,
+            pushContent: '#container',
+            labelClose: false
+        });
+    })(jQuery);
 </script>
