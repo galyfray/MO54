@@ -3,7 +3,10 @@
   "version": "0.3.0",
   "scripts": {
     "build": "node ./Scripts/devEnv.js",
-    "test": "asc -v "
+    "build-serv": "node ./Scripts/devEnv.js server",
+    "build-web": "node ./Scripts/devEnv.js web",
+    "prestart-serv" : "npm run build-serv",
+    "start-serv": "node ./build/dev/server/server.js"
   },
   "dependencies": {
     "as-wasi": "^0.4.6",

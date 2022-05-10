@@ -52,9 +52,10 @@ async function getAllFiles(dir) {
  */
 /**
  * @param {number} START The time at which the script started.
+ * @param {string} scope the scope of the process must be either "web", "server" or "all".
  * @returns {DirOutput} An object containing the log file, the web directory and the server directory.
  */
-async function buildDirs(START) {
+async function buildDirs(START, scope) {
 
     // Making all the paths relative to this file.
     const BUILD_DIR = "build";
@@ -64,9 +65,19 @@ async function buildDirs(START) {
     const SERVER_DIR = path.join(DEV_DIR, "server");
 
     try {
-        await fs.promises.access(DEV_DIR, fs.constants.F_OK).then(() => {
-            fs.promises.rm(DEV_DIR, {recursive: true});
-        });
+        if (scope === "all") {
+            await fs.promises.access(DEV_DIR, fs.constants.F_OK).then(() => {
+                fs.promises.rm(DEV_DIR, {recursive: true});
+            });
+        } else if (scope === "web") {
+            await fs.promises.access(WEB_DIR, fs.constants.F_OK).then(() => {
+                fs.promises.rm(WEB_DIR, {recursive: true});
+            });
+        } else if (scope === "server") {
+            await fs.promises.access(SERVER_DIR, fs.constants.F_OK).then(() => {
+                fs.promises.rm(SERVER_DIR, {recursive: true});
+            });
+        }
     } catch (e) {
         // Do nothing
     }
@@ -230,27 +241,27 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
         };
 
         await Promise.all(HTML_SOURCES.map(async file => {
-            BUFFER.push(`[INFO] processing ${file}`);
+            BUFFER.push(`[INFO][HTML] processing ${file}`);
             return fs.promises.readFile(file, "utf8").then(fileContent => {
 
                 // Replacing the js sources tag with the asked sources.
                 let match = fileContent.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
 
                 if (match !== -1) {
-                    BUFFER.push(`[INFO][${file}] extracting script regexp`);
+                    BUFFER.push(`[INFO][HTML][${file}] extracting script regexp`);
                     fileContent = replaceSource(fileContent, match, JS_MAPER, JS_SOURCES);
                 } else {
-                    BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
+                    BUFFER.push(`[INFO][HTML] ${file} does not contain SCRIPTS directive`);
                 }
 
                 // Replacing the css sources tag with the asked sources.
                 match = fileContent.search(/[\t ]*<!-- STYLES \[.*\] -->/);
 
                 if (match !== -1) {
-                    BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
+                    BUFFER.push(`[INFO][HTML][${file}] extracting stylesheet regexp`);
                     fileContent = replaceSource(fileContent, match, CSS_MAPER, CSS_SOURCES);
                 } else {
-                    BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
+                    BUFFER.push(`[INFO][HTML] ${file} does not contain STYLES directive`);
                 }
 
                 // Returning the new file content
@@ -264,7 +275,7 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
         }));
         BUFFER.push("[INFO][HTML] Mapping successful.");
     } catch (e) {
-        BUFFER.push("[ERROR]Unable to succesfully map the sources into the HTML files");
+        BUFFER.push("[ERROR][HTML] Unable to succesfully map the sources into the HTML files");
         throw e;
     }
 
@@ -425,18 +436,32 @@ async function buildServer(BUFFER, SERVER_DIR) {
 (async() => {
     "use strict;";
 
+    let scope = process.argv[2];
+
+    if (!(scope in [
+        "web",
+        "server",
+        "all"
+    ])) {
+        scope = "all";
+    }
+
     const START = Date.now();
     const {
         LOG,
         WEB_DIR,
         SERVER_DIR
-    } = await buildDirs(START);
+    } = await buildDirs(START, scope);
 
     const BUFFER = [];
 
     try {
-        await buildWeb(BUFFER, WEB_DIR);
-        await buildServer(BUFFER, SERVER_DIR);
+        if (scope === "all" || scope === "web") {
+            await buildWeb(BUFFER, WEB_DIR);
+        }
+        if (scope === "all" || scope === "server") {
+            await buildServer(BUFFER, SERVER_DIR);
+        }
     } catch (e) {
         console.error(e);
         LOG.write(BUFFER.join("\n"));
@@ -451,7 +476,3 @@ async function buildServer(BUFFER, SERVER_DIR) {
     LOG.write(last);
 
 })(); // IIFE to be able to use await
-
-/* TODO: add a build for the server
- * Improove the mapSources function to be more genric-ish.
-*/
