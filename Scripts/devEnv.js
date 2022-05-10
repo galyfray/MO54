@@ -119,7 +119,9 @@ async function lintFiles(BUFFER, ...files) {
 
         if (
             LINT_RESULTS.some(result => {
-                return result.fatalErrorCount > 0 || result.warningCount > result.fixableWarningCount;
+                return result.fatalErrorCount > 0 ||
+                    result.warningCount > result.fixableWarningCount ||
+                    result.errorCount > result.fixableErrorCount;
             })
         ) {
             BUFFER.push("[ERROR][LINT] Linting failed.");
