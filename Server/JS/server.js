@@ -45,11 +45,11 @@ SERVER.use((req, res, next) => {
 
     // Starting the server
     const KEY = await fs.promises.readFile(
-        utils.resolve("../Ressources/server.key"),
+        utils.resolve("./server.key"),
         "utf8"
     );
     const CERT = await fs.promises.readFile(
-        utils.resolve("../Ressources/server.cert"),
+        utils.resolve("./server.cert"),
         "utf8"
     );
 

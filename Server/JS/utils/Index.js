@@ -1,9 +1,9 @@
-class Indexe{
-    constructor(){
+class Indexe {
+    constructor() {
         this.index = [];
     }
 
-    add(value){
+    add(value) {
         this.index.push(value);
     }
 }

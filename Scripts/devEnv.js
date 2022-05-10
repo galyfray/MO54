@@ -32,7 +32,7 @@ async function getAllFiles(dir) {
                     .then(stats => stats.isDirectory())
                     .then(isDir => {
                         if (isDir) {
-                            return getAllFiles(path.join(dir, file)).then(files => files.concat(allFiles));
+                            return getAllFiles(path.join(dir, file)).then(files => allFiles.push(...files));
                         } else {
                             allFiles.push(path.join(dir, file));
                         }
@@ -110,7 +110,7 @@ async function lintFiles(BUFFER, ...files) {
 
         BUFFER.push("[INFO][LINT] Linting results:");
         BUFFER.push(
-            ("[INFO][LINT]" + FORMATTER.format(LINT_RESULTS))
+            ("[INFO][LINT] " + FORMATTER.format(LINT_RESULTS))
                 .trim()
                 .replace(/\n/g, "\n[INFO][LINT] ")
         );
@@ -280,10 +280,11 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
     BUFFER.push("[INFO][COPY] Copying files...");
     try {
         await Promise.all(SOURCES.map(async file => {
-            await fs.promises.mkdir(path.dirname(file), {recursive: true}).then(() => {
+            let filename = TRANSFORM(file);
+            await fs.promises.mkdir(path.dirname(filename), {recursive: true}).then(() => {
                 return fs.promises.copyFile(
                     file,
-                    TRANSFORM(file)
+                    filename
                 );
             });
         }));
@@ -368,6 +369,57 @@ async function buildWeb(BUFFER, WEB_DIR) {
 
 }
 
+/**
+ * This function will do everything needed to build the server part of the project.
+ * @param {Array} BUFFER a buffer to push the logs to.
+ * @param {string} SERVER_DIR the destination folder for the builded server scripts.
+ */
+async function buildServer(BUFFER, SERVER_DIR) {
+    BUFFER.push("[INFO][SERVER] Building server...");
+    const SERVER_JS = "Server/JS",
+        SERVER_AS = "Server/AS",
+        SERVER_RESSOURCE = "Server/Ressources";
+
+    try {
+
+        const JS_SOURCES = await getAllFiles(SERVER_JS);
+        const AS_SOURCES = await getAllFiles(SERVER_AS);
+
+        await lintFiles(
+            BUFFER,
+            SERVER_JS + "/**/*.js",
+            SERVER_AS + "/**/*.ts"
+        );
+
+        await compileAS(
+            BUFFER,
+            AS_SOURCES,
+            file => path.join(SERVER_DIR, path.relative(SERVER_AS, file))
+        );
+
+        await copyAll(
+            BUFFER,
+            file => {
+
+                if (file.includes(SERVER_JS)) {
+
+                    file = path.relative(SERVER_JS, file);
+                } else if (file.includes(SERVER_RESSOURCE)) {
+
+                    file = path.relative(SERVER_RESSOURCE, file);
+                }
+                return path.join(SERVER_DIR, file);
+            },
+            ...JS_SOURCES,
+            ...await getAllFiles(SERVER_RESSOURCE)
+        );
+
+    } catch (e) {
+        BUFFER.push("[ERROR][SERVER] Unexpected error while building the server");
+        throw e;
+    }
+}
+
 (async() => {
     "use strict;";
 
@@ -375,7 +427,6 @@ async function buildWeb(BUFFER, WEB_DIR) {
     const {
         LOG,
         WEB_DIR,
-        // eslint-disable-next-line no-unused-vars
         SERVER_DIR
     } = await buildDirs(START);
 
@@ -383,6 +434,7 @@ async function buildWeb(BUFFER, WEB_DIR) {
 
     try {
         await buildWeb(BUFFER, WEB_DIR);
+        await buildServer(BUFFER, SERVER_DIR);
     } catch (e) {
         console.error(e);
         LOG.write(BUFFER.join("\n"));
@@ -399,6 +451,5 @@ async function buildWeb(BUFFER, WEB_DIR) {
 })(); // IIFE to be able to use await
 
 /* TODO: add a build for the server
- * create a ressource folder for the web pages.
  * Improove the mapSources function to be more genric-ish.
 */
