@@ -2,7 +2,7 @@
   "name": "mo54",
   "version": "0.3.0",
   "scripts": {
-    "build": "node ./Scripts/devEnv.js HTML JS CSS AS",
+    "build": "node ./Scripts/devEnv.js",
     "test": "asc -v "
   },
   "dependencies": {

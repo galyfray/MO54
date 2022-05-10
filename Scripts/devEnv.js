@@ -65,7 +65,7 @@ async function buildDirs(START) {
 
     try {
         await fs.promises.access(DEV_DIR, fs.constants.F_OK).then(() => {
-            fs.promises.rmdir(DEV_DIR, {recursive: true});
+            fs.promises.rm(DEV_DIR, {recursive: true});
         });
     } catch (e) {
         // Do nothing
@@ -109,7 +109,11 @@ async function lintFiles(BUFFER, ...files) {
         const LINT_RESULTS = await LINTER.lintFiles(files);
 
         BUFFER.push("[INFO][LINT] Linting results:");
-        BUFFER.push(FORMATTER.format(LINT_RESULTS).replace(/\n/g, "\n[INFO][LINT] "));
+        BUFFER.push(
+            ("[INFO][LINT]" + FORMATTER.format(LINT_RESULTS))
+                .trim()
+                .replace(/\n/g, "\n[INFO][LINT] ")
+        );
 
         await ESLint.outputFixes(LINT_RESULTS);
 
@@ -188,8 +192,9 @@ async function compileAS(BUFFER, SOURCES, TRANSFORM) {
  * @param {string[]} CSS_SOURCES the list of all the CSS source files
  * @param {string[]} JS_SOURCES the list of all the JS source files
  * @param {string} WEB_DIR the destination folder for the parsed HTML files.
+ * @param {string} WEB_HTML the source folder of the HTML files
  */
-async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR) {
+async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR, WEB_HTML) {
     BUFFER.push("[INFO][HTML] Mapping sources into html files...");
     try {
         const JS_MAPER = indent => {
@@ -250,7 +255,7 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
                 return fileContent;
             })
                 .then(async fileContent => {
-                    let filename = path.join(WEB_DIR, path.relative(process.argv[2], file));
+                    let filename = path.join(WEB_DIR, path.relative(WEB_HTML, file));
                     await fs.promises.mkdir(path.dirname(filename), {recursive: true});
                     return fs.promises.writeFile(filename, fileContent);
                 });
@@ -275,10 +280,12 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
     BUFFER.push("[INFO][COPY] Copying files...");
     try {
         await Promise.all(SOURCES.map(async file => {
-            fs.promises.copyFile(
-                file,
-                TRANSFORM(file)
-            );
+            await fs.promises.mkdir(path.dirname(file), {recursive: true}).then(() => {
+                return fs.promises.copyFile(
+                    file,
+                    TRANSFORM(file)
+                );
+            });
         }));
         BUFFER.push("[INFO][COPY] Copying successful.");
     } catch (e) {
@@ -296,24 +303,31 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
 async function buildWeb(BUFFER, WEB_DIR) {
     BUFFER.push("[INFO][WEB] Building web...");
     try {
-        const HTML_SOURCES = await getAllFiles(process.argv[2]);
+        const WEB_HTML = "Web/HTML",
+            WEB_CSS = "Web/CSS",
+            WEB_JS = "Web/JS",
+            WEB_AS = "Web/AS",
+            WEB_RESSOURCE = "Web/Ressources";
+
+        const HTML_SOURCES = await getAllFiles(WEB_HTML);
 
         // We use path.relative to remove the root folder from the file name.
-        const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
-        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
-        const AS_SOURCES = await getAllFiles(process.argv[5]);
+        const JS_SOURCES = (await getAllFiles(WEB_JS)).map(file => path.relative(WEB_JS, file));
+        const CSS_SOURCES = (await getAllFiles(WEB_CSS)).map(file => path.relative(WEB_CSS, file));
+        const AS_SOURCES = await getAllFiles(WEB_AS);
+        const RESSOURCES = await getAllFiles(WEB_RESSOURCE);
 
         await lintFiles(
             BUFFER,
-            process.argv[2] + "/**/*.html",
-            process.argv[3] + "/**/*.js",
-            process.argv[5] + "/**/*.ts"
+            WEB_HTML + "/**/*.html",
+            WEB_JS + "/**/*.js",
+            WEB_AS + "/**/*.ts"
         );
 
         await compileAS(
             BUFFER,
             AS_SOURCES,
-            file => path.join(WEB_DIR, path.relative(process.argv[5], file))
+            file => path.join(WEB_DIR, path.relative(WEB_AS, file))
         );
 
         await mapSources(
@@ -321,25 +335,30 @@ async function buildWeb(BUFFER, WEB_DIR) {
             HTML_SOURCES,
             CSS_SOURCES,
             JS_SOURCES,
-            WEB_DIR
+            WEB_DIR,
+            WEB_HTML
         );
 
         await copyAll(
             BUFFER,
             file => {
 
-                if (file.includes(process.argv[3])) {
+                if (file.includes(WEB_JS)) {
 
-                    file = path.relative(process.argv[3], file);
-                } else if (file.includes(process.argv[4])) {
+                    file = path.relative(WEB_JS, file);
+                } else if (file.includes(WEB_CSS)) {
 
-                    file = path.relative(process.argv[4], file);
+                    file = path.relative(WEB_CSS, file);
+                } else if (file.includes(WEB_RESSOURCE)) {
+
+                    file = path.relative(WEB_RESSOURCE, file);
                 }
 
                 return path.join(WEB_DIR, file);
             },
-            ...JS_SOURCES.map(file => path.join(process.argv[3], file)),
-            ...CSS_SOURCES.map(file => path.join(process.argv[4], file))
+            ...JS_SOURCES.map(file => path.join(WEB_JS, file)),
+            ...CSS_SOURCES.map(file => path.join(WEB_CSS, file)),
+            ...RESSOURCES
         );
         BUFFER.push("[INFO][WEB] Building successful.");
     } catch (e) {
@@ -351,12 +370,6 @@ async function buildWeb(BUFFER, WEB_DIR) {
 
 (async() => {
     "use strict;";
-
-    // 4 arguments + two string that are always there : "node" and the script file name
-    if (process.argv.length < 4 + 2) {
-        console.log("Usage: node devEnv.js <html> <js> <css> <as>");
-        process.exit(1);
-    }
 
     const START = Date.now();
     const {
@@ -386,8 +399,6 @@ async function buildWeb(BUFFER, WEB_DIR) {
 })(); // IIFE to be able to use await
 
 /* TODO: add a build for the server
- * Abstract the HTML, CSS, AS and JS folder.
- * Create a folder for the web stie.
  * create a ressource folder for the web pages.
  * Improove the mapSources function to be more genric-ish.
 */
