@@ -35,7 +35,8 @@ SERVER.use((req, res, next) => {
 
 // API routes
 (async() => {
-    SERVER.use("/", await require("./routes.js"));
+    SERVER.use("/api", await require("./apiRoutes.js"));
+    SERVER.use("/web", await require("./webRoutes.js"));
 
     // Error handling
     SERVER.use((req, res) => {
