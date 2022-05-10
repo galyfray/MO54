@@ -1,31 +1,3 @@
-.img_cart {
-    grid-area: img;
-}
-
-.name_cart {
-    grid-area: name;
-}
-
-.del_cart {
-    grid-area: del;
-}
-
-.info_cart {
-    grid-area: info;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-areas:
-        'img img name name name del'
-        'img img info info info info';
-    gap: 10px;
-    padding: 10px;
-}
-
-    .grid-container > div {
-        text-align: center;
-    }
 
 html.hc-nav-yscroll {
     overflow-y: scroll
@@ -55,24 +27,24 @@ html.hc-nav-yscroll {
     display: block;
 }
 
-    .hc-offcanvas-nav li.level-open > .nav-wrapper {
-        visibility: visible;
-    }
+.hc-offcanvas-nav li.level-open > .nav-wrapper {
+    visibility: visible;
+}
 
-    .hc-offcanvas-nav li:not(.custom-content) a {
-        position: relative;
-        display: block;
-        box-sizing: border-box;
-        cursor: pointer;
-    }
+.hc-offcanvas-nav li:not(.custom-content) a {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    cursor: pointer;
+}
 
-        .hc-offcanvas-nav li:not(.custom-content) a[disabled] {
-            cursor: not-allowed
-        }
+.hc-offcanvas-nav li:not(.custom-content) a[disabled] {
+    cursor: not-allowed
+}
 
-        .hc-offcanvas-nav li:not(.custom-content) a, .hc-offcanvas-nav li:not(.custom-content) a:hover {
-            text-decoration: none
-        }
+.hc-offcanvas-nav li:not(.custom-content) a, .hc-offcanvas-nav li:not(.custom-content) a:hover {
+    text-decoration: none
+}
 
 .hc-offcanvas-nav input[type="checkbox"] {
     display: none
@@ -111,13 +83,12 @@ html.hc-nav-yscroll {
     transform: translate3d(100%, 0, 0)
 }
 
-
 .hc-offcanvas-nav.nav-open[class*='hc-nav-'] div.nav-container {
     transform: translate3d(0, 0, 0)
 }
 
 body.body_menu .hc-offcanvas-nav .nav-container, body.body_menu .hc-offcanvas-nav .nav-wrapper, body.body_menu .hc-offcanvas-nav ul {
-    background: rgb(220, 190, 220);
+    background: rgb(220, 190, 220); 
 }
 
 body.body_menu .hc-offcanvas-nav .nav-item-link, body.body_menu .hc-offcanvas-nav li.nav-close a, body.body_menu .hc-offcanvas-nav .nav-back a {
@@ -167,13 +138,137 @@ html {
     height: 100%;
 }
 
-h3 {
-    margin: 0;
-}
-
 ol, ul {
     list-style: none;
 }
+
+.cf::before, .cf::after {
+    content: '';
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+
+.cf::after {
+    clear: both;
+}
+
+.wrapper {
+    margin: 0 auto;
+    padding: 0 5px;
+    max-width: 800px;
+}
+
+#main-nav {
+    display: none;
+}
+
+header {
+    position: relative;
+    padding: 10px;
+    background-color: rgb(230,230,230);
+}
+           
+header .menu_icon {
+    display: none;
+    display: block;
+    z-index: 9980;
+    float: left;
+    position: absolute;
+    position: relative;
+    top: 2px;
+    top: auto;
+    left: auto;
+    box-sizing: content-box;
+    width: 35px;
+    width: auto;
+    margin-top: 5px;
+    padding-left: 55px;
+    min-height: 26px;
+    text-align: left;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 22px;
+    color: #fff;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+}
+
+header .menu_icon span {
+    top: 50%;
+    width: 35px;
+    transform: translateY(-50%);
+    transform-origin: 50% 50%;
+}
+header .menu_icon span,
+header .menu_icon span::before,
+header .menu_icon span::after {
+    display: block;
+    position: absolute;
+    left: 0;
+    height: 4px;
+    background: #182631;
+    /*transition: all .25s ease;*/
+}
+
+header .menu_icon span::before,
+header .menu_icon span::after {
+    content: '';
+    width: 100%;
+}
+
+header .menu_icon span::before {
+    top: -11px;
+}
+
+header .menu_icon span::after {
+    bottom: -11px;
+}
+header .menu_icon.menu_icon-open span {
+    background: rgba(0,0,0,0);
+    transform: rotate(45deg);
+}
+
+header .menu_icon.menu_icon-open span::before {
+    transform: translate3d(0,11px,0);
+}
+
+header .menu_icon.menu_icon-open span::after {
+    transform: rotate(-90deg) translate3d(11px,0,0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .cf::before, .cf::after {
     content: '';
@@ -237,7 +332,9 @@ header {
             transform-origin: 50% 50%;
         }
 
-            header .menu_icon span, header .menu_icon span::before, header .menu_icon span::after {
+            header .menu_icon span,
+            header .menu_icon span::before,
+            header .menu_icon span::after {
                 display: block;
                 position: absolute;
                 left: 0;
@@ -246,7 +343,8 @@ header {
                 /*transition: all .25s ease;*/
             }
 
-                header .menu_icon span::before, header .menu_icon span::after {
+                header .menu_icon span::before,
+                header .menu_icon span::after {
                     content: '';
                     width: 100%;
                 }
@@ -271,167 +369,3 @@ header {
             header .menu_icon.menu_icon-open span::after {
                 transform: rotate(-90deg) translate3d(11px,0,0);
             }
-
-
-
-
-
-body {
-    margin: 0;
-    font-family: 'Lato', sans-serif;
-    background-color: rgb(253,253,253);
-}
-/*Customization of h1, h2 (price of the article), h3 (name of the article) and h4 (brand of the article)*/
-h1 {
-    width: 90%;
-    margin: auto;
-    padding: 20px;
-    font-weight: 700;
-}
-
-h2 {
-    color: rgb(180, 150, 180);
-}
-
-h3 {
-    font-size: 16px;
-}
-
-h4 {
-    font-weight: 100;
-}
-
-
-
-
-/*
-        This code is used to give properties to the div containing all the articles.
-        Here, the css code create 5 columns -> we have 5 articles by line.
-        -> It will change according to the width of the device used (see the media querry part)
-    */
-#div_container_all_article {
-    display: grid;
-    grid-gap: 70px 20px;
-    grid-template-columns: repeat(5, 1fr);
-    width: 90%;
-    margin: auto;
-    padding-bottom: 40px;
-}
-/*
-        We defined the box properties:
-        - shadow with the cursos hover or not
-        - the border radius of an article "box" : div in which there are the name, price, brand and image of an article
-        We also defined the properties of the image of an article with a border radius.
-    */
-#box {
-    width: 100%;
-    background-color: rgb(240,240,240);
-    align-content: center;
-    border-radius: 15px;
-    box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
-}
-
-    #box:hover {
-        box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
-    }
-
-#div_container_all_article img {
-    width: 100%;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-#details {
-    padding: 0 15px;
-}
-
-
-
-/*
-        Media query:
-        - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page
-        -> width>= 850px : 5 columns of articles (grid-template-columns: repeat(5, 1fr);)
-        -> width>= 505px &  width< 850px : 3 columns of articles (grid-template-columns: repeat(3, 1fr);)
-        -> width< 505px : 2 columns of articles (grid-template-columns: repeat(2, 1fr);)
-        -> the font-size & width of h1 is redefined according to the device width
-        -> the width of the div is redefined as well
-    */
-
-@media(max-width: 1070px) {
-    h1 {
-        font-size: 25px;
-    }
-
-    #div_container_all_article {
-        width: 95%;
-        grid-gap: 10px;
-    }
-}
-
-@media(max-width: 850px) {
-    h1 {
-        width: 80%;
-    }
-
-    #div_container_all_article {
-        display: grid;
-        grid-gap: 70px 20px;
-        grid-template-columns: repeat(3, 1fr);
-        width: 80%;
-    }
-}
-
-@media(max-width: 650px) {
-    h1 {
-        font-size: 20px;
-        width: 90%;
-    }
-
-    #div_container_all_article {
-        width: 90%;
-    }
-}
-
-@media(max-width: 600px) {
-    h1 {
-        width: 70%;
-    }
-
-    #div_container_all_article {
-        width: 70%;
-    }
-}
-
-@media(max-width: 505px) {
-    h1 {
-        width: 80%;
-    }
-
-    #div_container_all_article {
-        width: 80%;
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-</style >
-
-<style >
-#web_site_name {
-    font-size: 20px;
-    color: teal;
-    text-align: center;
-    vertical-align: central;
-    float: central;
-}
-
-#nb_article_in_cart {
-    font-size: 12px;
-    background: orange;
-    color: white;
-    padding: 0 5px;
-    vertical-align: top;
-    margin-left: -10px;
-    float: right;
-    border-radius: 5px;
-}
-
