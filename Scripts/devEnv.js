@@ -100,26 +100,33 @@ async function buildDirs(START) {
  * @param  {...string} files the files to lint.
  */
 async function lintFiles(BUFFER, ...files) {
-    const LINTER = new ESLint({fix: true});
-    const FORMATTER = await LINTER.loadFormatter("stylish");
+    BUFFER.push("[INFO][LINT] Linting files ...");
 
-    const LINT_RESULTS = await LINTER.lintFiles(files);
+    try {
+        const LINTER = new ESLint({fix: true});
+        const FORMATTER = await LINTER.loadFormatter("compact");
 
-    BUFFER.push("[INFO][LINT] Linting results:");
-    BUFFER.push(FORMATTER.format(LINT_RESULTS).replace(/\n/g, "\n[INFO][LINT] "));
+        const LINT_RESULTS = await LINTER.lintFiles(files);
 
-    await ESLint.outputFixes(LINT_RESULTS);
+        BUFFER.push("[INFO][LINT] Linting results:");
+        BUFFER.push(FORMATTER.format(LINT_RESULTS).replace(/\n/g, "\n[INFO][LINT] "));
 
-    if (
-        LINT_RESULTS.some(result => {
-            return result.fatalErrorCount > 0 || result.warningCount > result.fixableWarningCount;
-        })
-    ) {
-        BUFFER.push("[ERROR][LINT] Linting failed.");
-        console.log("[ERROR][LINT] Linter failed to fix all problem, see log file for details.");
-        throw new Error("Linting failed");
-    } else {
-        BUFFER.push("[INFO][LINT] Linting successful.");
+        await ESLint.outputFixes(LINT_RESULTS);
+
+        if (
+            LINT_RESULTS.some(result => {
+                return result.fatalErrorCount > 0 || result.warningCount > result.fixableWarningCount;
+            })
+        ) {
+            BUFFER.push("[ERROR][LINT] Linting failed.");
+            console.log("[ERROR][LINT] Linter failed to fix all problem, see log file for details.");
+            throw new Error("Linting failed");
+        } else {
+            BUFFER.push("[INFO][LINT] Linting successful.");
+        }
+    } catch (e) {
+        BUFFER.push("[ERROR][LINT] Linting failed due to an unexpected error");
+        throw e;
     }
 }
 
@@ -136,32 +143,38 @@ async function lintFiles(BUFFER, ...files) {
  * @see {@link sourceTransformerCallback}
  */
 async function compileAS(BUFFER, SOURCES, TRANSFORM) {
-    // TODO: change to assemblyscript/asc when this shit get fixed + move it back to the beginning of the file.
-    const asc = await import("assemblyscript/dist/asc.js");
-
-    let errorFlag = false;
-
     BUFFER.push("[INFO][AS] Compiling assembly scripts...");
 
-    await Promise.all(SOURCES.map(async file => {
-        const result = await asc.main([
-            file,
-            "--outFile",
-            TRANSFORM(file.replace(/\.ts$/, ".wasm"))
-        ]);
-        if (result.error) {
-            errorFlag = true;
-            console.log("Compilation failed: " + file);
-            BUFFER.push(`[ERROR] Compilation failed: ${file}`);
-            BUFFER.push(`[ERROR] ${result.error.message}`);
-            BUFFER.push(result.stderr.toString().replace(/\n/g, "\n[ERROR] "));
-        }
-    }));
+    try {
+        // TODO: change to assemblyscript/asc when this shit get fixed + move it back to the beginning of the file.
+        const asc = await import("assemblyscript/dist/asc.js");
 
-    if (errorFlag) {
-        throw new Error("Compilation failed");
-    } else {
-        BUFFER.push("[INFO][AS] Compilation successful.");
+        let errorFlag = false;
+
+
+        await Promise.all(SOURCES.map(async file => {
+            const result = await asc.main([
+                file,
+                "--outFile",
+                TRANSFORM(file.replace(/\.ts$/, ".wasm"))
+            ]);
+            if (result.error) {
+                errorFlag = true;
+                console.log("Compilation failed: " + file);
+                BUFFER.push(`[ERROR] Compilation failed: ${file}`);
+                BUFFER.push(`[ERROR] ${result.error.message}`);
+                BUFFER.push(result.stderr.toString().replace(/\n/g, "\n[ERROR] "));
+            }
+        }));
+
+        if (errorFlag) {
+            throw new Error("Compilation failed");
+        } else {
+            BUFFER.push("[INFO][AS] Compilation successful.");
+        }
+    } catch (e) {
+        BUFFER.push("[ERROR][AS] Comilation failed due to an unexpected error");
+        throw e;
     }
 }
 
@@ -178,70 +191,76 @@ async function compileAS(BUFFER, SOURCES, TRANSFORM) {
  */
 async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR) {
     BUFFER.push("[INFO][HTML] Mapping sources into html files...");
-    const JS_MAPER = indent => {
-        return source => `${indent}<script src="${source}"></script>\n`;
-    };
-    const CSS_MAPER = indent => {
-        return source => `${indent}<link rel="stylesheet" href="${source}">\n`;
-    };
+    try {
+        const JS_MAPER = indent => {
+            return source => `${indent}<script src="${source}"></script>\n`;
+        };
+        const CSS_MAPER = indent => {
+            return source => `${indent}<link rel="stylesheet" href="${source}">\n`;
+        };
 
-    const replaceSource = (fileContent, match, mapper, source) => {
-        match = fileContent.substring(match, fileContent.indexOf("\n", match) + 1); // Isolating the matched section
-        let indent = match.substring(0, match.indexOf("<")); // Isolating the indentation
+        const replaceSource = (fileContent, match, mapper, source) => {
+            match = fileContent.substring(match, fileContent.indexOf("\n", match) + 1); // Isolating the matched section
+            let indent = match.substring(0, match.indexOf("<")); // Isolating the indentation
 
-        // Creating the regexp to match the filenames
-        let regexp = new RegExp(
-            match.substring(
-                match.indexOf("[") + 1,
-                match.lastIndexOf("]")
-            ),
-            "g"
-        );
+            // Creating the regexp to match the filenames
+            let regexp = new RegExp(
+                match.substring(
+                    match.indexOf("[") + 1,
+                    match.lastIndexOf("]")
+                ),
+                "g"
+            );
 
-        // Replacing the matched section with the new content
-        return fileContent.replace(
-            match,
-            source.filter(
-                file => regexp.test(file)
-            ).map(mapper(indent))
-                .join("")
-        );
-    };
+            // Replacing the matched section with the new content
+            return fileContent.replace(
+                match,
+                source.filter(
+                    file => regexp.test(file)
+                ).map(mapper(indent))
+                    .join("")
+            );
+        };
 
-    await Promise.all(HTML_SOURCES.map(async file => {
-        BUFFER.push(`[INFO] processing ${file}`);
-        return fs.promises.readFile(file, "utf8").then(fileContent => {
+        await Promise.all(HTML_SOURCES.map(async file => {
+            BUFFER.push(`[INFO] processing ${file}`);
+            return fs.promises.readFile(file, "utf8").then(fileContent => {
 
-            // Replacing the js sources tag with the asked sources.
-            let match = fileContent.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
+                // Replacing the js sources tag with the asked sources.
+                let match = fileContent.search(/[\t ]*<!-- SCRIPTS \[.*\] -->/);
 
-            if (match !== -1) {
-                BUFFER.push(`[INFO][${file}] extracting script regexp`);
-                fileContent = replaceSource(fileContent, match, JS_MAPER, JS_SOURCES);
-            } else {
-                BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
-            }
+                if (match !== -1) {
+                    BUFFER.push(`[INFO][${file}] extracting script regexp`);
+                    fileContent = replaceSource(fileContent, match, JS_MAPER, JS_SOURCES);
+                } else {
+                    BUFFER.push(`[INFO] ${file} does not contain SCRIPTS directive`);
+                }
 
-            // Replacing the css sources tag with the asked sources.
-            match = fileContent.search(/[\t ]*<!-- STYLES \[.*\] -->/);
+                // Replacing the css sources tag with the asked sources.
+                match = fileContent.search(/[\t ]*<!-- STYLES \[.*\] -->/);
 
-            if (match !== -1) {
-                BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
-                fileContent = replaceSource(fileContent, match, CSS_MAPER, CSS_SOURCES);
-            } else {
-                BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
-            }
+                if (match !== -1) {
+                    BUFFER.push(`[INFO][${file}] extracting stylesheet regexp`);
+                    fileContent = replaceSource(fileContent, match, CSS_MAPER, CSS_SOURCES);
+                } else {
+                    BUFFER.push(`[INFO] ${file} does not contain STYLES directive`);
+                }
 
-            // Returning the new file content
-            return fileContent;
-        })
-            .then(async fileContent => {
-                let filename = path.join(WEB_DIR, path.relative(process.argv[2], file));
-                await fs.promises.mkdir(path.dirname(filename), {recursive: true});
-                return fs.promises.writeFile(filename, fileContent);
-            });
-    }));
-    BUFFER.push("[INFO][HTML] Mapping successful.");
+                // Returning the new file content
+                return fileContent;
+            })
+                .then(async fileContent => {
+                    let filename = path.join(WEB_DIR, path.relative(process.argv[2], file));
+                    await fs.promises.mkdir(path.dirname(filename), {recursive: true});
+                    return fs.promises.writeFile(filename, fileContent);
+                });
+        }));
+        BUFFER.push("[INFO][HTML] Mapping successful.");
+    } catch (e) {
+        BUFFER.push("[ERROR]Unable to succesfully map the sources into the HTML files");
+        throw e;
+    }
+
 }
 
 /**
@@ -254,13 +273,19 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
  */
 async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
     BUFFER.push("[INFO][COPY] Copying files...");
-    await Promise.all(SOURCES.map(async file => {
-        fs.promises.copyFile(
-            file,
-            TRANSFORM(file)
-        );
-    }));
-    BUFFER.push("[INFO][COPY] Copying successful.");
+    try {
+        await Promise.all(SOURCES.map(async file => {
+            fs.promises.copyFile(
+                file,
+                TRANSFORM(file)
+            );
+        }));
+        BUFFER.push("[INFO][COPY] Copying successful.");
+    } catch (e) {
+        BUFFER.push("[ERROR][COPY] Faled to copy all the files");
+        throw e;
+    }
+
 }
 
 /**
@@ -270,41 +295,58 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
  */
 async function buildWeb(BUFFER, WEB_DIR) {
     BUFFER.push("[INFO][WEB] Building web...");
-    const HTML_SOURCES = await getAllFiles(process.argv[2]);
+    try {
+        const HTML_SOURCES = await getAllFiles(process.argv[2]);
 
-    // We use path.relative to remove the root folder from the file name.
-    const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
-    const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
-    const AS_SOURCES = await getAllFiles(process.argv[5]);
+        // We use path.relative to remove the root folder from the file name.
+        const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3], file));
+        const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4], file));
+        const AS_SOURCES = await getAllFiles(process.argv[5]);
 
-    await lintFiles(
-        BUFFER,
-        process.argv[2] + "/**/*.html",
-        process.argv[3] + "/**/*.js",
-        process.argv[5] + "/**/*.ts"
-    );
+        await lintFiles(
+            BUFFER,
+            process.argv[2] + "/**/*.html",
+            process.argv[3] + "/**/*.js",
+            process.argv[5] + "/**/*.ts"
+        );
 
-    await compileAS(
-        BUFFER,
-        AS_SOURCES,
-        file => path.join(WEB_DIR, path.relative(process.argv[5], file))
-    );
+        await compileAS(
+            BUFFER,
+            AS_SOURCES,
+            file => path.join(WEB_DIR, path.relative(process.argv[5], file))
+        );
 
-    await mapSources(
-        BUFFER,
-        HTML_SOURCES,
-        CSS_SOURCES,
-        JS_SOURCES,
-        WEB_DIR
-    );
+        await mapSources(
+            BUFFER,
+            HTML_SOURCES,
+            CSS_SOURCES,
+            JS_SOURCES,
+            WEB_DIR
+        );
 
-    await copyAll(
-        BUFFER,
-        file => path.join(WEB_DIR, file),
-        ...JS_SOURCES.map(file => path.relative(process.argv[3], file)),
-        ...CSS_SOURCES.map(file => path.relative(process.argv[4], file))
-    );
-    BUFFER.push("[INFO][WEB] Building successful.");
+        await copyAll(
+            BUFFER,
+            file => {
+
+                if (file.includes(process.argv[3])) {
+
+                    file = path.relative(process.argv[3], file);
+                } else if (file.includes(process.argv[4])) {
+
+                    file = path.relative(process.argv[4], file);
+                }
+
+                return path.join(WEB_DIR, file);
+            },
+            ...JS_SOURCES.map(file => path.join(process.argv[3], file)),
+            ...CSS_SOURCES.map(file => path.join(process.argv[4], file))
+        );
+        BUFFER.push("[INFO][WEB] Building successful.");
+    } catch (e) {
+        BUFFER.push("[ERROR][WEB] Unexpected error while building the web site");
+        throw e;
+    }
+
 }
 
 (async() => {
