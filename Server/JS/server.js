@@ -1,3 +1,7 @@
+/**
+ * @author Galyfray
+ */
+
 const Express = require("express");
 const HTTPS = require("https");
 const fs = require("fs");
@@ -14,13 +18,13 @@ SERVER.use(Express.json());
 // API srules
 SERVER.use((req, res, next) => {
 
-    // set the CORS policy
+    // Set the CORS policy
     res.header('Access-Control-Allow-Origin', '*');
 
-    // set the CORS headers
+    // Set the CORS headers
     res.header('Access-Control-Allow-Headers', 'origin, X-Requested-With,Content-Type,Accept, Authorization');
 
-    // set the CORS method headers
+    // Set the CORS method headers
     if (req.method === 'OPTIONS') {
         res.header('Access-Control-Allow-Methods', 'GET POST');
         return res.status(200).json({});
@@ -30,35 +34,33 @@ SERVER.use((req, res, next) => {
 
 
 // API routes
-(async () => {
-    SERVER.use("/",await require("./routes.js"));
+(async() => {
+    SERVER.use("/api", await require("./apiRoutes.js"));
+    SERVER.use("/web", await require("./webRoutes.js"));
 
     // Error handling
-    SERVER.use((req, res, next) => {
+    SERVER.use((req, res) => {
         const error = new Error("not found");
-        return res.status(404).json({
-            message: error.message
-        });
+        return res.status(404).json({message: error.message});
     });
-    
+
     // Starting the server
     const KEY = await fs.promises.readFile(
-        utils.resolve("../Ressources/server.key"),
+        utils.resolve("./server.key"),
         "utf8"
     );
     const CERT = await fs.promises.readFile(
-        utils.resolve("../Ressources/server.cert"),
+        utils.resolve("./server.cert"),
         "utf8"
     );
-    
+
     HTTPS.createServer(
         {
-            key: KEY,
+            key : KEY,
             cert: CERT
         },
         SERVER
-    )
-    .listen(PORT, function () {
+    ).listen(PORT, function() {
         console.log(`Server listening on port ${PORT}`);
     });
 

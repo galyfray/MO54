@@ -99,6 +99,17 @@
     },
     "overrides": [
         {
+            // Override for the folders which contains script runned with nodejs. 
+            "files": ["Server/**/*","Scripts/**/*"],
+            "parserOptions": {
+                "ecmaVersion": 11
+            },
+            "env": {
+                "node": true,
+                "es6": true
+            }
+        },
+        {
             "files": [
                 "*.ts"
             ],
