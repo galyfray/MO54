@@ -1,10 +1,11 @@
 let contentTitle;
 
-
-    /* create_list_article(article) is used to create all the html element that are needed to show an article on a page (image, price, name)
+   /* create_list_article(article) is used to create all the html element that are needed to show an article on a page (image, price, name)
     * article is an object with the following properties : price, brand, name, description and preview image
     */
 function create_list_article(article) {
+    console.log("inside");
+
                 /*Create all component needed for an article
                  - html_component_div_container :    the div that contains every component created for an article
                  - html_component_article_image :    an image component for the preview of the article
@@ -22,11 +23,25 @@ function create_list_article(article) {
                 let html_component_article_brand = document.createElement("h4");
                 let html_component_article_price = document.createElement("h2");
                 let boxLink = document.createElement("a");
+                boxLink.style="text-decoration:none;";
+                boxLink.href="see_article.html";
 
                 // put in the right place the component
                 html_component_div_container.appendChild(boxLink);
                 boxLink.appendChild(html_component_article_image);
                 boxLink.appendChild(html_component_article_info_div);
+                boxLink.onclick = function (){
+                 console.log("article click");
+                    //Need to load the html page and to give to the function that displays the article the informations required
+                    localStorage.setItem('name_article', article.name);
+                    localStorage.setItem('description_article', article.description);
+                    localStorage.setItem('price_article', article.price);
+                    localStorage.setItem('brand_article', article.brand);
+                    localStorage.setItem("image_article", article.preview);
+
+                                      
+                    //create_see_article(article);
+                }
                 html_component_article_info_div.appendChild(html_component_article_name);
                 html_component_article_info_div.appendChild(html_component_article_brand);
                 html_component_article_info_div.appendChild(html_component_article_price);
@@ -44,19 +59,20 @@ function create_list_article(article) {
 
                 let article_brand = document.createTextNode(article.brand);
                 html_component_article_brand.appendChild(article_brand);
+    console.log(article.brand);
 
                 //  boxLink.href = "/contentDetails.html?" + article.id;
     html_component_article_image.src = article.preview;
-    console.log("zz")
-                return html_component_div_container;
+    html_component_article_image.className = "image_of_article_in_display";
+//    html_component_article_image.style = "height: 30vh;     max - height : 150px; ";
+
+    //en passant par le cvs commenté maintenant pour tester sans se faire chier
+//    return html_component_div_container;
+//pour ne pas avoir à passer par le csv
+    div_container_all_article.appendChild(html_component_div_container);
             }
-/*
-create_list_article({ "id": "1", "name": "Pneu 1", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Un pneu", "brand": "Michelin", "price": 49.99 });
-create_list_article({ "id": "2", "name": "Pneu d'hiver", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Black pneu", "brand": "Michelin", "price": 79.99 });
-create_list_article({ "id": "3", "name": "Pneu michelin", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Pneu S", "brand": "Michelin", "price": 69.99 });
-create_list_article({ "id": "4", "name": "Pneu d'été", "preview": "https://bcdn.1001pneus.fr/media/catalog/category/MICHELIN_ALPIN_5.jpg", "description": "Pneu Michelin", "size": [1, 1, 1, 1, 1], "brand": "BARESKIN", "price": 9999 });
-create_list_article({ "id": "5", "name": "Pneu d'hiver Michelin", "preview": "https://s2.medias-norauto.fr/images_produits/michelin-alpin-a4/650x650/pneu-michelin-alpin-a4-215-65-r15-96-h--410230.jpg", "description": "Pneu Michelin", "size": [1, 1, 1, 1, 1], "brand": "Continental", "price": 52.00 });
-*/
+
+
 
             // mainContainer is the main div of the page. it contains the div that is filled with the function create_list_article
 let mainContainer = document.getElementById("mainContainer");
@@ -87,13 +103,11 @@ let mainContainer = document.getElementById("mainContainer");
             };
             // The code take the data from a CSV file saved on github.
 
-
-/* TO MAKE IT WORK WITHOU CSV FOR THE MOMENT
-*/            httpRequest.open(
-                "GET",
-"https://raw.githubusercontent.com/Yasmarila/Site_web_test/main/test?token=GHSAT0AAAAAABUG3RZ5AY65ZET4ZTGOLUOGYT23LTQ",
-    true
-            );
+            httpRequest.open(
+    "GET",
+                "https://raw.githubusercontent.com/Yasmarila/Site_web_test/main/test?token=GHSAT0AAAAAABUG3RZ5TJOUIGOYXJ6V4ILYYT36LXA",
+                true
+);
             httpRequest.send();
         
         (function ($) {
@@ -110,4 +124,6 @@ let mainContainer = document.getElementById("mainContainer");
                     pushContent: '#container',
                     labelClose: false
                 });
-            })(jQuery);
+})(jQuery);
+
+

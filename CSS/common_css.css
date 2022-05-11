@@ -1,0 +1,83 @@
+html, body, div, span, header, ul, li, a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+}
+
+html {
+    height: 100%;
+}
+
+/*Style of the body : we use the same background color & font-family for each view */
+body {
+    /*    margin: 0;*/
+    font-family: 'Lato', sans-serif;
+    background-color: rgb(253,253,253);
+}
+
+
+/*Customization of h1 & h2 & h4*/
+h1 {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    font-weight: 700;
+}
+
+h2 {
+    color: rgb(180, 150, 180);
+}
+
+h4 {
+    font-weight: 100;
+}
+
+h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+/*
+Media query:
+    - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page
+    -> width>= 850px : 5 columns of articles (grid-template-columns: repeat(5, 1fr);)
+    -> width>= 505px &  width< 850px : 3 columns of articles (grid-template-columns: repeat(3, 1fr);)
+    -> width< 505px : 2 columns of articles (grid-template-columns: repeat(2, 1fr);)
+    -> the font-size & width of h1 is redefined according to the device width
+    -> the width of the div is redefined as well
+ */
+
+
+@media(max-width: 1070px) {
+    h1 {
+        font-size: 25px;
+    }
+}
+
+@media(max-width: 850px) {
+    h1 {
+        width: 80%;
+    }
+}
+
+@media(max-width: 650px) {
+    h1 {
+        font-size: 20px;
+        width: 90%;
+    }
+}
+
+@media(max-width: 600px) {
+    h1 {
+        width: 70%;
+    }
+}
+
+@media(max-width: 505px) {
+    h1 {
+        width: 80%;
+    }
+}
