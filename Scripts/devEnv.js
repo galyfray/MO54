@@ -142,7 +142,7 @@ async function lintFiles(BUFFER, ...files) {
             BUFFER.push("[INFO][LINT] Linting successful.");
         }
     } catch (e) {
-        BUFFER.push("[ERROR][LINT] Linting failed due to an unexpected error");
+        BUFFER.push("[ERROR][LINT] Linting failed due to an unexpected error.");
         throw e;
     }
 }
@@ -185,12 +185,12 @@ async function compileAS(BUFFER, SOURCES, TRANSFORM) {
         }));
 
         if (errorFlag) {
-            throw new Error("Compilation failed");
+            throw new Error("Compilation failed.");
         } else {
             BUFFER.push("[INFO][AS] Compilation successful.");
         }
     } catch (e) {
-        BUFFER.push("[ERROR][AS] Comilation failed due to an unexpected error");
+        BUFFER.push("[ERROR][AS] Compilation failed due to an unexpected error.");
         throw e;
     }
 }
@@ -283,7 +283,7 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
 
 /**
  * This function will copy the given files to their destination.
- * Their destination is define by the TRANSFORM function.
+ * Their destination is defined by the TRANSFORM function.
  * @param {Array} BUFFER a buffer to push the logs to.
  * @param {sourceTransformerCallback} TRANSFORM the function used to transform the source filenames to the destination filenames.
  * @param  {...string} SOURCES the filenames of the files to copy.
@@ -303,7 +303,7 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
         }));
         BUFFER.push("[INFO][COPY] Copying successful.");
     } catch (e) {
-        BUFFER.push("[ERROR][COPY] Faled to copy all the files");
+        BUFFER.push("[ERROR][COPY] Failed to copy all the files");
         throw e;
     }
 
