@@ -38,6 +38,8 @@ function create_list_article(article) {
                     localStorage.setItem('price_article', article.price);
                     localStorage.setItem('brand_article', article.brand);
                     localStorage.setItem("image_article", article.preview);
+                    localStorage.setItem("id_article", article.id);
+
 
                                       
                     //create_see_article(article);

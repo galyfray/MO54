@@ -15,8 +15,8 @@
     <link rel="stylesheet" href="../CSS/cart_css2.css">
     <link rel="stylesheet" href="../CSS/common_css.css">
 
-    <!--<script src="../JS/cart.js"></script>
-    -->
+    <script src="../JS/cart.js"></script>
+    
 
 
 </head>
@@ -228,9 +228,9 @@
         <!--The following div contain the cart and will be fulfilled with the js code-->
         <div id="cartContainer">
             <!--The id in h1 will be useful when the backend will be done.
-        It will be used to show how many articles are in the cart.
-        The next div will contain the articles.
-     -->
+               It will be used to show how many articles are in the cart.
+               The next div will contain the articles.
+            -->
             <h1 id="nb_object_in_cart">Votre panier(5)</h1>
             <div id="div_container_all_article_in_cart"></div>
             <h1 id="total_to_pay">Prix à payer : 0</h1>
@@ -247,20 +247,10 @@
     let cart_div = document.getElementById('div_container_all_article_in_cart');
     cart_div.style = "padding: 10px;";
     let nb_article_by_createCart = 0;
-    /*It is here to test the function. In the future, the function createCart will directly use a file*/
-    createCart({ "id": "1", "name": "Jante alu RACER TARGET 7x17 5x108 ET46 aoiaoiauzoiauzoaiuz", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Un pneu", "brand": "Michelin", "price": 49.99 }, 2);
-    createCart({ "id": "2", "name": "AUTORADIO KENWOOD KDC-BT450DABNA", "preview": "https://bcdn.1001pneus.fr/media/catalog/category/MICHELIN_ALPIN_5.jpg", "description": "Pneu Michelin", "brand": "Continental", "price": 419 }, 8);
-    createCart({ "id": "3", "name": "PNEU CONTINENTAL ECOCONTACT 6 195/55 R16 87 H RENAULT", "preview": "https://voyage-onirique.com/wp-content/uploads/2020/02/647220.jpg", "description": "Un chat inconnu", "brand": "Renault", "price": 110.50 }, 3);
-    createCart({ "id": "4", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 }, 2);
-    createCart({ "id": "5", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 }, 1);
-    createCart({ "id": "6", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 }, 5);
 
-
-
-    
     /**
      * This function is used to create the cart. We create all the different html component that are needed.
-     
+
      * @param ob : the object we are working on. It has for now those properties: name, image, description, brand and price.
      * @param nbArticle : the quantity asked by the user for an article.
      */
@@ -271,7 +261,7 @@
         nb_article_by_createCart = nb_article_by_createCart + 1;
         document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + nb_article_by_createCart + ")";
         nb_article_in_cart.textContent = nb_article_by_createCart;
-        /* 
+        /*
          * grid_article_in_cart: the grid that contains all the information for an article
          * img : the image of the article
          * img_cart_div : the div that contains the image of the article
@@ -284,24 +274,18 @@
          * prix_div : the div that contains the price of the article
          * quantite_div : the div that contains the component for the quantity of the article
          * quantite : the input that contains the quantity of the article
-         * label_quantite : the label that print "Quantité : "   
+         * label_quantite : the label that print "Quantité : "
          */
         let grid_article_in_cart = document.createElement('div');
         grid_article_in_cart.className = "grid-container";
-        //grid_article_in_cart.style = "background-color:rgb(230,230,230); ";
         grid_article_in_cart.style = "border: 2px solid rgb(230,230,230);  border-radius : 20px; ";
         let img = document.createElement('img')
         img.src = ob.preview;
         img.className = "img_cart";
-        
 
         let img_cart_div = document.createElement('div');
         img_cart_div.className = "img_cart";
         img_cart_div.appendChild(img);
-
-      
-
-       
 
         let name = document.createTextNode(ob.name);
         let name_cart_div = document.createElement('div');
@@ -321,17 +305,9 @@
         let prix = document.createTextNode(ob.price * nbArticle + "€");
         let prix_div = document.createElement('div');
         prix.id = "price_id" + ob.id;
-        
+
         prix_div.style = "text-align: left;";
         prix_div.className = "prix_cart";
-
-
-
-
-
-        
-
-
 
         let box_selectdiv = document.createElement('div');
         box_selectdiv.className = "number-input";
@@ -361,7 +337,7 @@
             var intermediaire = document.getElementById('quantite_id_v2' + ob.id).value;
             document.getElementById('quantite_id_v2' + ob.id).value = parseInt(intermediaire) + 1;
             prix_div.removeChild(prix);
-            prix = document.createTextNode((ob.price * (parseInt(intermediaire)+1)).toFixed(2) + "€");
+            prix = document.createTextNode((ob.price * (parseInt(intermediaire) + 1)).toFixed(2) + "€");
             prix_div.appendChild(prix);
         };
 
@@ -370,13 +346,11 @@
             if (!(parseInt(intermediaire) - 1 == 0)) {
                 document.getElementById('quantite_id_v2' + ob.id).value = parseInt(intermediaire) - 1;
                 prix_div.removeChild(prix);
-                prix = document.createTextNode((ob.price * (parseInt(intermediaire)-1)).toFixed(2) + "€");
+                prix = document.createTextNode((ob.price * (parseInt(intermediaire) - 1)).toFixed(2) + "€");
                 prix_div.appendChild(prix);
 
             }
         };
-
-
 
         let delt_text = document.createElement('h4');
         delt_text.textContent = "Supprimer du pannier";
@@ -385,7 +359,7 @@
         del_text_div.appendChild(delt_text);
         del_text_div.style = "font-style: italic; color: rgb(220,220,220); ";
         del_text_div.onclick = function () {
-          //To be redone with css
+            //To be redone with css
             if (confirm('Etes vous sûr de vouloir retirer cet article du pannier? ')) {
                 cart_div.removeChild(grid_article_in_cart);
                 cart_div.removeChild(line);
@@ -394,22 +368,11 @@
                 nb_article_in_cart.textContent = nb_article_by_createCart;
 
 
-            } 
+            }
 
-            
+
         }
 
-
-
-
-
-
-
-
-
-
-
-        
         grid_article_in_cart.appendChild(img_cart_div);
         brand_div.appendChild(brand);
         prix_div.appendChild(prix);
@@ -418,18 +381,15 @@
         info_cart_div.appendChild(box_selectdiv);
         info_cart_div.appendChild(del_text_div);
 
-        
-
-
         grid_article_in_cart.appendChild(name_cart_div);
         grid_article_in_cart.appendChild(info_cart_div);
 
         cart_div.appendChild(grid_article_in_cart);
-        
+
         let line = document.createElement('div');
         line.style = "padding : 10px;";
         cart_div.appendChild(line);
-       
+
         return cart_div
     }
 </script>
@@ -449,3 +409,13 @@
         });
     })(jQuery);
 </script>
+
+
+
+<script>
+    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+        createCart2(old_data_saved[i]);
+    }
+</script>
+

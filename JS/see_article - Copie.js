@@ -1,38 +1,21 @@
-(function ($) {
-    'use strict';
-    var Nav = new hcOffcanvasNav('#main-nav', {
-        disableAt: false,
-        customToggle: '.menu_icon',
-        levelSpacing: 40,
-        navTitle: 'All',
-        levelTitles: true,
-        levelTitleAsBack: true,
-        pushContent: '#container',
-        labelClose: false
-    });
-})(jQuery);
+                                                (function ($) {
+                                                    'use strict';
+                    var Nav = new hcOffcanvasNav('#main-nav', {
+                                                    disableAt: false,
+                        customToggle: '.menu_icon',
+                        levelSpacing: 40,
+                        navTitle: 'All',
+                        levelTitles: true,
+                        levelTitleAsBack: true,
+                        pushContent: '#container',
+                        labelClose: false
+                    });
+                })(jQuery);
 
                                     
 var tab_contain_sessionStorage = [];
 
 function create_see_article(article) {
-    /*
-     * We create all the html component needed:
-     * - box_article : 
-     * - imagediv : the div that will contains image (img)
-     * - image : the preview of the article
-     * - detailsDiv :
-     * - buttonDiv : a div that contains
-     * - infoDiv : a div that contains
-     * - name = a <h1> that contains the name of the article (nameContent)
-     * - price : a <h3> that contains the price of the article (priceContent)
-     * - brand : a <h3> that contains the brand of the article (brandContent)
-     * - descriptionP : a <p> that contains the Description of the article (descriptionPContent)
-     * - add_btn : a <button> to add the article to the cart
-     * - box_selectdiv: a div  that contains the input of type number with the button minus and plus
-     * - box_select_minus : a <button> to reduce the quantity wanted for an article of 1
-     * - box_select_plus : a <button> to increase the quantity wanted for an article of 1
-     */
     let box_article = document.createElement('div');
     box_article.id = 'box';
     let imagediv = document.createElement('div');
@@ -55,11 +38,20 @@ function create_see_article(article) {
     let brand = document.createElement('h3');
     let brandContent = document.createTextNode(article.brand);
 
+
+
+
     let descriptionP = document.createElement('p');
     let descriptionPContent = document.createTextNode("Description : " + article.description);
 
     let add_btn = document.createElement('button');
     add_btn.id = "btn_add_article_to_cart";
+
+
+
+
+
+
 
     let box_selectdiv = document.createElement('div');
     box_selectdiv.className = "number-input";
@@ -109,43 +101,31 @@ function create_see_article(article) {
     add_btnContent = document.createTextNode('Ajouter au pannier');
     
     add_btn.onclick = function () {
-        /*
-         This code add to the cart the article by taking the following informations:
-         - what is the article
-         - what quantity is the item purchased
-         → Since our cart is saved in the sessionStorage, in order to have all the stuff put in there, we need to read the sessionStorage and then add the new element.
-
-        old_data_saved : the var that contains all the informations stored in the sessionStorage
-        quantite : the quantity of the item purchased
-        tab : the array that contains all the json array to save into the sessionStorage.
-        */
+        console.log("add to cart " + document.getElementById('quantity').value);
         var quantite = document.getElementById('quantity').value;
+        //var articleToCart = { 'name': article.brand, 'description': article.description, 'preview': article.preview, 'quantity' : quantite };
+        //sessionStorage.setItem('articleToCart', JSON.stringify(articleToCart));
         var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
         var tab = [];
-        //on doit vérifier avant de placer dans le tableau que l'item que l'on a a pas le même id qu'un item déjà saved
-
-        /*var r = [];
-        r.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantite });
-        sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
-        */
-
-        var article_already_in_cart = false;
+ //       var count = Object.keys(old_data_saved).length;
+   //     console.log(count);
         for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-            if (old_data_saved[i].id == article.id) {
-                old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantite);
-                article_already_in_cart = true;
-            }
             tab.push(old_data_saved[i]);
         }
-        if (article_already_in_cart == false) {
-            tab.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantite });
-        }
-       
         
+        tab.push({ 'name': article.name, 'price': article.price, 'brand' : article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantite });
+
+       // tab_contain_sessionStorage.push(old_data_saved);
+       // tab_contain_sessionStorage.push({ 'name': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantite });
         sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+
+       // sessionStorage.setItem('articleToCart2', JSON.stringify(tab_contain_sessionStorage));
         var retrievedPerson2 = JSON.parse(sessionStorage.getItem('articleToCart2'));
         console.log(retrievedPerson2);
+
     }
+
+
 
     box_article.appendChild(imagediv)
     box_article.appendChild(infoDiv)
@@ -165,4 +145,4 @@ function create_see_article(article) {
     buttonDiv.appendChild(add_btn);
 
     return box_article
-}
+        }
