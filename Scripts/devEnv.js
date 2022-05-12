@@ -438,11 +438,7 @@ async function buildServer(BUFFER, SERVER_DIR) {
 
     let scope = process.argv[2];
 
-    if (!(scope in [
-        "web",
-        "server",
-        "all"
-    ])) {
+    if (" web server all ".indexOf(` ${scope} `) === -1) {
         scope = "all";
     }
 
