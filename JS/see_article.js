@@ -11,14 +11,13 @@
         labelClose: false
     });
 })(jQuery);
-/*
- *The code show the number of article in the cart
- */
+
 $(document).ready(function () {
-    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-    document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
+    /*The code show the number of article in the cart*/
+ //   var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+   // document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
 
-
+    /*We read from the localStorage the properties of the article selected and then we create it*/
     let my_article = {
         "name": localStorage.getItem('name_article'),
         "description": localStorage.getItem('description_article'),
@@ -30,9 +29,9 @@ $(document).ready(function () {
     create_see_article(my_article);
 });
 /**
- *
  * @param {any} description : the component that contains the text that will be cut
  * @param {any} text : the description on an article.
+ * The function reads the description on an article in order to cut it with line break.
  */
 function addText(description, text) {
     var t = text.split(/\n/), i;
@@ -46,7 +45,10 @@ function addText(description, text) {
         }
     }
 }
-
+/**
+ * @param {any} article 
+ * The function is used to display a particular article.
+ */
 function create_see_article(article) {
     /*
      * We create all the html components needed:
@@ -90,15 +92,7 @@ function create_see_article(article) {
 
     let descriptionP = document.createElement('p');
     let descriptionPContent = document.createTextNode("Description : " + article.description);
-
-
-    
-
     addText(descriptionP, article.description);
-
-
-
-
 
     let add_btn = document.createElement('button');
     add_btn.id = "btn_add_article_to_cart";
@@ -114,10 +108,15 @@ function create_see_article(article) {
     box_selectdiv.appendChild(box_select_value);
     box_selectdiv.appendChild(box_select_plus);
 
+    /*
+     * When we click on the plus button, the quantity of the article is updated in the view.
+     */
     box_select_plus.onclick = function () {
         document.getElementById('quantity').value = parseInt(document.getElementById('quantity').value) + 1;
     };
-
+    /*
+     * When we click on the minus button, the quantity of the article is updated in the view as long as the value is superior to 0.
+     */
     box_select_minus.onclick = function () {
         if (!(parseInt(document.getElementById('quantity').value) - 1 == 0)) {
             document.getElementById('quantity').value = parseInt(document.getElementById('quantity').value) - 1;
@@ -137,8 +136,8 @@ function create_see_article(article) {
     infoDiv.appendChild(name);
     infoDiv.appendChild(brand);
     infoDiv.appendChild(detailsDiv);
-    infoDiv.appendChild(buttonDiv);
     detailsDiv.appendChild(price);
+    detailsDiv.appendChild(buttonDiv);
     detailsDiv.appendChild(descriptionP);
     add_btn.appendChild(add_btnContent);
     buttonDiv.appendChild(box_selectdiv);
@@ -162,7 +161,7 @@ function create_see_article(article) {
         var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
         var tab = [];
         var article_already_in_cart = false;
-        if (old_data_saved != null || Object.keys(old_data_saved).length != 0) {
+        if (old_data_saved != null) {
             for (i = 0; i < Object.keys(old_data_saved).length; i++) {
                 if (old_data_saved[i].id == article.id) {
                     old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantity_article);
@@ -171,7 +170,6 @@ function create_see_article(article) {
                 tab.push(old_data_saved[i]);
             }
         }
-
         if (article_already_in_cart == false) {
             tab.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantity_article });
         }

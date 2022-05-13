@@ -3,6 +3,7 @@
     - the name of the article will be in the name_cart div
     - the other information will be in the info_cart div 
 */
+
 .img_cart {
     grid-area: img;
 }
@@ -25,52 +26,6 @@
     gap: 10px;
     padding: 10px;
 }
-/*
-html, body, div, span, header, ul, li, a {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font: inherit;
-    font-size: 100%;
-    vertical-align: baseline;
-}
-
-html {
-    height: 100%;
-}
-   
-
-
-body {
-    font-family: 'Lato', sans-serif;
-    background-color: rgb(253,253,253);
-}
-     
-//Customization of h1 & h2 & h4
-h1 {
-    width: 90%;
-    margin: auto;
-    padding: 20px;
-    font-weight: 700;
-}
-
-h2 {
-    color: rgb(180, 150, 180);
-}
-
-h4 {
-    font-weight: 100;
-}
-*/
-
-
-
-
-
-
-
-
-
 
 #web_site_name {
     font-size: 20px;
@@ -91,13 +46,6 @@ h4 {
     border-radius: 5px;
 }
 
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
 .name_cart {
     font-size: 24px;
     font-weight: bold;
@@ -112,8 +60,7 @@ input[type=number]::-webkit-outer-spin-button {
     width: 80%;
     margin: 0 auto;
 }
-
-.brand_div_cart, .quantite_div_cart, .quantite_cart, .label_quantite_cart {
+.brand_div_cart {
     font-size: 24px;
     color: rgb(180,150,180);
 }
@@ -126,9 +73,7 @@ input[type=number]::-webkit-outer-spin-button {
         color: black;
         text-align: left;
     }
-.quantite_cart {
-    border: none;
-}
+
 
 .del_text_div {
     font-style: italic;
@@ -139,23 +84,6 @@ input[type=number]::-webkit-outer-spin-button {
     width: 500px;
     margin: 0 auto;
 }
-
-
-
-input[type="number"] {
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.number-input {
-    border: 0;
-    display: inline-flex;
-}
-
-    .number-input, .number-input * {
-        box-sizing: border-box;
-    }
 
         .number-input button {
             outline: none;
@@ -172,22 +100,6 @@ input[type="number"] {
             box-shadow: 0px 0px 1px #474747;
             border-radius: 50%;
         }
-
-            /*Button inside + or - */
-.number-input button:before, .number-input button:after {
-    display: inline-block;
-    position: absolute;
-    content: '';
-    width: 10px;
-    height: 2px;
-    background-color: blueviolet;
-    transform: translate(-50%, -50%);
-}
-
-/*In order to have a + */
-.number-input button.plus:after {
-    transform: translate(-50%, -50%) rotate(90deg);
-}
 
 /*Input value quantity*/
 .number-input input[type=number] {
@@ -218,12 +130,9 @@ input[type="number"] {
     .name_cart {
         font-size: 22px;
     }
-    .brand_div_cart, .prix_div_cart, .quantite_div_cart, .quantite_cart, .label_quantite_cart {
+    .brand_div_cart {
         font-size: 21px;
         color: sandybrown;/*red*/
-    }
-    .quantite_cart{
-        border: none;
     }
     
     #div_container_all_article_in_cart {
@@ -233,15 +142,6 @@ input[type="number"] {
         width: 120px;
         height: 120px;
     }
-    .number-input button {
-        width: 25px;
-        height: 25px;
-        margin: 0;
-    }
-    .number-input button:before, .number-input button:after {
-        width: 13px;
-        height: 2px;
-     }
     .number-input input[type=number] {
         max-width: 45px;
         padding: .45px;
@@ -260,7 +160,7 @@ input[type="number"] {
         font-size: 20px;
     }
 
-    .brand_div_cart, .prix_div_cart, .quantite_div_cart, .quantite_cart, .label_quantite_cart, .prix_cart{
+    .brand_div_cart, .prix_cart{
         font-size: 19px;
         color: sandybrown; /*blue;*/
     }
@@ -271,17 +171,6 @@ input[type="number"] {
         width: 100px;
         height: 100px;
     }
-    .number-input button {
-        width: 22px;
-        height: 22px;
-        margin: 0;
-    }
-
-        .number-input button:before, .number-input button:after {
-            width: 11px;
-            height: 2px;
-        }
-
     .number-input input[type=number] {
         max-width: 40px;
         padding: .40px;
@@ -299,7 +188,7 @@ input[type="number"] {
         font-size: 18px;
     }
 
-    .brand_div_cart, .prix_div_cart, .quantite_div_cart, .quantite_cart, .label_quantite_cart, .prix_cart{
+    .brand_div_cart, .prix_cart{
         font-size: 17px;
         color: sandybrown; /*blue;*/
     }
@@ -310,23 +199,13 @@ input[type="number"] {
         width: 80px;
         height: 80px;
     }
-    .number-input button {
-        width: 20px;
-        height: 20px;
-        margin: 0;
-    }
-
-        .number-input button:before, .number-input button:after {
-            width: 9px;
-            height: 2px;
-        }
-
     .number-input input[type=number] {
         max-width: 36px;
         padding: .36px;
         font-size: 17px;
         height: 20px;
     }
+
     .img_cart_empty {
         width: 300px;
         margin: 0 auto;
@@ -338,7 +217,7 @@ input[type="number"] {
         font-size: 17px;
     }
 
-    .brand_div_cart, .prix_div_cart, .quantite_div_cart, .quantite_cart, .label_quantite_cart, .prix_cart {
+    .brand_div_cart, .prix_cart {
         font-size: 16px;
         color: sandybrown; /*deeppink;*/
     }
@@ -360,7 +239,7 @@ input[type="number"] {
         font-size: 16px;
     }
 
-    .brand_div_cart, .prix_div_cart, .quantite_div_cart, .quantite_cart, .label_quantite_cart, .prix_cart {
+    .brand_div_cart,  .prix_cart {
         font-size: 15px;
         color: sandybrown;
     }

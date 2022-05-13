@@ -1,7 +1,6 @@
 let nb_article_by_createCart = 0;
 var total_price = 0;
 $(document).ready(function () {
-
     /*
      The function to make the navigation works
      */
@@ -71,7 +70,7 @@ $(document).ready(function () {
 });
 
 /**
- * This function is used to create the cart. We create all the different html component that are needed.
+ * This function is used to create the cart. We create all the different html components that are needed.
  * @param article : the object we are working on. It has for now those properties: name, image, description, brand and price.
  */
 function createCart2(article) {
@@ -174,12 +173,8 @@ function createCart2(article) {
         document.getElementById('quantity_id' + article.id).value = parseInt(intermediaire) + 1;
         price_div.removeChild(price);
         total_price = total_price - parseFloat(price.textContent);
-
-
-
         price = document.createTextNode((article.price * (parseInt(intermediaire) + 1)).toFixed(2) + "€");
         price_div.appendChild(price);
-
         total_price = total_price + parseFloat(price.textContent);
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
         var quantite = document.getElementById('quantity_id' + article.id).value;
@@ -224,9 +219,6 @@ function createCart2(article) {
         }
     };
 
-
-
-
     /*
    * We make sure that the quantity of the article after the action is still superior to 0.
    * We update the sessionStorage with the new quantity.
@@ -249,7 +241,6 @@ function createCart2(article) {
         }
         sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
     };
-
 
     brand_div.appendChild(brand);
     price_div.appendChild(price);

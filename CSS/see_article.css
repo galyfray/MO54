@@ -1,42 +1,29 @@
+/*The div that contain the whole information about the article*/
 #box {
     width: 90%;
     margin: auto;
     padding: 20px;
 }
 
+/*The div that contain the image of the article*/
 #imageSection {
     width: 80%;
     margin: auto;
 }
+#imageSection img {
+    width: 100%;
+    float: right;
+    border-radius: 10px;
+    box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+}
+#imageSection img:hover {
+    box-shadow: 1px 0px 9px 1px rgb(3, 122, 122);
+}
 
-    #imageSection img {
-        width: 100%;
-        float: right;
-        border-radius: 10px;
-        box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
-    }
-
-        #imageSection img:hover {
-            box-shadow: 1px 0px 9px 1px rgb(3, 122, 122);
-        }
-
+/*The div that contain the details of the article*/
 #productDetails {
     width: 100%;
 }
-
-
-
-
-#productPreview {
-    padding-bottom: 10px;
-}
-
-    #productPreview > img {
-        width: 50px;
-        padding: 10px 10px;
-        border-radius: 15px;
-        cursor: pointer;
-    }
 
 p {
     font-size: 15px;
@@ -44,7 +31,7 @@ p {
     letter-spacing: 1px;
     line-height: 25px;
 }
-
+/*The button that allow the user to add an article is customized*/
 button {
     padding: 10px 15px;
     color: white;
@@ -54,28 +41,19 @@ button {
     cursor: pointer;
     font-size: 20px;
 }
+button a {
+    text-decoration: none;
+    font-size: 18px;
+}
+button:hover {
+    background-color: rgb(3, 94, 94);
+}
+button a:focus {
+    outline: none;
+}
 
-    button a {
-        text-decoration: none;
-        font-size: 18px;
-    }
-
-    button:hover {
-        background-color: rgb(3, 94, 94);
-    }
-
-    button a:focus {
-        outline: none;
-    }
-
-
+/*Media querry*/
 @media(max-width: 1300px) {
-    #productPreview > img {
-        width: 40px;
-        padding: 10px 10px;
-        padding-bottom: 30px;
-    }
-
     button {
         padding: 8px 13px;
         background-color: rgb(3, 122, 122);
@@ -86,12 +64,6 @@ button {
 }
 
 @media(max-width: 1170px) {
-    #productPreview > img {
-        width: 40px;
-        padding: 10px 10px;
-        padding-bottom: 30px;
-    }
-
     button a {
         font-size: 15px;
     }
@@ -105,8 +77,14 @@ button {
     }
 }
 
+@media(max-width: 1070px) {
+    .number-input input[type=number] {
+        font-size: 18px;
+        height: 25px;
+    }
+}
+
 @media(max-width: 900px) {
-    /* #containerProduct */
     #box {
         width: 60%;
         margin: auto;
@@ -119,11 +97,11 @@ button {
         text-align: center;
     }
 
-        #imageSection img {
-            text-align: center;
-            width: 70%;
-            float: none;
-        }
+    #imageSection img {
+        text-align: center;
+        width: 70%;
+        float: none;
+    }
 
     #productDetails {
         width: 100%;
@@ -134,164 +112,7 @@ button {
     }
 }
 
-@media(max-width: 650px) {
-    #box {
-        width: 80%;
-    }
-}
-
-
-
-
-#input_add_article_to_cart {
-    width: 100%;
-}
-#btn_add_article_to_cart {
-    padding: 4px;
-    background-color: rgb(220, 150, 220);
-    border: none;
-    cursor: pointer;
-    width : 100%;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.number-input {
-    border: 0;
-    display: inline-flex;
-}
-
-    .number-input, .number-input * {
-        box-sizing: border-box;
-    }
-
-    .number-input button {
-        outline: none;
-        -webkit-appearance: none;
-        background-color: transparent;
-        border: none;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        cursor: pointer;
-        margin: 0;
-        position: relative;
-        box-shadow: 0px 0px 1px #474747;
-        }
-
-            /*Button inside + or - */
-            .number-input button:before, .number-input button:after {
-                display: inline-block;
-                position: absolute;
-                content: '';
-                width: 10px;
-                height: 2px;
-                background-color: blueviolet;
-                transform: translate(-50%, -50%);
-            }
-
-            /*In order to have a + */
-            .number-input button.plus:after {
-                transform: translate(-50%, -50%) rotate(90deg);
-            }
-
-        /*Input value quantity*/
-        .number-input input[type=number] {
-            font-family: sans-serif;
-            padding: .50px;
-            border: none;
-            border-width: 0 2px;
-            font-size: 20px;
-            height: 30px;
-            font-weight: bold;
-            text-align: center;
-            color: #9be3df;
-        }
-@media(max-width: 1070px) {
-    .number-input button {
-        width: 25px;
-        height: 25px;
-        margin: 0;
-    }
-
-    .number-input button:before, .number-input button:after {
-        width: 13px;
-        height: 2px;
-    }
-
-    .number-input input[type=number] {
-        font-size: 18px;
-        height: 25px;
-    }
-}
-
 @media(max-width: 850px) {
-    .number-input button {
-        width: 22px;
-        height: 22px;
-        margin: 0;
-    }
-
-    .number-input button:before, .number-input button:after {
-        width: 11px;
-        height: 2px;
-    }
-
     .number-input input[type=number] {
         padding: .40px;
         font-size: 17px;
@@ -300,20 +121,47 @@ input[type="number"] {
 }
 
 @media(max-width: 650px) {
-    .number-input button {
-        width: 20px;
-        height: 20px;
-        margin: 0;
+    #box {
+        width: 80%;
     }
-
-    .number-input button:before, .number-input button:after {
-        width: 9px;
-        height: 2px;
-    }
-
     .number-input input[type=number] {
         padding: .36px;
         font-size: 17px;
         height: 20px;
     }
+}
+
+#btn_add_article_to_cart {
+    padding: 4px;
+    background-color: rgb(220, 150, 220);
+    border: none;
+    cursor: pointer;
+    width : 100%;
+}
+
+/*All the css used to customize the input of type : number*/
+.number-input button {
+    outline: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+    box-shadow: 0px 0px 1px #474747;
+}
+.number-input input[type=number] {
+    font-family: sans-serif;
+    padding: .50px;
+    border: none;
+    border-width: 0 2px;
+    font-size: 20px;
+    height: 30px;
+    font-weight: bold;
+    text-align: center;
+    color: #9be3df;
 }

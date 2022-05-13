@@ -1,3 +1,10 @@
+/*
+    This files contains all the css that the views have in common.
+    - style of body, div, span, header, ul, li, a
+    - style of h1 to h4
+    - style of the input number component
+
+*/
 html, body, div, span, header, ul, li, a {
     margin: 0;
     padding: 0;
@@ -17,7 +24,6 @@ body {
     font-family: 'Lato', sans-serif;
     background-color: rgb(253,253,253);
 }
-
 
 /*Customization of h1 & h2 & h4*/
 h1 {
@@ -50,7 +56,6 @@ Media query:
     -> the width of the div is redefined as well
  */
 
-
 @media(max-width: 1070px) {
     h1 {
         font-size: 25px;
@@ -61,6 +66,16 @@ Media query:
     h1 {
         width: 80%;
     }
+    .number-input button {
+        width: 22px;
+        height: 22px;
+        margin: 0;
+    }
+
+    .number-input button:before, .number-input button:after {
+        width: 11px;
+        height: 2px;
+    }
 }
 
 @media(max-width: 650px) {
@@ -68,7 +83,18 @@ Media query:
         font-size: 20px;
         width: 90%;
     }
+    .number-input button {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+    }
+
+    .number-input button:before, .number-input button:after {
+        width: 9px;
+        height: 2px;
+    }
 }
+
 
 @media(max-width: 600px) {
     h1 {
@@ -80,4 +106,54 @@ Media query:
     h1 {
         width: 80%;
     }
+}
+
+@media(max-width: 1070px) {
+    .number-input button {
+        width: 25px;
+        height: 25px;
+        margin: 0;
+    }
+
+        .number-input button:before, .number-input button:after {
+            width: 13px;
+            height: 2px;
+        }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.number-input {
+    border: 0;
+    display: inline-flex;
+}
+
+.number-input, .number-input * {
+    box-sizing: border-box;
+}
+
+/*In order to have a + */
+.number-input button.plus:after {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/*Button inside + or - */
+.number-input button:before, .number-input button:after {
+    display: inline-block;
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 2px;
+    background-color: blueviolet;
+    transform: translate(-50%, -50%);
 }
