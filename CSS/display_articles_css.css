@@ -50,8 +50,9 @@ Media query:
     -> the width of the div is redefined as well
  */
 
-image_of_article_in_display {
-    height: 250px;
+#image_of_article_in_display {
+    height: 260px;
+    max-height: 260px;
 }
 
 @media(max-width: 1070px) {
@@ -59,11 +60,9 @@ image_of_article_in_display {
         width: 95%;
         grid-gap: 10px;
     }
-    image_of_article_in_display {
+    #image_of_article_in_display {
         height: 250px;
-        padding: 130px;
-        max-height: 150px;
-        border-radius: 50%;
+        max-height: 250px;
     }
 }
 
@@ -74,9 +73,8 @@ image_of_article_in_display {
         grid-template-columns: repeat(3, 1fr);
         width: 80%;
     }
-    image_of_article_in_display {
+    #image_of_article_in_display {
         height: 250px;
-        padding: 130px;
         max-height: 150px;
     }
 }
@@ -85,9 +83,8 @@ image_of_article_in_display {
     #div_container_all_article {
         width: 90%;
     }
-    image_of_article_in_display {
+    #image_of_article_in_display {
         height: 200px;
-        padding: 130px;
         max-height: 150px;
     }
 }
@@ -96,9 +93,8 @@ image_of_article_in_display {
     #div_container_all_article {
         width: 70%;
     }
-    image_of_article_in_display {
+    #image_of_article_in_display {
         height: 170px;
-        border-radius: 50%;
         max-height: 150px;
     }
 
@@ -109,9 +105,8 @@ image_of_article_in_display {
         width: 80%;
         grid-template-columns: repeat(2, 1fr);
     }
-    image_of_article_in_display {
+    #image_of_article_in_display {
         height: 30vh;
         max-height: 150px;
-        border-radius: 50%;
     }
 }

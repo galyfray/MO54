@@ -1,5 +1,13 @@
 let contentTitle;
 
+/*
+ *The code show the number of article in the cart
+ */
+$(document).ready(function () {
+    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
+});
+
    /* create_list_article(article) is used to create all the html element that are needed to show an article on a page (image, price, name)
     * article is an object with the following properties : price, brand, name, description and preview image
     */
@@ -65,7 +73,7 @@ function create_list_article(article) {
 
                 //  boxLink.href = "/contentDetails.html?" + article.id;
     html_component_article_image.src = article.preview;
-    html_component_article_image.className = "image_of_article_in_display";
+    html_component_article_image.id = "image_of_article_in_display";
 //    html_component_article_image.style = "height: 30vh;     max - height : 150px; ";
 
     //en passant par le cvs commenté maintenant pour tester sans se faire chier

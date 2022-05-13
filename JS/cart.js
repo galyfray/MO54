@@ -1,5 +1,5 @@
 let nb_article_by_createCart = 0;
-
+var total_price = 0;
 $(document).ready(function () {
 
     /*
@@ -18,6 +18,7 @@ $(document).ready(function () {
             labelClose: false
         });
     })(jQuery);
+
 
     /*
      * We load the stuff saved in the sessionStorage and then we check if it's empty or not.
@@ -54,12 +55,15 @@ $(document).ready(function () {
         cart_div.appendChild(warning_div);
         document.getElementById("nb_object_in_cart").textContent = "Hum...";
         document.getElementById("total_to_pay").textContent = "";
-        return cart_div
+        return cart_div;
     }
     else {
         for (i = 0; i < Object.keys(old_data_saved).length; i++) {
             createCart2(old_data_saved[i]);
+            total_price = parseFloat(total_price) + parseFloat((parseFloat(old_data_saved[i].price) * parseInt(old_data_saved[i].quantity)).toFixed(2));
         }
+        
+        document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
         document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + Object.keys(old_data_saved).length + ")";
         nb_article_in_cart.textContent = Object.keys(old_data_saved).length;
 
@@ -124,6 +128,7 @@ function createCart2(article) {
     let box_select_value = document.createElement('input');
     box_select_value.className = "quantity";
     box_select_value.type = "number";
+    box_select_value.min = "1";
     box_select_value.id = "quantity_id" + article.id;
     box_select_value.value = article.quantity;
 
@@ -161,15 +166,22 @@ function createCart2(article) {
     }
 
     /*
-* We update the sessionStorage with the new quantity.
-* We re-calculate the price of the article according to the new quantity
-*/
+    * We update the sessionStorage with the new quantity.
+    * We re-calculate the price of the article according to the new quantity
+    */
     box_select_plus.onclick = function () {
         var intermediaire = document.getElementById('quantity_id' + article.id).value;
         document.getElementById('quantity_id' + article.id).value = parseInt(intermediaire) + 1;
         price_div.removeChild(price);
+        total_price = total_price - parseFloat(price.textContent);
+
+
+
         price = document.createTextNode((article.price * (parseInt(intermediaire) + 1)).toFixed(2) + "€");
         price_div.appendChild(price);
+
+        total_price = total_price + parseFloat(price.textContent);
+        document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
         var quantite = document.getElementById('quantity_id' + article.id).value;
         var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
         var tab = [];
@@ -193,8 +205,12 @@ function createCart2(article) {
         if (!(parseInt(intermediaire) - 1 == 0)) {
             document.getElementById('quantity_id' + article.id).value = parseInt(intermediaire) - 1;
             price_div.removeChild(price);
+            total_price = total_price - parseFloat(price.textContent);
             price = document.createTextNode((article.price * (parseInt(intermediaire) - 1)).toFixed(2) + "€");
             price_div.appendChild(price);
+            total_price = total_price + parseFloat(price.textContent);
+            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
+            
             var quantite = document.getElementById('quantity_id' + article.id).value;
             var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
             var tab = [];
@@ -207,6 +223,33 @@ function createCart2(article) {
             sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
         }
     };
+
+
+
+
+    /*
+   * We make sure that the quantity of the article after the action is still superior to 0.
+   * We update the sessionStorage with the new quantity.
+   * We re-calculate the price of the article according to the new quantity
+   */
+    box_select_value.oninput = function () {      
+        price_div.removeChild(price);
+        total_price = total_price - parseFloat(price.textContent);
+        price = document.createTextNode((article.price * box_select_value.value).toFixed(2) + "€");
+        price_div.appendChild(price);
+        total_price = total_price + parseFloat(price.textContent);
+        document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
+        var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+        var tab = [];
+        for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+            if (old_data_saved[i].id == article.id) {
+                old_data_saved[i].quantity = parseInt(box_select_value.value);
+            }
+            tab.push(old_data_saved[i]);
+        }
+        sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+    };
+
 
     brand_div.appendChild(brand);
     price_div.appendChild(price);
