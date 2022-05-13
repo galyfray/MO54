@@ -120,9 +120,8 @@
             </div>
 
         </header>
-
-
-
+        <div style="height:20px;"></div>
+        <a href="display_articles.html" style="padding: 30px; text-decoration:none; color:teal">← Retour aux articles</a>
         <div id="containerProduct">
         </div>
 
@@ -135,20 +134,5 @@
 <script>
     //need to find a way to have this in the js
     let container_product_div = document.getElementById("containerProduct");
-    console.log(container_product_div);
 </script>
 <script src="../JS/see_article.js"></script>
-
-<script>
-    let my_article = {
-        "name": localStorage.getItem('name_article'),
-        "description": localStorage.getItem('description_article'),
-        "price": localStorage.getItem('price_article'),
-        "brand": localStorage.getItem('brand_article'),
-        "id": localStorage.getItem('id_article'),
-        "preview": localStorage.getItem("image_article")
-    }
-
-    create_see_article(my_article);
-
-</script>

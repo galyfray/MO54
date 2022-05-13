@@ -17,8 +17,36 @@
 $(document).ready(function () {
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
+
+
+    let my_article = {
+        "name": localStorage.getItem('name_article'),
+        "description": localStorage.getItem('description_article'),
+        "price": localStorage.getItem('price_article'),
+        "brand": localStorage.getItem('brand_article'),
+        "id": localStorage.getItem('id_article'),
+        "preview": localStorage.getItem("image_article")
+    }
+    create_see_article(my_article);
 });
-                                   
+/**
+ *
+ * @param {any} description : the component that contains the text that will be cut
+ * @param {any} text : the description on an article.
+ */
+function addText(description, text) {
+    var t = text.split(/\n/), i;
+    if (t[0].length > 0) {
+        description.appendChild(document.createTextNode(t[0]));
+    }
+    for (i = 1; i < t.length; i++) {
+        description.appendChild(document.createElement('BR'));
+        if (t[i].length > 0) {
+            description.appendChild(document.createTextNode(t[i]));
+        }
+    }
+}
+
 function create_see_article(article) {
     /*
      * We create all the html components needed:
@@ -56,12 +84,21 @@ function create_see_article(article) {
     let name = document.createElement('h1');
     let nameContent = document.createTextNode(article.name);
     let price = document.createElement('h3');
-    let priceContent = document.createTextNode("Prix unitaire : " + article.price + "€");
+    let priceContent = document.createTextNode("Prix unitaire : " + (parseFloat(article.price)).toFixed(2) + "€");
     let brand = document.createElement('h3');
     let brandContent = document.createTextNode(article.brand);
 
     let descriptionP = document.createElement('p');
     let descriptionPContent = document.createTextNode("Description : " + article.description);
+
+
+    
+
+    addText(descriptionP, article.description);
+
+
+
+
 
     let add_btn = document.createElement('button');
     add_btn.id = "btn_add_article_to_cart";

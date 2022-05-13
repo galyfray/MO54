@@ -15,10 +15,6 @@
     <link rel="stylesheet" href="../CSS/header_menu_css.css">
     <link rel="stylesheet" href="../CSS/common_css.css">
     <script src="../JS/display_article_js.js"></script>
-    <!--<script type="module" src="../JS/see_article.js"></script>
-    import { create_see_article } from '../HTML/see_article.html';-->
-
-
 </head>
 
 
@@ -243,37 +239,6 @@
             <h1>Tout les pneus</h1>
             <div id="div_container_all_article"></div>
         </div>
-
-
-        <script>
-            (function ($) {
-                'use strict';
-                var Nav = new hcOffcanvasNav('#main-nav', {
-                    disableAt: false,
-                    customToggle: '.menu_icon',
-                    levelSpacing: 40,
-                    navTitle: 'All',
-                    levelTitles: true,
-                    levelTitleAsBack: true,
-                    pushContent: '#container',
-                    labelClose: false
-                });
-            })(jQuery);
-        </script>
     </div>
 </body>
 </html>
-<script>
-    let div_container_all_article = document.getElementById("div_container_all_article");
-    create_list_article({ "id": "1", "name": "Pneu Michelin 244", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Un pneu", "brand": "Michelin", "price": 49.99 });
-    create_list_article({ "id": "2", "name": "Pneu d'été", "preview": "https://bcdn.1001pneus.fr/media/catalog/category/MICHELIN_ALPIN_5.jpg", "description": "Pneu Michelin", "brand": "Continental", "price": 12.50 });
-    create_list_article({ "id": "3", "name": "Chat", "preview": "https://voyage-onirique.com/wp-content/uploads/2020/02/647220.jpg", "description": "Un chat inconnu", "brand": "Unknown", "price": 15 });
-    create_list_article({ "id": "4", "name": "Chat mignon", "preview": "https://www.zooplus.fr/magazine/wp-content/uploads/2018/05/ragdoll1.jpg", "description": "Un chat de race", "brand": "RagDoll", "price": 122.50 });
-    create_list_article({ "id": "5", "name": "Pneu d'hiver", "preview": "https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg", "description": "Black pneu", "brand": "Michelin", "price": 79.99 });
-    create_list_article({ "id": "6", "name": "Pneu d'hiver Michelin", "preview": "https://s2.medias-norauto.fr/images_produits/michelin-alpin-a4/650x650/pneu-michelin-alpin-a4-215-65-r15-96-h--410230.jpg", "description": "Pneu Michelin", "brand": "Michelin", "price": 52.00 });
-    create_list_article({ "id": "7", "name": "Chat moyennement cute", "preview": "https://i.pinimg.com/564x/06/3f/00/063f00618643bde18eaa914e248fd47d.jpg", "description": "Un énième chat mignon que l'on vend sur notre site web", "brand": "Bâtard", "price": 79.99 });
-    create_list_article({ "id": "8", "name": "Minou minou ", "preview": "https://img.freepik.com/free-photo/cute-adorable-animals-funny-cat-grass-with-tongue-out_87555-2984.jpg?w=996", "description": "Encore un chat car on manque de chat dans la vie", "brand": "Continental", "price": 99.90 });
-    create_list_article({ "id": "9", "name": "Kawai nekooooo ", "preview": "https://www.meme-arsenal.com/memes/df4f75462c0e60c091b008376b8b3638.jpg", "description": "Continental penu", "brand": "Continental", "price": 139.90 });
-    create_list_article({ "id": "10", "name": "Pneu again", "preview": "https://www.vroomly.com/media/images/iStock-1251191256.width-500.jpg", "description": "Another pneu", "brand": "Continental", "price": 149.99 });
-    create_list_article({ "id": "11", "name": "Chat super cute", "preview": "https://voyage-onirique.com/wp-content/uploads/2021/11/ZUdnRGZQcA.jpg", "description": "Un énième chat mignon que l'on vend sur notre site web pour une somme pas trop exagérée x)", "brand": "Bâtard", "price": 70.99 });
-</script>
