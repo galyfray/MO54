@@ -117,13 +117,22 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 24px;
     color: rgb(180,150,180);
 }
-
-.prix_cart {
-    font-size: 24px;
-    color: black;
+.brand_div_cart {
+    text-align: left;
 }
+
+    .prix_cart {
+        font-size: 24px;
+        color: black;
+        text-align: left;
+    }
 .quantite_cart {
     border: none;
+}
+
+.del_text_div {
+    font-style: italic;
+    color: rgb(220,220,220);
 }
 
 .img_cart_empty {
