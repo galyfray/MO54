@@ -36,7 +36,7 @@ $(document).ready(function () {
         grid_article_in_cart.className = "grid-container";
         grid_article_in_cart.style = "border: 2px solid rgb(230,230,230);  border-radius : 20px; ";
 
-        let img = document.createElement('img')
+        let img = document.createElement('img');
         img.src = "../Ressource/nothing_in_cart.png";
         img.className = "img_cart_empty";
         
@@ -93,7 +93,7 @@ function createCart2(article) {
     grid_article_in_cart.className = "grid-container";
     grid_article_in_cart.style = "border: 2px solid rgb(230,230,230);  border-radius : 20px; ";
 
-    let img = document.createElement('img')
+    let img = document.createElement('img');
     img.src = article.preview;
     img.className = "img_cart";
 
