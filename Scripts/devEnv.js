@@ -173,15 +173,34 @@ async function compileAS(BUFFER, SOURCES, TRANSFORM) {
             const result = await asc.main([
                 file,
                 "--outFile",
-                TRANSFORM(file.replace(/\.ts$/, ".wasm"))
+                TRANSFORM(file.replace(/\.ts$/, ".wasm")),
+                "--textFile",
+                TRANSFORM(file.replace(/\.ts$/, ".wat")),
+                "--sourceMap",
+                "--debug"
             ]);
             if (result.error) {
                 errorFlag = true;
                 console.log("Compilation failed: " + file);
                 BUFFER.push(`[ERROR] Compilation failed: ${file}`);
                 BUFFER.push(`[ERROR] ${result.error.message}`);
-                BUFFER.push(result.stderr.toString().replace(/\n/g, "\n[ERROR] "));
+                BUFFER.push("[ERROR] " +
+                    result.stderr
+                        .toString()
+                        .trim()
+                        .replace(/\n/g, "\n[ERROR] ")
+                );
+            } else if (result.stderr.toString().length > 0) {
+                console.log("Something appened during compilation: " + file);
+                BUFFER.push(`[WARN] Something appened during compilation: ${file}`);
+                BUFFER.push("[WARN] " +
+                result.stderr
+                    .toString()
+                    .trim()
+                    .replace(/\n/g, "\n[WARN] ")
+                );
             }
+
         }));
 
         if (errorFlag) {

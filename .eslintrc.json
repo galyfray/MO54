@@ -57,7 +57,7 @@
             "allowBlockStart": true,
             "allowClassStart": true
         }],
-        "lines-between-class-members": ["warn", "always"],
+        "lines-between-class-members": ["warn", "always", { "exceptAfterSingleLine": true }],
         "max-len": ["warn", {
             "code": 120,
             "tabWidth": 4,
