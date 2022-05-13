@@ -124,19 +124,17 @@ function create_see_article(article) {
         var tab = [];
         //on doit vérifier avant de placer dans le tableau que l'item que l'on a a pas le même id qu'un item déjà saved
 
-        /*var r = [];
-        r.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantite });
-        sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
-        */
-
         var article_already_in_cart = false;
-        for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-            if (old_data_saved[i].id == article.id) {
-                old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantite);
-                article_already_in_cart = true;
+        if (old_data_saved != null) {
+            for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+                if (old_data_saved[i].id == article.id) {
+                    old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantite);
+                    article_already_in_cart = true;
+                }
+                tab.push(old_data_saved[i]);
             }
-            tab.push(old_data_saved[i]);
         }
+        
         if (article_already_in_cart == false) {
             tab.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantite });
         }

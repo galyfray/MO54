@@ -126,6 +126,11 @@ input[type=number]::-webkit-outer-spin-button {
     border: none;
 }
 
+.img_cart_empty {
+    width: 500px;
+    margin: 0 auto;
+}
+
 
 
 input[type="number"] {
@@ -234,6 +239,10 @@ input[type="number"] {
         font-size: 18px;
         height: 25px;
      }
+    .img_cart_empty {
+        width: 400px;
+        margin: 0 auto;
+    }
 
 }
 
@@ -269,7 +278,11 @@ input[type="number"] {
         padding: .40px;
         font-size: 17px;
         height: 22px;
-    }  
+    }
+    .img_cart_empty {
+        width: 350px;
+        margin: 0 auto;
+    }
 }
 
 @media(max-width: 650px) {
@@ -305,6 +318,10 @@ input[type="number"] {
         font-size: 17px;
         height: 20px;
     }
+    .img_cart_empty {
+        width: 300px;
+        margin: 0 auto;
+    }
 }
 
 @media(max-width: 600px) {
@@ -322,6 +339,10 @@ input[type="number"] {
     .img_cart {
         width: 70px;
         height: 70px;
+    }
+    .img_cart_empty {
+        width: 250px;
+        margin: 0 auto;
     }
 }
 
@@ -342,5 +363,9 @@ input[type="number"] {
     .img_cart {
         width: 60px;
         height: 60px;
+    }
+    .img_cart_empty {
+        width: 250px;
+        margin: 0 auto;
     }
 }

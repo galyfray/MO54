@@ -103,7 +103,7 @@ let mainContainer = document.getElementById("mainContainer");
                     }
                 }
             };
-            // The code take the data from a CSV file saved on github.
+            // The code take the data from a json file saved on github.
 
             httpRequest.open(
     "GET",
@@ -115,7 +115,6 @@ let mainContainer = document.getElementById("mainContainer");
         (function ($) {
                 'use strict';
 
-                // call our plugin
                 var Nav = new hcOffcanvasNav('#main-nav', {
                     disableAt: false,
                     customToggle: '.menu_icon',
