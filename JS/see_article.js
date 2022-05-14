@@ -19,7 +19,7 @@ $(document).ready(function () {
 
     /*The code show the number of article in the cart*/
  //   var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-   // document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
+   // document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
 
     /*We read from the localStorage the properties of the article selected and then we create it*/
     let my_article = {
@@ -167,8 +167,7 @@ function create_see_article(article) {
         var tab = [];
         var article_already_in_cart = false;
         if (old_data_saved != null) {
-            for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-                //yet another weird loop :)
+            for (i = 0; i < old_data_saved.length; i++) {
                 if (old_data_saved[i].id == article.id) {
                     old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantity_article);
                     article_already_in_cart = true;

@@ -38,7 +38,7 @@ $(document).ready(function () {
      * If not : we create all the articles to show them.
      */
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-    if (Object.keys(old_data_saved).length == 0) {
+    if (old_data_saved.length == 0) {
         /*
          * img : the image that says there is nothing in the cart
          * img_cart_div: the div that contains the image
@@ -70,19 +70,13 @@ $(document).ready(function () {
         return cart_div;
     }
     else {
-        for (var i = 0; i < Object.keys(old_data_saved).length; i++) {
-/*
-this for loop is unclear.
-old_data_saved looks like an object as you use Object.keys but right after you index it using a number, something is clearly at least weird.
-*/
+        for (var i = 0; i < old_data_saved.length; i++) {
             createCart2(old_data_saved[i]);
             total_price = total_price + parseFloat(old_data_saved[i].price) * parseInt(old_data_saved[i].quantity);
         }
-                
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-        document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + Object.keys(old_data_saved).length + ")";
-        nb_article_in_cart.textContent = Object.keys(old_data_saved).length;
-
+        document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
+        nb_article_in_cart.textContent = old_data_saved.length;
     }    
 });
 
@@ -169,19 +163,11 @@ function createCart2(article) {
             cart_div.removeChild(grid_article_in_cart);
             cart_div.removeChild(line);            
             let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-            let tab = [];
-            for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-/*
-this loop is also confusing
-if old_data_saved is an array, consider using the filter method instead of this loop.
-*/
-                if (!(old_data_saved[i].id == article.id)) {
-                    tab.push(old_data_saved[i]);
-                }
-            }
-            sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
-            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + (Object.keys(old_data_saved).length - 1) + ")";
-            nb_article_in_cart.textContent = Object.keys(old_data_saved).length - 1;            
+
+            old_data_saved = old_data_saved.filter(del => del.id != article.id);
+            sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
+            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
+            nb_article_in_cart.textContent = old_data_saved.length ;            
         }
     }
 
@@ -256,8 +242,7 @@ You may also want to check but JSON.parse should automatically parse integer and
 function update_json_file(article, elem) {
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     var tab = [];
-    //another weird loop
-    for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+    for (i = 0; i < old_data_saved.length; i++) {
         if (old_data_saved[i].id == article.id) {
             old_data_saved[i].quantity = elem.value;
         }
