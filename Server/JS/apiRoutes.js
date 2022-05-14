@@ -19,7 +19,6 @@ const PENDINGS = [
 ];
 
 const POPULATE = () => {
-    console.log("Populating routes...");
 
     for (let element of INDEX.index) {
         switch (element.type) {

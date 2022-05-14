@@ -24,6 +24,11 @@ const AJAX = {
         delete data.url;
         delete data.method;
 
+        if (data.MIME) {
+            req.overrideMimeType(data.MIME);
+            delete data.MIME;
+        }
+
         for (let key in data) {
             url += key + "=" + encodeURIComponent(data[key]) + "&";
         }
@@ -40,8 +45,11 @@ const AJAX = {
                 }
             };
         });
-
-        req.send();
+        try {
+            req.send();
+        } catch (error) {
+            console.error(error);
+        }
 
         return promise;
     }
@@ -49,9 +57,10 @@ const AJAX = {
 
 document.onreadystatechange = function() {
     AJAX.send({
-        "url"   : "http://localhost:8080/api/parse",
+        "url"   : "https://localhost:8000/api/parse",
         "method": "GET",
-        "query" : "SELECT * FROM table"
+        "MIME"  : "application/json",
+        "query" : "SELECT bannana FROM table WHERE id = 1"
     }).then(req => {
         console.log(req.responseText);
     });

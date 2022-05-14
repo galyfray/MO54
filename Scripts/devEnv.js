@@ -147,73 +147,6 @@ async function lintFiles(BUFFER, ...files) {
     }
 }
 
-/** This function aims to go from a source file to a destination file.
- * @callback sourceTransformerCallback
- * @param {String} file the filename to transform.
- * @returns {String} the transformed filename.
- */
-/**
- * This function will compile the given AssemblyScripts files.
- * @param {Array} BUFFER a buffer to push the logs to.
- * @param {string[]} SOURCES the filenames of the files to compile.
- * @param {sourceTransformerCallback} TRANSFORM the function used to transform the source filenames to the destination filenames.
- * @see {@link sourceTransformerCallback}
- */
-async function compileAS(BUFFER, SOURCES, TRANSFORM) {
-    BUFFER.push("[INFO][AS] Compiling assembly scripts...");
-
-    try {
-        // TODO: change to assemblyscript/asc when this shit get fixed + move it back to the beginning of the file.
-        const asc = await import("assemblyscript/dist/asc.js");
-
-        let errorFlag = false;
-
-
-        await Promise.all(SOURCES.map(async file => {
-            const result = await asc.main([
-                file,
-                "--outFile",
-                TRANSFORM(file.replace(/\.ts$/, ".wasm")),
-                "--textFile",
-                TRANSFORM(file.replace(/\.ts$/, ".wat")),
-                "--sourceMap",
-                "--debug"
-            ]);
-            if (result.error) {
-                errorFlag = true;
-                console.log("Compilation failed: " + file);
-                BUFFER.push(`[ERROR] Compilation failed: ${file}`);
-                BUFFER.push(`[ERROR] ${result.error.message}`);
-                BUFFER.push("[ERROR] " +
-                    result.stderr
-                        .toString()
-                        .trim()
-                        .replace(/\n/g, "\n[ERROR] ")
-                );
-            } else if (result.stderr.toString().length > 0) {
-                console.log("Something appened during compilation: " + file);
-                BUFFER.push(`[WARN] Something appened during compilation: ${file}`);
-                BUFFER.push("[WARN] " +
-                result.stderr
-                    .toString()
-                    .trim()
-                    .replace(/\n/g, "\n[WARN] ")
-                );
-            }
-
-        }));
-
-        if (errorFlag) {
-            throw new Error("Compilation failed.");
-        } else {
-            BUFFER.push("[INFO][AS] Compilation successful.");
-        }
-    } catch (e) {
-        BUFFER.push("[ERROR][AS] Compilation failed due to an unexpected error.");
-        throw e;
-    }
-}
-
 /**
  * This function will parse the HTML file to find tags that indicate the files to include.
  * Once the tags are found, the files are included in the HTML file,
@@ -300,6 +233,11 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
 
 }
 
+/** This function aims to go from a source file to a destination file.
+ * @callback sourceTransformerCallback
+ * @param {String} file the filename to transform.
+ * @returns {String} the transformed filename.
+ */
 /**
  * This function will copy the given files to their destination.
  * Their destination is defined by the TRANSFORM function.
@@ -339,7 +277,6 @@ async function buildWeb(BUFFER, WEB_DIR) {
         const WEB_HTML = "Web/HTML",
             WEB_CSS = "Web/CSS",
             WEB_JS = "Web/JS",
-            WEB_AS = "Web/AS",
             WEB_RESSOURCE = "Web/Ressources";
 
         const HTML_SOURCES = await getAllFiles(WEB_HTML);
@@ -347,20 +284,12 @@ async function buildWeb(BUFFER, WEB_DIR) {
         // We use path.relative to remove the root folder from the file name.
         const JS_SOURCES = (await getAllFiles(WEB_JS)).map(file => path.relative(WEB_JS, file));
         const CSS_SOURCES = (await getAllFiles(WEB_CSS)).map(file => path.relative(WEB_CSS, file));
-        const AS_SOURCES = await getAllFiles(WEB_AS);
         const RESSOURCES = await getAllFiles(WEB_RESSOURCE);
 
         await lintFiles(
             BUFFER,
             WEB_HTML + "/**/*.html",
-            WEB_JS + "/**/*.js",
-            WEB_AS + "/**/*.ts"
-        );
-
-        await compileAS(
-            BUFFER,
-            AS_SOURCES,
-            file => path.join(WEB_DIR, path.relative(WEB_AS, file))
+            WEB_JS + "/**/*.js"
         );
 
         await mapSources(
@@ -409,25 +338,17 @@ async function buildWeb(BUFFER, WEB_DIR) {
 async function buildServer(BUFFER, SERVER_DIR) {
     BUFFER.push("[INFO][SERVER] Building server...");
     const SERVER_JS = "Server/JS",
-        SERVER_AS = "Server/AS",
         SERVER_RESSOURCE = "Server/Ressources";
 
     try {
 
         const JS_SOURCES = await getAllFiles(SERVER_JS);
-        const AS_SOURCES = await getAllFiles(SERVER_AS);
 
         await lintFiles(
             BUFFER,
-            SERVER_JS + "/**/*.js",
-            SERVER_AS + "/**/*.ts"
+            SERVER_JS + "/**/*.js"
         );
 
-        await compileAS(
-            BUFFER,
-            AS_SOURCES,
-            file => path.join(SERVER_DIR, path.relative(SERVER_AS, file))
-        );
 
         await copyAll(
             BUFFER,
