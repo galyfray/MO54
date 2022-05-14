@@ -12,7 +12,11 @@
     });
 })(jQuery);
 
+/*container_product_div : way to use the element "containerProduct" that already exist in the view.*/
+let container_product_div;
 $(document).ready(function () {
+    
+
     /*The code show the number of article in the cart*/
  //   var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
    // document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
@@ -26,6 +30,7 @@ $(document).ready(function () {
         "id": localStorage.getItem('id_article'),
         "preview": localStorage.getItem("image_article")
     }
+    container_product_div = document.getElementById("containerProduct");
     create_see_article(my_article);
 });
 /**
@@ -163,6 +168,7 @@ function create_see_article(article) {
         var article_already_in_cart = false;
         if (old_data_saved != null) {
             for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+                //yet another weird loop :)
                 if (old_data_saved[i].id == article.id) {
                     old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantity_article);
                     article_already_in_cart = true;

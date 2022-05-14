@@ -1,6 +1,17 @@
-let nb_article_by_createCart = 0;
+/*
+ * total_price : variable used to know the final price to pay for the cart.
+ * It's a global var because it will be used when an article is created
+ * and also when the quantity of the article is updated.
+ * 
+ * cart_div : use to access the div 'div_container_all_article_in_cart'
+ * → contains all the future article from the cart.html
+ */
 var total_price = 0;
+let cart_div;
+
+
 $(document).ready(function () {
+    'use strict';
     /*
      The function to make the navigation works
      */
@@ -18,6 +29,8 @@ $(document).ready(function () {
         });
     })(jQuery);
 
+    cart_div = document.getElementById('div_container_all_article_in_cart');
+    cart_div.style = "padding: 10px;";
 
     /*
      * We load the stuff saved in the sessionStorage and then we check if it's empty or not.
@@ -57,11 +70,15 @@ $(document).ready(function () {
         return cart_div;
     }
     else {
-        for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+        for (var i = 0; i < Object.keys(old_data_saved).length; i++) {
+/*
+this for loop is unclear.
+old_data_saved looks like an object as you use Object.keys but right after you index it using a number, something is clearly at least weird.
+*/
             createCart2(old_data_saved[i]);
-            total_price = parseFloat(total_price) + parseFloat((parseFloat(old_data_saved[i].price) * parseInt(old_data_saved[i].quantity)).toFixed(2));
+            total_price = total_price + parseFloat(old_data_saved[i].price) * parseInt(old_data_saved[i].quantity);
         }
-        
+                
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
         document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + Object.keys(old_data_saved).length + ")";
         nb_article_in_cart.textContent = Object.keys(old_data_saved).length;
@@ -151,9 +168,13 @@ function createCart2(article) {
         if (confirm('Etes vous sûr de vouloir retirer cet article du panier? ')) {
             cart_div.removeChild(grid_article_in_cart);
             cart_div.removeChild(line);            
-            var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-            var tab = [];
+            let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+            let tab = [];
             for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+/*
+this loop is also confusing
+if old_data_saved is an array, consider using the filter method instead of this loop.
+*/
                 if (!(old_data_saved[i].id == article.id)) {
                     tab.push(old_data_saved[i]);
                 }
@@ -169,77 +190,46 @@ function createCart2(article) {
     * We re-calculate the price of the article according to the new quantity
     */
     box_select_plus.onclick = function () {
-        var intermediaire = document.getElementById('quantity_id' + article.id).value;
-        document.getElementById('quantity_id' + article.id).value = parseInt(intermediaire) + 1;
-        price_div.removeChild(price);
-        total_price = total_price - parseFloat(price.textContent);
-        price = document.createTextNode((article.price * (parseInt(intermediaire) + 1)).toFixed(2) + "€");
-        price_div.appendChild(price);
-        total_price = total_price + parseFloat(price.textContent);
+        let elem = document.getElementById('quantity_id' + article.id);
+        elem.value = parseInt(elem.value) + 1;        
+        total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
+        price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-        var quantite = document.getElementById('quantity_id' + article.id).value;
-        var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-        var tab = [];
-
-        for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-            if (old_data_saved[i].id == article.id) {
-                old_data_saved[i].quantity = parseInt(quantite);
-            }
-            tab.push(old_data_saved[i]);
-        }
-        sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+        update_json_file(article, elem);
     };
 
+ /*
+there is a lot of call to JSON.parse and JSON.stringify, without counting the numberof parseInt|Float. 
+The cart should get a class with an internal storage dumped when necessary this will remove many excessive call to those functions. 
+This will also reduce memory movement making the job of the GC easier. keeping additional instances of the DOM object's could reduce the amount of lookup done in it and will enable you to create generic handler that will be instantiated only once.
+You may also want to check but JSON.parse should automatically parse integer and floats.
+*/
     /*
     * We make sure that the quantity of the article after the action is still superior to 0.
     * We update the sessionStorage with the new quantity.
     * We re-calculate the price of the article according to the new quantity
     */
     box_select_minus.onclick = function () {
-        var intermediaire = document.getElementById('quantity_id' + article.id).value;
-        if (!(parseInt(intermediaire) - 1 == 0)) {
-            document.getElementById('quantity_id' + article.id).value = parseInt(intermediaire) - 1;
-            price_div.removeChild(price);
-            total_price = total_price - parseFloat(price.textContent);
-            price = document.createTextNode((article.price * (parseInt(intermediaire) - 1)).toFixed(2) + "€");
-            price_div.appendChild(price);
-            total_price = total_price + parseFloat(price.textContent);
-            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-            
-            var quantite = document.getElementById('quantity_id' + article.id).value;
-            var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-            var tab = [];
-            for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-                if (old_data_saved[i].id == article.id) {
-                    old_data_saved[i].quantity = parseInt(quantite);
-                }
-                tab.push(old_data_saved[i]);
-            }
-            sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+        let elem = document.getElementById('quantity_id' + article.id);
+        elem.value = parseInt(elem.value);
+        if (!(elem.value - 1 == 0)) {
+            elem.value = elem.value - 1;
+            total_price = total_price - parseFloat(price.textContent) + article.price * (elem.value);
+            price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
+            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";   
+            update_json_file(article, elem);
         }
     };
 
     /*
-   * We make sure that the quantity of the article after the action is still superior to 0.
    * We update the sessionStorage with the new quantity.
    * We re-calculate the price of the article according to the new quantity
    */
     box_select_value.oninput = function () {      
-        price_div.removeChild(price);
-        total_price = total_price - parseFloat(price.textContent);
-        price = document.createTextNode((article.price * box_select_value.value).toFixed(2) + "€");
-        price_div.appendChild(price);
-        total_price = total_price + parseFloat(price.textContent);
+        total_price = total_price - parseFloat(price.textContent) + article.price * this.value;
+        price.nodeValue = (article.price * this.value).toFixed(2) + "€";
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-        var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-        var tab = [];
-        for (i = 0; i < Object.keys(old_data_saved).length; i++) {
-            if (old_data_saved[i].id == article.id) {
-                old_data_saved[i].quantity = parseInt(box_select_value.value);
-            }
-            tab.push(old_data_saved[i]);
-        }
-        sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+        update_json_file(article, this);
     };
 
     brand_div.appendChild(brand);
@@ -254,7 +244,24 @@ function createCart2(article) {
     cart_div.appendChild(grid_article_in_cart);
 
     let line = document.createElement('div');
-    line.style = "padding : 10px;";
+    line.className = "line_in_cart";
     cart_div.appendChild(line);
-    return cart_div
+    return cart_div;
+}
+/**
+ * Function used when we change the quantity of an article to save the changes into the sessionStorage
+ * @param {any} article : object that contains the article
+ * @param {any} elem : the input that contains the value of the quantity chosen for an article
+ */
+function update_json_file(article, elem) {
+    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    var tab = [];
+    //another weird loop
+    for (i = 0; i < Object.keys(old_data_saved).length; i++) {
+        if (old_data_saved[i].id == article.id) {
+            old_data_saved[i].quantity = elem.value;
+        }
+        tab.push(old_data_saved[i]);
+    }
+    sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
 }

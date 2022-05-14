@@ -56,33 +56,22 @@ Media query:
     -> the width of the div is redefined as well
  */
 
-@media(max-width: 1070px) {
-    h1 {
-        font-size: 25px;
-    }
-}
-
-@media(max-width: 850px) {
+@media(max-width: 505px) {
     h1 {
         width: 80%;
     }
-    .number-input button {
-        width: 22px;
-        height: 22px;
-        margin: 0;
-    }
-
-    .number-input button:before, .number-input button:after {
-        width: 11px;
-        height: 2px;
+}
+@media(max-width: 600px) {
+    h1 {
+        width: 70%;
     }
 }
-
 @media(max-width: 650px) {
     h1 {
         font-size: 20px;
         width: 90%;
     }
+
     .number-input button {
         width: 20px;
         height: 20px;
@@ -94,37 +83,36 @@ Media query:
         height: 2px;
     }
 }
-
-
-@media(max-width: 600px) {
-    h1 {
-        width: 70%;
-    }
-}
-
-@media(max-width: 505px) {
+@media(max-width: 850px) {
     h1 {
         width: 80%;
     }
-}
 
+    .number-input button {
+        width: 22px;
+        height: 22px;
+        margin: 0;
+    }
+
+    .number-input button:before, .number-input button:after {
+        width: 11px;
+        height: 2px;
+    }
+}
 @media(max-width: 1070px) {
+    h1 {
+        font-size: 25px;
+    }
     .number-input button {
         width: 25px;
         height: 25px;
         margin: 0;
     }
 
-        .number-input button:before, .number-input button:after {
-            width: 13px;
-            height: 2px;
-        }
-}
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    .number-input button:before, .number-input button:after {
+        width: 13px;
+        height: 2px;
+    }
 }
 
 input[type="number"] {

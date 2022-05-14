@@ -60,19 +60,12 @@
     width: 80%;
     margin: 0 auto;
 }
-.brand_div_cart {
+
+.brand_div_cart, .prix_cart {
+    color: sandybrown;
     font-size: 24px;
-    color: rgb(180,150,180);
-}
-.brand_div_cart {
     text-align: left;
 }
-
-    .prix_cart {
-        font-size: 24px;
-        color: black;
-        text-align: left;
-    }
 
 
 .del_text_div {
@@ -85,21 +78,21 @@
     margin: 0 auto;
 }
 
-        .number-input button {
-            outline: none;
-            -webkit-appearance: none;
-            background-color: transparent;
-            border: none;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            margin: 0;
-            position: relative;
-            box-shadow: 0px 0px 1px #474747;
-            border-radius: 50%;
-        }
+.number-input button {
+    outline: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+    box-shadow: 0px 0px 1px #474747;
+    border-radius: 50%;
+}
 
 /*Input value quantity*/
 .number-input input[type=number] {
@@ -114,6 +107,9 @@
     text-align: center;
     color: #9be3df;
 }
+.line_in_cart {
+    padding : 10px;
+}
 /*
         Media query:
         - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page
@@ -123,16 +119,124 @@
         -> the font-size & width of h1 is redefined according to the device width
         -> the width of the div is redefined as well
     */
+
+/* pour img_cart dans le media queery
+    the ratio between the media's max width and the size of this element is always in the neighborhood of 12% this means that you can replace this with a generic size in % this resource might help
+*/
+@media(max-width: 505px) {
+    .name_cart {
+        font-size: 16px;
+    }
+
+    .brand_div_cart, .prix_cart {
+        font-size: 15px;
+    }
+
+    #div_container_all_article_in_cart {
+        align-content: center;
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .img_cart {
+        width: 60px;
+        height: 60px;
+    }
+
+    .img_cart_empty {
+        width: 250px;
+    }
+}
+
+@media(max-width: 600px) {
+    .name_cart {
+        font-size: 17px;
+    }
+
+    .brand_div_cart, .prix_cart {
+        font-size: 16px;
+    }
+
+    #div_container_all_article_in_cart {
+        width: 95%;
+    }
+
+    .img_cart {
+        width: 70px;
+        height: 70px;
+    }
+
+    .img_cart_empty {
+        width: 250px;
+    }
+}
+
+@media(max-width: 650px) {
+    .name_cart {
+        font-size: 18px;
+    }
+
+    .brand_div_cart, .prix_cart {
+        font-size: 17px;
+    }
+
+    #div_container_all_article_in_cart {
+        width: 95%;
+    }
+
+    .img_cart {
+        width: 80px;
+        height: 80px;
+    }
+
+    .number-input input[type=number] {
+        max-width: 36px;
+        padding: .36px;
+        font-size: 17px;
+        height: 20px;
+    }
+
+    .img_cart_empty {
+        width: 300px;
+    }
+}
+
+@media(max-width: 850px) {
+    .name_cart {
+        font-size: 20px;
+    }
+
+    .brand_div_cart, .prix_cart {
+        font-size: 19px;
+    }
+
+    #div_container_all_article_in_cart {
+        width: 90%;
+    }
+
+    .img_cart {
+        width: 100px;
+        height: 100px;
+    }
+
+    .number-input input[type=number] {
+        max-width: 40px;
+        padding: .40px;
+        font-size: 17px;
+        height: 22px;
+    }
+
+    .img_cart_empty {
+        width: 350px;
+    }
+}
+
 @media(max-width: 1070px) {
-    .prix_cart {
+    .prix_cart, .brand_div_cart {
         font-size: 21px;
     }
     .name_cart {
         font-size: 22px;
-    }
-    .brand_div_cart {
-        font-size: 21px;
-        color: sandybrown;/*red*/
     }
     
     #div_container_all_article_in_cart {
@@ -150,110 +254,6 @@
      }
     .img_cart_empty {
         width: 400px;
-        margin: 0 auto;
     }
 
-}
-
-@media(max-width: 850px) {
-     .name_cart {
-        font-size: 20px;
-    }
-
-    .brand_div_cart, .prix_cart{
-        font-size: 19px;
-        color: sandybrown; /*blue;*/
-    }
-    #div_container_all_article_in_cart {
-        width: 90%;
-    }
-    .img_cart {
-        width: 100px;
-        height: 100px;
-    }
-    .number-input input[type=number] {
-        max-width: 40px;
-        padding: .40px;
-        font-size: 17px;
-        height: 22px;
-    }
-    .img_cart_empty {
-        width: 350px;
-        margin: 0 auto;
-    }
-}
-
-@media(max-width: 650px) {
-    .name_cart {
-        font-size: 18px;
-    }
-
-    .brand_div_cart, .prix_cart{
-        font-size: 17px;
-        color: sandybrown; /*blue;*/
-    }
-    #div_container_all_article_in_cart {
-        width: 95%;
-    }
-    .img_cart {
-        width: 80px;
-        height: 80px;
-    }
-    .number-input input[type=number] {
-        max-width: 36px;
-        padding: .36px;
-        font-size: 17px;
-        height: 20px;
-    }
-
-    .img_cart_empty {
-        width: 300px;
-        margin: 0 auto;
-    }
-}
-
-@media(max-width: 600px) {
-    .name_cart {
-        font-size: 17px;
-    }
-
-    .brand_div_cart, .prix_cart {
-        font-size: 16px;
-        color: sandybrown; /*deeppink;*/
-    }
-    #div_container_all_article_in_cart {
-        width: 95%;
-    }
-    .img_cart {
-        width: 70px;
-        height: 70px;
-    }
-    .img_cart_empty {
-        width: 250px;
-        margin: 0 auto;
-    }
-}
-
-@media(max-width: 505px) {
-    .name_cart {
-        font-size: 16px;
-    }
-
-    .brand_div_cart,  .prix_cart {
-        font-size: 15px;
-        color: sandybrown;
-    }
-    #div_container_all_article_in_cart {
-        align-content: center;
-        width: 95%;
-        margin: 0 auto;
-    }
-    .img_cart {
-        width: 60px;
-        height: 60px;
-    }
-    .img_cart_empty {
-        width: 250px;
-        margin: 0 auto;
-    }
 }

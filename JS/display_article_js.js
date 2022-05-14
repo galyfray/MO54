@@ -1,5 +1,3 @@
-let result_http_request;
-
 $(document).ready(function () {
     /*
     *This code is used to get the number of article in the cart from the view "display_article"
@@ -109,11 +107,10 @@ function create_list_article(article) {
 //We create a XMLHttpRequest to read the articles.
 let httpRequest = new XMLHttpRequest();
 httpRequest.onreadystatechange = function () {
-    //readyState = 4 means that the operation with the XMLHttpRequest is done.
-    if (this.readyState === 4) {
+    if (httpRequest.DONE) {
         // status = 200 mean that the statut of the XMLHttpRequest is OK (everything is going well)
         if (this.status == 200) {
-            result_http_request = JSON.parse(this.responseText);
+            let result_http_request = JSON.parse(this.responseText);
             //For each element, the code add dynamically with the function create_list_article the article to the component "div_container_all_article"
             for (let i = 0; i < result_http_request.length; i++) {
                 div_container_all_article.appendChild(
@@ -128,7 +125,7 @@ httpRequest.onreadystatechange = function () {
 // The code take the data from a json file saved on github.
 httpRequest.open(
     "GET",
-    "https://raw.githubusercontent.com/Yasmarila/Site_web_test/main/test?token=GHSAT0AAAAAABUG3RZ5TJOUIGOYXJ6V4ILYYT36LXA",
+    "",
     true
 );
 httpRequest.send();       
