@@ -3,7 +3,7 @@
  */
 
 const Express = require("express");
-const HTTPS = require("https");
+const SPDY = require("spdy");
 const fs = require("fs");
 const utils = require("./utils/utils.js");
 
@@ -54,7 +54,7 @@ SERVER.use((req, res, next) => {
         "utf8"
     );
 
-    HTTPS.createServer(
+    SPDY.createServer(
         {
             key : KEY,
             cert: CERT
