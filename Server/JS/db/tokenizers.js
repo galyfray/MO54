@@ -1,4 +1,4 @@
-const Tokenizer = require('./Tokenizer');
+const Tokenizer = require("./Tokenizer");
 
 class stringTokenizer extends Tokenizer {
 
@@ -26,12 +26,12 @@ class numberTokenizer extends Tokenizer {
     }
 
     canTokenize(char) {
-        return char >= '0' && char <= '9';
+        return char >= "0" && char <= "9";
     }
 
     tokenize(charStream) {
         let isFloat = false;
-        let value = this._readWhile(charStream, char => this.canTokenize(char) || char === '.' && !isFloat && (isFloat = true));
+        let value = this._readWhile(charStream, char => this.canTokenize(char) || char === "." && !isFloat && (isFloat = true));
 
         if (isFloat) {
             return {
@@ -54,12 +54,12 @@ class identifierTokenizer extends Tokenizer {
     }
 
     canTokenize(char) {
-        return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z' || char === '_';
+        return char >= "a" && char <= "z" || char >= "A" && char <= "Z" || char === "_";
     }
 
     tokenize(charStream) {
         return {
-            value: this._readWhile(charStream, char => this.canTokenize(char)),
+            value: this._readWhile(charStream, char => this.canTokenize(char) || char == "."),
             type : "identifier"
         };
     }
@@ -100,7 +100,7 @@ class OperatorTokenizer extends Tokenizer {
 
     canTokenize(char) {
         //TODO check if we can make this faster
-        return char == '+' || char == '-' || char == '*' || char == '/' || char == '=' || char == '>' || char == '<' || char == '!';
+        return char == "+" || char == "-" || char == "*" || char == "/" || char == "=" || char == ">" || char == "<" || char == "!";
     }
 
     // TODO: remove duplicated code

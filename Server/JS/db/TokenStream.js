@@ -54,6 +54,15 @@ class TokenStream {
     eof() {
         return this.charStream.eof();
     }
+
+    getColumn() {
+        return this.charStream.getColumn();
+    }
+
+    getLine() {
+        return this.charStream.getLine();
+    }
+
 }
 
 module.exports = TokenStream;

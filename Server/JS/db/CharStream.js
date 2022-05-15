@@ -36,7 +36,7 @@ class CharStream {
      * @returns {String} the next character in the stream or null if the stream is at the end.
     */
     peek() {
-        if (this.index >= this.value.length) {
+        if (this.eof()) {
             return null;
         }
         return this.value[this.index];
