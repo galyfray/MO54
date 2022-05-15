@@ -3,6 +3,7 @@
  */
 
 const Express = require("express");
+const compression = require("compression");
 const SPDY = require("spdy");
 const fs = require("fs");
 const utils = require("./utils/utils.js");
@@ -12,6 +13,7 @@ const SERVER = Express();
 
 // Configuring the server.
 
+SERVER.use(compression());
 SERVER.use(Express.urlencoded({extended: true}));
 SERVER.use(Express.json());
 
