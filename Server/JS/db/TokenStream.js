@@ -13,6 +13,7 @@ class TokenStream {
         if (this.tokenizers === null) {
             throw new Error("tokenizers can't be null");
         }
+        this._currentToken = null;
     }
 
     /**Private method.
@@ -31,6 +32,11 @@ class TokenStream {
      * @returns {Token} the next token in the stream.
      */
     next() {
+        if (this._currentToken !== null) {
+            const token = this._currentToken;
+            this._currentToken = null;
+            return token;
+        }
 
         this._readWhile(this.isWhitespace);
 
@@ -45,6 +51,10 @@ class TokenStream {
         }
 
         throw new Error("unable to tokenize character " + this.charStream.peek());
+    }
+
+    peek() {
+        return this._currentToken || (this._currentToken = this.next());
     }
 
     /**
