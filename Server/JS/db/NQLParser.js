@@ -151,6 +151,8 @@ function unexpectedToken(stream, token) {
 
 function parseNQL(nql) {
     let char_stream = new CharStream(nql);
+
+    // TODO externalize the tokenizers construction to reduce memory usage
     let token_stream = new TokenStream(
         char_stream,
         char => " \t\n\r".indexOf(char) !== -1,
@@ -211,4 +213,12 @@ function parseNQL(nql) {
 
 }
 
+//TODO :
+// - refactor to class
+// - benchmark
+// - add tests
+// - add documentation
+// - support JOINS
+// - support LIKE
+// - support IN
 module.exports = parseNQL;
