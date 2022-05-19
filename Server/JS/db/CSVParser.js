@@ -7,7 +7,7 @@ class CSVParser {
         this._char_stream = null;
     }
 
-    async parse(file) {
+    async parse(file, prefix = "") {
         const data = await fs.promises.readFile(file, "utf8");
         this._char_stream = new CharStream(data);
         let header = [];
@@ -15,7 +15,7 @@ class CSVParser {
         let row;
 
         while (this._char_stream.peek() != "\n") {
-            header.push(this._readWhile(this._isSeparator));
+            header.push(prefix + this._readWhile(this._isSeparator));
             this._char_stream.next();
         }
 

@@ -139,7 +139,7 @@ function parseSide(token_stream) {
         } else {
             unexpectedToken(token_stream, token.value);
         }
-    } else if (token.type == "int" || token.type == "float") {
+    } else if (token.type == "int" || token.type == "float" || token.type == "string") {
         return token;
     }
 
@@ -149,6 +149,10 @@ function unexpectedToken(stream, token) {
     throw new Error("Unexpected token: " + token.value + " at " + getPosition(stream, token.value));
 }
 
+/**
+ * @param {String} nql the query to parse
+ * @returns an AST
+ */
 function parseNQL(nql) {
     let char_stream = new CharStream(nql);
 
@@ -164,8 +168,7 @@ function parseNQL(nql) {
                 "FROM",
                 "WHERE",
                 "AND",
-                "OR",
-                "NOT"
+                "OR"
             ],
             (kw, list) => {
                 return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
@@ -221,4 +224,5 @@ function parseNQL(nql) {
 // - support JOINS
 // - support LIKE
 // - support IN
+// - support NOT
 module.exports = parseNQL;
