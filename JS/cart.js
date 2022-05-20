@@ -32,7 +32,6 @@ $(document).ready(function () {
     })(jQuery);
 
     cart_div = document.getElementById('div_container_all_article_in_cart');
-    cart_div.style = "padding: 10px;";
 
     /*
      * We load the stuff saved in the sessionStorage and then we check if it's empty or not.
@@ -74,7 +73,7 @@ $(document).ready(function () {
     }
     
     else {
-        for (var i = 0; i < old_data_saved.length; i++) {
+        for (let i = 0; i < old_data_saved.length; i++) {
             createCart2(old_data_saved[i]);
             total_price = total_price + parseFloat(old_data_saved[i].price) * parseInt(old_data_saved[i].quantity);
         }
@@ -162,16 +161,7 @@ function createCart2(article) {
      * We update the SessionStorage by deleting an entry .
      * We also update the component that show the number of article in the cart.
     */
-    del_text_div.onclick = function () {/*
-        if (confirm('Etes vous sûr de vouloir retirer cet article du panier? ')) {
-            cart_div.removeChild(grid_article_in_cart);
-            cart_div.removeChild(line);            
-            let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-            old_data_saved = old_data_saved.filter(del => del.id != article.id);
-            sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
-            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-            nb_article_in_cart.textContent = old_data_saved.length;            
-        }*/
+    del_text_div.onclick = function () {
         document.getElementById("overlay_alert").style.display = "block";
         document.getElementById("popupAlert").style.display = "block";
         id_article_deleted = article.id;
@@ -251,9 +241,9 @@ You may also want to check but JSON.parse should automatically parse integer and
     box_select_minus.onclick = function () {
         let elem = document.getElementById('quantity_id' + article.id);
         elem.value = parseInt(elem.value);
-        if (!(elem.value - 1 == 0)) {
+        if (elem.value - 1 != 0) {
             elem.value = elem.value - 1;
-            total_price = total_price - parseFloat(price.textContent) + article.price * (elem.value);
+            total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
             price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";   
             update_json_file(article, elem);
@@ -285,7 +275,6 @@ You may also want to check but JSON.parse should automatically parse integer and
     let line = document.createElement('div');
     line.className = "line_in_cart";
     cart_div.appendChild(line);
-    return cart_div;
 }
 /**
  * Function used when we change the quantity of an article to save the changes into the sessionStorage
@@ -293,9 +282,9 @@ You may also want to check but JSON.parse should automatically parse integer and
  * @param {any} elem : the input that contains the value of the quantity chosen for an article
  */
 function update_json_file(article, elem) {
-    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     var tab = [];
-    for (i = 0; i < old_data_saved.length; i++) {
+    for (let i = 0; i < old_data_saved.length; i++) {
         if (old_data_saved[i].id == article.id) {
             old_data_saved[i].quantity = elem.value;
         }

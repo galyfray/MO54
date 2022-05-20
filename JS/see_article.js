@@ -87,7 +87,6 @@ function create_see_article(article) {
     let box_selectdiv = document.createElement('div');
     box_selectdiv.className = "number-input";
     let emptydiv = document.createElement('div');
-    emptydiv.style = "height: 12px; ";
     emptydiv.id = "emptydiv";
     
     let image = document.createElement('img');
@@ -112,9 +111,6 @@ function create_see_article(article) {
 
     let add_btn = document.createElement('button');
     add_btn.id = "btn_add_article_to_cart";
-
-    
-
 
     let box_select_minus = document.createElement('button');
     let box_select_plus = document.createElement('button');
@@ -177,10 +173,10 @@ function create_see_article(article) {
     */
 
     add_btn.onclick = function () {
-        var quantity_article = document.getElementById('quantity').value;
-        var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-        var tab = [];
-        var article_already_in_cart = false;
+        let quantity_article = document.getElementById('quantity').value;
+        let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+        let tab = [];
+        let article_already_in_cart = false;
         if (old_data_saved != null) {
             for (i = 0; i < old_data_saved.length; i++) {
                 if (old_data_saved[i].id == article.id) {
@@ -200,12 +196,7 @@ function create_see_article(article) {
 
         document.getElementById("overlay_alert").style.display = "block";
         document.getElementById("popupAlert").style.display = "block";
-        myVar = setTimeout(alertClosed, 1500);
-
-
-    
-        
-
+        setTimeout(alertClosed, 1500);
     }
     return box_article
 }

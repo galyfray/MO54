@@ -11,19 +11,22 @@
     margin: auto;
     height: auto;
 }
+#emptydiv {
+    height: 12px;
+}
 
-    #imageSection img {
-        float: right;
-        border-radius: 10px;
-        box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
-        height: auto;
-        width: 100%;
-        max-height: 250px;
-    }
+#imageSection img {
+    float: right;
+    border-radius: 10px;
+    box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+    height: auto;
+    width: 100%;
+    max-height: 250px;
+}
 
-        #imageSection img:hover {
-            box-shadow: 1px 0px 9px 1px rgb(3, 122, 122);
-        }
+#imageSection img:hover {
+    box-shadow: 1px 0px 9px 1px rgb(3, 122, 122);
+}
 
 /*The div that contain the details of the article*/
 #productDetails {
@@ -47,18 +50,18 @@ button {
     font-size: 20px;
 }
 
-    button a {
-        text-decoration: none;
-        font-size: 18px;
-    }
+button a {
+    text-decoration: none;
+    font-size: 18px;
+}
 
-    button:hover {
-        background-color: rgb(3, 94, 94);
-    }
+button:hover {
+    background-color: rgb(3, 94, 94);
+}
 
-    button a:focus {
-        outline: none;
-    }
+button a:focus {
+    outline: none;
+}
 
 /*Media querry*/
 
@@ -99,31 +102,6 @@ button {
     color: #9be3df;
 }
 
-
-@media(max-width: 650px) {
-    #box {
-        width: 80%;
-    }
-
-    .number-input input[type=number] {
-        padding: .36px;
-        font-size: 17px;
-        height: 20px;
-    }
-
-    #imageSection img {
-        height: auto;
-        width: 100%;
-        max-height: 250px;
-    }
-
-    #imageSection {
-        height: auto;
-        width: 70%;
-        margin: auto;
-    }
-}
-
 @media(min-width: 651px) {
     .number-input input[type=number] {
         padding: .40px;
@@ -146,11 +124,11 @@ button {
         text-align: center;
     }
 
-        #imageSection img {
-            text-align: center;
-            width: 70%;
-            float: none;
-        }
+    #imageSection img {
+        text-align: center;
+        width: 70%;
+        float: none;
+    }
 
     #productDetails {
         width: 100%;
@@ -181,11 +159,11 @@ button {
         width: 250px;
     }
 
-        #imageSection > img {
-            width: 250px;
-            height: 250px;
-            padding: 0px;
-        }
+    #imageSection > img {
+        width: 250px;
+        height: 250px;
+        padding: 0px;
+    }
 
     #productDetails { /*Infodiv*/
         grid-area: productDetailsPlace;
@@ -267,11 +245,11 @@ button {
         text-align: center;
     }
 
-        #imageSection img {
-            text-align: center;
-            width: 70%;
-            float: none;
-        }
+    #imageSection img {
+        text-align: center;
+        width: 70%;
+        float: none;
+    }
 }
 
 
@@ -294,11 +272,11 @@ button {
         width: 300px;
     }
 
-        #imageSection > img {
-            width: 300px;
-            height: 300px;
-            padding: 0px;
-        }
+    #imageSection > img {
+        width: 300px;
+        height: 300px;
+        padding: 0px;
+    }
 
     #productDetails { /*Infodiv*/
         grid-area: productDetailsPlace;
@@ -406,12 +384,12 @@ button {
         margin: auto;
     }
 
-        #imageSection img {
-            width: 100%;
-            float: right;
-            border-radius: 10px;
-            box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
-        }
+    #imageSection img {
+        width: 100%;
+        float: right;
+        border-radius: 10px;
+        box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+    }
 
     .number-input input[type=number] {
         font-family: sans-serif;

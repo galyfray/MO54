@@ -26,9 +26,9 @@
     box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
 }
 
-    #box:hover {
-        box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
-    }
+#box:hover {
+    box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
+}
 
 #div_container_all_article img {
     width: 100%;
@@ -55,19 +55,6 @@ Media query:
 #image_of_article_in_display {
     height: 30vh;
     max-height: 150px;
-}
-
-
-@media(max-width: 505px) {
-    #div_container_all_article {
-        width: 80%;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    #image_of_article_in_display {
-        height: 30vh;
-        max-height: 150px;
-    }
 }
 
 @media(min-width: 506px) {
