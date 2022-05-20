@@ -18,8 +18,11 @@ $(document).ready(function () {
     
 
     /*The code show the number of article in the cart*/
- //   var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-   // document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
+    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    if (old_data_saved) {
+        document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
+
+    }
 
     /*We read from the localStorage the properties of the article selected and then we create it*/
     let my_article = {
@@ -78,29 +81,41 @@ function create_see_article(article) {
     let infoDiv = document.createElement('div');
     infoDiv.id = 'productDetails';
     let detailsDiv = document.createElement('div');
+    detailsDiv.id = "detailDivId";
     let buttonDiv = document.createElement('div');
     buttonDiv.id = 'button';
     let box_selectdiv = document.createElement('div');
     box_selectdiv.className = "number-input";
     let emptydiv = document.createElement('div');
     emptydiv.style = "height: 12px; ";
-
+    emptydiv.id = "emptydiv";
+    
     let image = document.createElement('img');
     image.src = article.preview;
 
     let name = document.createElement('h1');
+    name.id = "nameId";
     let nameContent = document.createTextNode(article.name);
     let price = document.createElement('h3');
-    let priceContent = document.createTextNode("Prix unitaire : " + (parseFloat(article.price)).toFixed(2) + "€");
+    price.id = 'price';
+//    let priceContent = document.createTextNode("Prix unitaire : " + (parseFloat(article.price)).toFixed(2) + "€");
+    let priceContent = document.createTextNode((parseFloat(article.price)).toFixed(2) + "€");
+
     let brand = document.createElement('h3');
+    brand.id = "brandId";
     let brandContent = document.createTextNode(article.brand);
 
     let descriptionP = document.createElement('p');
     let descriptionPContent = document.createTextNode("Description : " + article.description);
     addText(descriptionP, article.description);
+    descriptionP.id = 'descriptionP';
 
     let add_btn = document.createElement('button');
     add_btn.id = "btn_add_article_to_cart";
+
+    
+
+
     let box_select_minus = document.createElement('button');
     let box_select_plus = document.createElement('button');
     box_select_plus.className = "plus";
@@ -177,8 +192,25 @@ function create_see_article(article) {
         }
         if (article_already_in_cart == false) {
             tab.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantity_article });
+            document.getElementById("nb_article_in_cart").textContent = tab.length;
         }
         sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+        //Soit on affichera directement la pannier pour indiquer l'ajout soit on devra avoir un pop up
+       // location.href = "cart.html";
+
+        document.getElementById("overlay_alert").style.display = "block";
+        document.getElementById("popupAlert").style.display = "block";
+        myVar = setTimeout(alertClosed, 1500);
+
+
+    
+        
+
     }
     return box_article
+}
+
+function alertClosed() {
+    document.getElementById('overlay_alert').style.display = "none";
+    document.getElementById("popupAlert").style.display = "none";
 }

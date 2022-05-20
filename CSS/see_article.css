@@ -1,24 +1,29 @@
 /*The div that contain the whole information about the article*/
 #box {
-    width: 90%;
+    width: 80%;
     margin: auto;
     padding: 20px;
 }
 
 /*The div that contain the image of the article*/
 #imageSection {
-    width: 80%;
+    width: 70%;
     margin: auto;
+    height: auto;
 }
-#imageSection img {
-    width: 100%;
-    float: right;
-    border-radius: 10px;
-    box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
-}
-#imageSection img:hover {
-    box-shadow: 1px 0px 9px 1px rgb(3, 122, 122);
-}
+
+    #imageSection img {
+        float: right;
+        border-radius: 10px;
+        box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+        height: auto;
+        width: 100%;
+        max-height: 250px;
+    }
+
+        #imageSection img:hover {
+            box-shadow: 1px 0px 9px 1px rgb(3, 122, 122);
+        }
 
 /*The div that contain the details of the article*/
 #productDetails {
@@ -41,103 +46,29 @@ button {
     cursor: pointer;
     font-size: 20px;
 }
-button a {
-    text-decoration: none;
-    font-size: 18px;
-}
-button:hover {
-    background-color: rgb(3, 94, 94);
-}
-button a:focus {
-    outline: none;
-}
+
+    button a {
+        text-decoration: none;
+        font-size: 18px;
+    }
+
+    button:hover {
+        background-color: rgb(3, 94, 94);
+    }
+
+    button a:focus {
+        outline: none;
+    }
 
 /*Media querry*/
-@media(max-width: 650px) {
-    #box {
-        width: 80%;
-    }
 
-    .number-input input[type=number] {
-        padding: .36px;
-        font-size: 17px;
-        height: 20px;
-    }
-}
-
-@media(max-width: 850px) {
-    .number-input input[type=number] {
-        padding: .40px;
-        font-size: 17px;
-        height: 22px;
-    }
-}
-
-@media(max-width: 900px) {
-    #box {
-        width: 60%;
-        margin: auto;
-        display: grid;
-        grid-template-columns: 1fr;
-    }
-
-    #imageSection {
-        width: 100%;
-        text-align: center;
-    }
-
-    #imageSection img {
-        text-align: center;
-        width: 70%;
-        float: none;
-    }
-
-    #productDetails {
-        width: 100%;
-    }
-
-    #button {
-        text-align: center;
-    }
-}
-
-@media(max-width: 1070px) {
-    .number-input input[type=number] {
-        font-size: 18px;
-        height: 25px;
-    }
-}
-
-@media(max-width: 1170px) {
-    button a {
-        font-size: 15px;
-    }
-
-    h4, p {
-        font-size: 13px;
-    }
-
-    h3 {
-        font-size: 15px;
-    }
-}
-
-@media(max-width: 1300px) {
-    button {
-        padding: 8px 13px;
-        background-color: rgb(3, 122, 122);
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-}
 
 #btn_add_article_to_cart {
     padding: 4px;
     background-color: rgb(220, 150, 220);
     border: none;
     cursor: pointer;
-    width : 100%;
+    width: 100%;
 }
 
 /*All the css used to customize the input of type : number*/
@@ -155,14 +86,351 @@ button a:focus {
     position: relative;
     box-shadow: 0px 0px 1px #474747;
 }
+
 .number-input input[type=number] {
     font-family: sans-serif;
-    padding: .50px;
+    padding: .36px;
     border: none;
     border-width: 0 2px;
-    font-size: 20px;
-    height: 30px;
+    font-size: 17px;
+    height: 20px;
     font-weight: bold;
     text-align: center;
     color: #9be3df;
+}
+
+
+@media(max-width: 650px) {
+    #box {
+        width: 80%;
+    }
+
+    .number-input input[type=number] {
+        padding: .36px;
+        font-size: 17px;
+        height: 20px;
+    }
+
+    #imageSection img {
+        height: auto;
+        width: 100%;
+        max-height: 250px;
+    }
+
+    #imageSection {
+        height: auto;
+        width: 70%;
+        margin: auto;
+    }
+}
+
+@media(min-width: 651px) {
+    .number-input input[type=number] {
+        padding: .40px;
+        font-size: 17px;
+        height: 22px;
+    }
+}
+
+
+@media(min-width: 851px) {
+    #box {
+        width: 60%;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    #imageSection {
+        width: 70%;
+        text-align: center;
+    }
+
+        #imageSection img {
+            text-align: center;
+            width: 70%;
+            float: none;
+        }
+
+    #productDetails {
+        width: 100%;
+    }
+
+    #button {
+        text-align: center;
+    }
+}
+
+
+@media(min-width: 901px) {
+    #box {
+        display: grid;
+        grid-gap: 0px;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace'
+            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace';
+        padding-top: 20px;
+        padding-left: 0px;
+    }
+
+    #imageSection {
+        grid-area: imagePlace;
+        padding: 2px;
+        width: 250px;
+    }
+
+        #imageSection > img {
+            width: 250px;
+            height: 250px;
+            padding: 0px;
+        }
+
+    #productDetails { /*Infodiv*/
+        grid-area: productDetailsPlace;
+        background-color: darkblue;
+        padding: 5px;
+        display: grid;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'name name name'
+            'brand brand brand'
+            'detail detail detail';
+        padding-top: 20px;
+    }
+
+    #detailDivId {
+        grid-area: detail;
+        padding-top: 10px;
+    }
+
+    #nameId {
+        grid-area: name;
+        font-size: 30px;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    #brandId {
+        grid-area: brand;
+        font-size: 25px;
+    }
+
+    #button {
+        background-color: red;
+        padding-top: 10px;
+        background-color: darkblue;
+        padding: 5px;
+        display: grid;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'select add add add add'
+            'select add add add add'
+            'empty empty empty empty empty';
+        padding-top: 20px;
+    }
+
+    #descriptionP {
+    }
+
+    #price {
+        font-size: 30px;
+    }
+
+    #quantity {
+        grid-area: select;
+        padding: 0px;
+    }
+
+    #emptydiv {
+        grid-area: empty;
+    }
+
+    #btn_add_article_to_cart {
+        grid-area: add;
+        width: 180px;
+        padding: 5px;
+    }
+}
+
+@media(min-width: 951px) {
+    .number-input input[type=number] {
+        font-size: 18px;
+        height: 25px;
+    }
+
+    #imageSection {
+        width: 70%;
+        text-align: center;
+    }
+
+        #imageSection img {
+            text-align: center;
+            width: 70%;
+            float: none;
+        }
+}
+
+
+@media(min-width: 1070px) {
+    #box {
+        display: grid;
+        grid-gap: 0px;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace'
+            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace';
+        padding-top: 20px;
+        padding-left: 0px;
+    }
+
+    #imageSection {
+        grid-area: imagePlace;
+        padding: 2px;
+        width: 300px;
+    }
+
+        #imageSection > img {
+            width: 300px;
+            height: 300px;
+            padding: 0px;
+        }
+
+    #productDetails { /*Infodiv*/
+        grid-area: productDetailsPlace;
+        background-color: darkblue;
+        padding: 5px;
+        display: grid;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'name name name'
+            'brand brand brand'
+            'detail detail detail';
+        padding-top: 20px;
+    }
+
+    #detailDivId {
+        grid-area: detail;
+        padding-top: 10px;
+    }
+
+    #nameId {
+        grid-area: name;
+        font-size: 30px;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    #brandId {
+        grid-area: brand;
+        font-size: 25px;
+    }
+
+    #button {
+        background-color: red;
+        padding-top: 10px;
+        background-color: darkblue;
+        padding: 5px;
+        display: grid;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'select add add add add'
+            'select add add add add'
+            'empty empty empty empty empty';
+        padding-top: 20px;
+    }
+
+    #descriptionP {
+    }
+
+    #price {
+        font-size: 30px;
+    }
+
+    #quantity {
+        grid-area: select;
+        padding: 0px;
+    }
+
+    #emptydiv {
+        grid-area: empty;
+    }
+
+    #btn_add_article_to_cart {
+        grid-area: add;
+        width: 180px;
+        padding: 5px;
+    }
+}
+
+
+@media(max-width: 1170px) and (min-width: 1071px) {
+    button a {
+        font-size: 15px;
+    }
+
+    h4, p {
+        font-size: 13px;
+    }
+
+    h3 {
+        font-size: 15px;
+    }
+}
+
+
+
+@media(max-width: 1300px) and (min-width: 1171px) {
+    button {
+        padding: 8px 13px;
+        background-color: rgb(3, 122, 122);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+}
+
+@media(min-width : 1301px) {
+    #box {
+        width: 90%;
+    }
+
+    #imageSection {
+        width: 80%;
+        margin: auto;
+    }
+
+        #imageSection img {
+            width: 100%;
+            float: right;
+            border-radius: 10px;
+            box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+        }
+
+    .number-input input[type=number] {
+        font-family: sans-serif;
+        padding: .50px;
+        border: none;
+        border-width: 0 2px;
+        font-size: 20px;
+        height: 30px;
+        font-weight: bold;
+        text-align: center;
+        color: #9be3df;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#alert_popup_content {
+    color: black;
+    font-size: 18px;
 }

@@ -8,15 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- The page is named-->
     <title>Mon panier - ourWebSite.fr</title>
-    <!-- We create a link between the HTML file and the css, js files-->
-    <link rel="stylesheet" href="../CSS/header_menu_css.css">
-    <link rel="stylesheet" href="../CSS/cart_css2.css">
-    <link rel="stylesheet" href="../CSS/common_css.css">
-    <script src="../JS/cart.js"></script>
-    <!--
-    please replace with compiler's script tags, note that this path won't work with the web server.
-    same for the CSS as for the JS :)
-        -->
+    <!-- We create a link between the HTML file and the css, js files
+    <!-- SCRIPTS [(hc_|cart_).*\.js] -->
+    <!-- STYLES [(common_|cart_).*\.css] -->
+
+
 </head>
 
 <body class="body_menu">
@@ -209,15 +205,15 @@
                         </li>
                     </ul>
                 </nav>
-                <a class="menu_icon"  style="padding-left: 15px;">
+                <a class="menu_icon" style="padding-left: 15px;">
                     <span></span>
                 </a>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                 <a href="cart.html">
                     <i class="fa" style="font-size: 24px; float: right; color: teal; padding: 2px; padding-right: 10px;">&#xf07a;</i>
-                    <span id='nb_article_in_cart'> 5 </span>
+                    <span id='nb_article_in_cart'></span>
                 </a>
-                <span id='web_site_name'><h2> Our website </h2></span>
+                <span id='web_site_name'> <h2>Our website</h2> </span>
             </div>
         </header>
         <!--The following div contain the cart and will be fulfilled with the js code-->
@@ -230,5 +226,23 @@
             <div id="div_container_all_article_in_cart"></div>
             <h1 id="total_to_pay"></h1>
         </div>
+
     </div>
+
 </body>
+
+<div id="overlay_alert" style="display : none">
+    <div class="alert-popup">
+        <div id="popupAlert">
+            <form class="form-container">
+                <h2>Voulez vous retirer cet article du panier?</h2>
+                <button type="button" class="btn" id="overlay_alert_btn_yes">Oui</button>
+                <button type="button" class="btn cancel" id="overlay_alert_btn_no">Non</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+</html>

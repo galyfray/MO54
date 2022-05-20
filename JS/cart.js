@@ -8,7 +8,9 @@
  */
 var total_price = 0;
 let cart_div;
-
+let id_article_deleted;
+let grid_article_in_cart_deleted;
+let line_deleted;
 
 $(document).ready(function () {
     'use strict';
@@ -38,7 +40,7 @@ $(document).ready(function () {
      * If not : we create all the articles to show them.
      */
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-    if (old_data_saved.length == 0) {
+    if (!old_data_saved || old_data_saved.length == 0) {
         /*
          * img : the image that says there is nothing in the cart
          * img_cart_div: the div that contains the image
@@ -52,7 +54,7 @@ $(document).ready(function () {
         let img = document.createElement('img');
         img.src = "../Ressource/nothing_in_cart.png";
         img.className = "img_cart_empty";
-        
+
         let img_cart_div = document.createElement('div');
         img_cart_div.appendChild(img);
         img_cart_div.className = "img_cart_empty";
@@ -67,8 +69,10 @@ $(document).ready(function () {
         cart_div.appendChild(warning_div);
         document.getElementById("nb_object_in_cart").textContent = "Hum...";
         document.getElementById("total_to_pay").textContent = "";
+        document.getElementById("nb_article_in_cart").textContent = 0;
         return cart_div;
     }
+    
     else {
         for (var i = 0; i < old_data_saved.length; i++) {
             createCart2(old_data_saved[i]);
@@ -158,17 +162,66 @@ function createCart2(article) {
      * We update the SessionStorage by deleting an entry .
      * We also update the component that show the number of article in the cart.
     */
-    del_text_div.onclick = function () {
+    del_text_div.onclick = function () {/*
         if (confirm('Etes vous sûr de vouloir retirer cet article du panier? ')) {
             cart_div.removeChild(grid_article_in_cart);
             cart_div.removeChild(line);            
             let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-
             old_data_saved = old_data_saved.filter(del => del.id != article.id);
             sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
             document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-            nb_article_in_cart.textContent = old_data_saved.length ;            
+            nb_article_in_cart.textContent = old_data_saved.length;            
+        }*/
+        document.getElementById("overlay_alert").style.display = "block";
+        document.getElementById("popupAlert").style.display = "block";
+        id_article_deleted = article.id;
+        grid_article_in_cart_deleted = grid_article_in_cart;
+        line_deleted = line;
+    }
+
+    document.getElementById("overlay_alert_btn_yes").onclick = function () {
+        cart_div.removeChild(grid_article_in_cart_deleted);
+        cart_div.removeChild(line_deleted);
+        let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+        old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
+        sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
+        document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
+        nb_article_in_cart.textContent = old_data_saved.length; 
+        document.getElementById("overlay_alert").style.display = "none";
+
+
+
+        //If the cart is empty, we show the image for it.
+        if (old_data_saved.length == 0) {
+            let grid_article_in_cart = document.createElement('div');
+            grid_article_in_cart.className = "grid-container";
+            grid_article_in_cart.style = "border: 2px solid rgb(230,230,230);  border-radius : 20px; ";
+
+            let img = document.createElement('img');
+            img.src = "../Ressource/nothing_in_cart.png";
+            img.className = "img_cart_empty";
+
+            let img_cart_div = document.createElement('div');
+            img_cart_div.appendChild(img);
+            img_cart_div.className = "img_cart_empty";
+
+            let warning = document.createTextNode("Il n'y a aucun article dans le panier");
+            let warning_div = document.createElement('div');
+            warning_div.className = "name_cart";
+            warning_div.appendChild(warning);
+            warning_div.style = "margin: 0 auto; text-align : center;";
+
+            cart_div.appendChild(img_cart_div);
+            cart_div.appendChild(warning_div);
+            document.getElementById("nb_object_in_cart").textContent = "Hum...";
+            document.getElementById("total_to_pay").textContent = "";
+            document.getElementById("nb_article_in_cart").textContent = 0;
+            return cart_div;
         }
+    }
+
+    document.getElementById("overlay_alert_btn_no").onclick = function () {
+        document.getElementById("overlay_alert").style.display = "none";
     }
 
     /*

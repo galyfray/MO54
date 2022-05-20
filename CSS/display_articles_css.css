@@ -1,4 +1,4 @@
- /*
+/*
     This code is used to give properties to the div containing all the articles.
     Here, the css code create 5 columns -> we have 5 articles by line.
     -> It will change according to the width of the device used (see the media querry part)
@@ -6,7 +6,7 @@
 #div_container_all_article {
     display: grid;
     grid-gap: 70px 20px;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     width: 90%;
     margin: auto;
     padding-bottom: 40px;
@@ -26,9 +26,9 @@
     box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
 }
 
-#box:hover {
-    box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
-}
+    #box:hover {
+        box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
+    }
 
 #div_container_all_article img {
     width: 100%;
@@ -50,10 +50,13 @@ Media query:
     -> the width of the div is redefined as well
  */
 
+
+
 #image_of_article_in_display {
-    height: 260px;
-    max-height: 260px;
+    height: 30vh;
+    max-height: 150px;
 }
+
 
 @media(max-width: 505px) {
     #div_container_all_article {
@@ -67,7 +70,7 @@ Media query:
     }
 }
 
-@media(max-width: 600px) {
+@media(min-width: 506px) {
     #div_container_all_article {
         width: 70%;
     }
@@ -78,7 +81,7 @@ Media query:
     }
 }
 
-@media(max-width: 650px) {
+@media(min-width: 601px) {
     #div_container_all_article {
         width: 90%;
     }
@@ -89,7 +92,7 @@ Media query:
     }
 }
 
-@media(max-width: 850px) {
+@media(min-width: 651px) {
     #div_container_all_article {
         display: grid;
         grid-gap: 70px 20px;
@@ -103,11 +106,51 @@ Media query:
     }
 }
 
-@media(max-width: 1070px) {
+@media(min-width: 851px) and (max-width: 1070px) {
     #div_container_all_article {
-        width: 95%;
+        width: 85%;
         grid-gap: 10px;
     }
+
+    #image_of_article_in_display {
+        height: 250px;
+        max-height: 250px;
+    }
+}
+
+@media(min-width: 1071px) and (max-width: 1170px) {
+    #div_container_all_article {
+        width: 85%;
+        grid-gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #image_of_article_in_display {
+        height: 260px;
+        max-height: 260px;
+    }
+}
+
+@media(min-width: 1171px) and (max-width: 1300px) {
+    #div_container_all_article {
+        width: 85%;
+        grid-gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #image_of_article_in_display {
+        height: 270px;
+        max-height: 270px;
+    }
+}
+
+@media(min-width: 1301px) {
+    #div_container_all_article {
+        width: 90%;
+        grid-gap: 10px;
+        grid-template-columns: repeat(5, 1fr);
+    }
+
     #image_of_article_in_display {
         height: 250px;
         max-height: 250px;
