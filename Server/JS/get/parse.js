@@ -1,12 +1,14 @@
 const INDEX = require("../utils/Index.js");
 const crypto = require("crypto");
-const parseNQL = require("../db/NQLParser.js");
+const DatabaseManager = require("../db/DatabaseManager.js");
+const {resolve} = require("../utils/utils.js");
+
+const manager = new DatabaseManager(resolve("Database"));
 
 INDEX.add(
     {
         "type"   : "get",
-        "handler": (req, res) => {
-            const AST = parseNQL(req.query.query);
+        "handler": async(req, res) => {
 
             res.status(200).json({
                 to_parse: req.query.query,
@@ -14,9 +16,11 @@ INDEX.add(
                     .createHash("sha256")
                     .update(req.query.query)
                     .digest("hex"),
-                "parsed": AST
+                "parsed": await manager.get(req.query.query)
             });
         },
         "route": "/parse"
     }
 );
+
+module.exports = manager.init();

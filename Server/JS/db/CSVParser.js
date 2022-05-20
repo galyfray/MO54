@@ -14,9 +14,11 @@ class CSVParser {
         let rows = [];
         let row;
 
-        while (this._char_stream.peek() != "\n") {
-            header.push(prefix + this._readWhile(this._isSeparator));
-            this._char_stream.next();
+        while (!(this._isEndOfLine(this._char_stream.peek()) || this._char_stream.eof())) {
+            header.push(prefix + this._readUntil(this._isBroadSeparator));
+            if (this._isSeparator(this._char_stream.peek())) {
+                this._char_stream.next();
+            }
         }
 
         this._skipWhile(this._isWhiteSpace);
@@ -25,11 +27,16 @@ class CSVParser {
             row = {};
             for (let i = 0;i < header.length;i++) {
                 if (this._isQuote(this._char_stream.peek())) {
-                    row[header[i]] = this._readWhile(this._isQuote);
+                    row[header[i]] = this._readUntil(this._isQuote);
+                    this._char_stream.next();
                 } else {
-                    row[header[i]] = this._readWhile(this._isSeparator);
+                    row[header[i]] = this._readUntil(this._isBroadSeparator);
+                    if (this._isSeparator(this._char_stream.peek())) {
+                        this._char_stream.next();
+                    } else {
+                        this._skipWhile(this._isWhiteSpace);
+                    }
                 }
-                this._char_stream.next();
             }
             rows.push(row);
             this._skipWhile(this._isWhiteSpace);
@@ -44,11 +51,19 @@ class CSVParser {
     }
 
     _isSeparator(char) {
-        return char == ",";
+        return char == ";";
+    }
+
+    _isBroadSeparator(char) {
+        return char == ";" || char == "\n";
     }
 
     _isWhiteSpace(char) {
         return " \t\n\r".indexOf(char) > -1;
+    }
+
+    _isEndOfLine(char) {
+        return "\n\r".indexOf(char) > -1;
     }
 
     _skipWhile(predicate) {
@@ -57,10 +72,10 @@ class CSVParser {
         }
     }
 
-    _readWhile(predicate) {
+    _readUntil(predicate) {
         let value = "";
         let char;
-        while ((char = this._char_stream.peek()) != null && predicate(char)) {
+        while ((char = this._char_stream.peek()) != null && !predicate(char)) {
             value += this._char_stream.next();
         }
         return value;

@@ -118,11 +118,12 @@ function parseOperatorExpression(token_stream) {
     };
 
     if (!value.operator) {
-        unexpectedToken(token_stream, {value: value.operator});
+        unexpectedToken(token_stream, {value: value.operator.value});
     }
 
     if (value.operator.type == "operator") {
         value.right = parseSide(token_stream);
+        value.operator = value.operator.value;
         return value;
     } else {
         unexpectedToken(token_stream, value.operator.value);

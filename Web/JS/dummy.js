@@ -61,12 +61,14 @@ const AJAX = {
 };
 
 document.onreadystatechange = function() {
-    AJAX.send({
-        "url"   : "https://localhost:8000/api/parse",
-        "method": "GET",
-        "MIME"  : "application/json",
-        "query" : "SELECT bannana FROM table WHERE id = 1"
-    }).then(req => {
-        console.log(req.responseText);
-    });
+    if (document.readyState === "complete") {
+        AJAX.send({
+            "url"   : "https://localhost:8000/api/parse",
+            "method": "GET",
+            "MIME"  : "application/json",
+            "query" : "SELECT name FROM product WHERE id >= 0"
+        }).then(req => {
+            console.log(req.responseText);
+        });
+    }
 };

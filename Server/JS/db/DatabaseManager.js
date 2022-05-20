@@ -22,16 +22,16 @@ class DatabaseManager {
     }
 
     async _loadMeta() {
-        const Tables = this._csv_parser.parse(path.join(this._folder, "Tables.csv"));
-        const Columns = this._csv_parser.parse(path.join(this._folder, "Columns.csv"));
+        const Tables = await this._csv_parser.parse(path.join(this._folder, "Tables.csv"));
+        const Columns = await this._csv_parser.parse(path.join(this._folder, "Columns.csv"));
         const meta = {};
         for (let table of Tables) {
             for (let column of Columns) {
                 if (column.table_id == table.id) {
-                    if (!meta[table.TableName]) {
-                        meta[table.TableName] = {};
+                    if (!meta[table.name]) {
+                        meta[table.name] = {};
                     }
-                    meta[table.TableName][column.ColumnName] = column.type;
+                    meta[table.name][column.name] = column.type;
                 }
             }
         }
@@ -54,38 +54,44 @@ class DatabaseManager {
     }
 
     async get(query) {
-        const AST = NQLParser.parse(query);
+        await this.init();
+
+        const AST = NQLParser(query);
+
         for (let node of AST.SELECT) {
             this._qualifyTable(node, AST.FROM);
         }
-        const condition = this._interprateWhere(AST.WHERE);
+
+        const condition = this._interprateWhere(AST.WHERE, AST.FROM);
         let data;
+
         try {
-            data = await this._csv_parser.parse(path.join(this._folder, AST.FROM + ".csv"));
+            data = await this._csv_parser.parse(path.join(this._folder, AST.FROM + ".csv"), AST.FROM + ".");
         } catch (e) {
             throw new Error(`Table ${AST.FROM} does not exist`);
         }
+
         return data.filter(condition);
     }
 
     _qualifyTable(node, table) {
         if (node.table == null) {
-            if (self._meta[table][node.column] != null) {
-                node.table = table;
-            } else {
+            if (this._meta[table][node.column] == null) {
                 throw new Error(`The column ${node.column} is not defined in the table ${table}`);
             }
         } else if (node.table != table) {
             throw new Error(`The table ${node.table} is not defined in the query`);
         }
+
+        node.qualifyied = table + "." + node.column;
     }
 
-    _interprateWhere(where,table) {
+    _interprateWhere(where, table) {
         if (where == null) {
             return () => true;
         }
         if (where.type == "parenthesis") {
-            return this._interprateWhere(where.value);
+            return this._interprateWhere(where.value, table);
         }
         if (where.operator) {
             switch (where.operator) {
@@ -100,44 +106,43 @@ class DatabaseManager {
                 return data => left(data) || right(data);
             }
             default: {
-                let full_name, value, mapper = val => val;
+                let value, mapper = val => val;
                 if (where.left.column) {
                     this._qualifyTable(where.left, table);
-                    full_name = where.left.table + "." + where.left.column;
                     value = where.right;
                     if (where.right.column) {
                         throw new Error("Cannot compare two columns in a WHERE clause");
                     }
-                    if (self._meta[table][where.left.column] != value.type) {
-                        if (self._meta[table][where.left.column] == "date") {
+                    if (this._meta[table][where.left.column] != value.type) {
+                        if (this._meta[table][where.left.column] == "date") {
                             mapper = val => new Date(val);
                         } else {
                             throw new Error(
-                                `Type mismatch: ${self._meta[table][where.left.column]}\
-                                 != ${value.type} for ${full_name}`
+                                `Type mismatch: ${this._meta[table][where.left.column]}\
+                                 != ${value.type} for ${where.left.qualifyied}`
                             );
                         }
                     }
                     switch (where.operator) {
 
                     case "=":
-                        return data => mapper(data[full_name]) == mapper(value.value);
+                        return data => mapper(data[where.left.qualifyied]) == mapper(value.value);
 
                     case "!=":
-                        return data => mapper(data[full_name]) != mapper(value.value);
+                        return data => mapper(data[where.left.qualifyied]) != mapper(value.value);
 
                     case ">":
-                        return data => mapper(data[full_name]) > mapper(value.value);
+                        return data => mapper(data[where.left.qualifyied]) > mapper(value.value);
 
                     case "<":
-                        return data => mapper(data[full_name]) < mapper(value.value);
+                        return data => mapper(data[where.left.qualifyied]) < mapper(value.value);
 
                     case ">=":
-                        return data => mapper(data[full_name]) >= mapper(value.value);
+                        return data => mapper(data[where.left.qualifyied]) >= mapper(value.value);
 
                     case "<=":
-                        return data => mapper(data[full_name]) <= mapper(value.value);
-                        
+                        return data => mapper(data[where.left.qualifyied]) <= mapper(value.value);
+
                     default:
                         throw new Error(`Unknown operator ${where.operator}`);
                     }
@@ -158,7 +163,7 @@ class DatabaseManager {
                     case ">=":
                         where.operator = "<=";
                         break;
-                        
+
                     case "<=":
                         where.operator = ">=";
                         break;
@@ -182,6 +187,7 @@ class DatabaseManager {
 // - support IN, LIKE, NOT
 // - reformat the code that interprete WHERE
 // - alterate the entries to use the name used in the query (unqualifyed in the query => unqualifyed in the result)
+// - add documentation
 
 
 module.exports = DatabaseManager;
