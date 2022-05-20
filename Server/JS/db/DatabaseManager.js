@@ -61,6 +61,7 @@ class DatabaseManager {
         for (let node of AST.SELECT) {
             this._qualifyTable(node, AST.FROM);
         }
+        const mapper = this._makeSelectMapper(AST.SELECT);
 
         const condition = this._interprateWhere(AST.WHERE, AST.FROM);
         let data;
@@ -71,7 +72,27 @@ class DatabaseManager {
             throw new Error(`Table ${AST.FROM} does not exist`);
         }
 
-        return data.filter(condition);
+        return data.filter(condition).map(mapper);
+    }
+
+    _makeSelectMapper(SELECT) {
+        const map = {};
+        for (let node of SELECT) {
+            if (node.table == null) {
+                map[node.qualifyied] = node.column;
+            } else {
+                map[node.qualifyied] = node.qualifyied;
+            }
+        }
+        return element => {
+            let new_elem = {};
+
+            for (let key in map) {
+                new_elem[map[key]] = element[key];
+            }
+
+            return new_elem;
+        };
     }
 
     _qualifyTable(node, table) {
@@ -186,7 +207,6 @@ class DatabaseManager {
 // - improove error handling
 // - support IN, LIKE, NOT
 // - reformat the code that interprete WHERE
-// - alterate the entries to use the name used in the query (unqualifyed in the query => unqualifyed in the result)
 // - add documentation
 
 
