@@ -11,7 +11,7 @@ class CSVParser {
      * This method will read and parse a CSV file returning an array of all its rows
      * @param {string} file the filename of the CSV file to parse
      * @param {string} prefix a prefix to prepend to the header's names.
-     * @returns {Object[]} An array of rows. each row is an object where
+     * @returns {Promise<Object[]>} An array of rows. each row is an object where
      *  the keys are the name of a columns and the value the associated value.
      */
     async parse(file, prefix = "") {

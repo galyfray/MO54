@@ -16,7 +16,8 @@ class NQLParser {
     /**
      * Parsing function. This function parse the NQL query and return an AST.
      * @param {String} query the query to parse
-     * @returns an AST
+     * @returns {*} an AST
+     * @throws {UnexpectedTokenError} if the query is not valid.
      */
     parse(query) {
         this._query = query;
@@ -148,7 +149,7 @@ class NQLParser {
 
     _parse_operator_expression() {
         let value = {
-            type    : NQLParser.TYPES.BINARY_EXPRESSION,
+            type    : NQLParser.TYPES.OPERATOR_EXPRESSION,
             left    : this._parse_side(),
             operator: this._token_stream.next()
         };
@@ -263,9 +264,10 @@ NQLParser.PRECEDENCE = {
 };
 
 NQLParser.TYPES = {
-    IDENTIFIER       : "identifier",
-    PARENTHESIS      : "parenthesis",
-    BINARY_EXPRESSION: "binary_expression"
+    IDENTIFIER         : "identifier",
+    PARENTHESIS        : "parenthesis",
+    BINARY_EXPRESSION  : "binary_expression",
+    OPERATOR_EXPRESSION: "operator"
 };
 
 NQLParser.TOKENIZERS = [

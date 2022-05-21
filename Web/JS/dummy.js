@@ -66,7 +66,7 @@ document.onreadystatechange = function() {
             "url"   : "https://localhost:8000/api/parse",
             "method": "GET",
             "MIME"  : "application/json",
-            "query" : "SELECT name FROM product WHERE id >= 0"
+            "query" : "SELECT name price FROM product WHERE id >= 0"
         }).then(req => {
             console.log(req.responseText);
         });

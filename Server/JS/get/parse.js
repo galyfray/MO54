@@ -1,6 +1,6 @@
 const INDEX = require("../utils/Index.js");
 const crypto = require("crypto");
-const DatabaseManager = require("../db/DatabaseManager.js");
+const {DatabaseManager} = require("../db/DatabaseManager.js");
 const {resolve} = require("../utils/utils.js");
 
 const manager = new DatabaseManager(resolve("Database"));
