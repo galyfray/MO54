@@ -106,6 +106,7 @@ class CSVParser {
      * @param {*} predicate the predicate that will determine if the function should skip the next char from the stream
      */
     _skipWhile(predicate) {
+        predicate = predicate.bind(this);
         while (this._char_stream.peek() && predicate(this._char_stream.peek())) {
             this._char_stream.next();
         }
@@ -117,6 +118,7 @@ class CSVParser {
      * @returns {string} the value read
      */
     _readUntil(predicate) {
+        predicate = predicate.bind(this);
         let value = "";
         let char;
         while ((char = this._char_stream.peek()) != null && !predicate(char)) {
