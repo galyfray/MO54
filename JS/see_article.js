@@ -12,18 +12,12 @@
     });
 })(jQuery);
 
-/*container_product_div : way to use the element "containerProduct" that already exist in the view.*/
-let container_product_div;
 $(document).ready(function () {
-    
-
     /*The code show the number of article in the cart*/
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     if (old_data_saved) {
         document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
-
     }
-
     /*We read from the localStorage the properties of the article selected and then we create it*/
     let my_article = {
         "name": localStorage.getItem('name_article'),
@@ -33,7 +27,6 @@ $(document).ready(function () {
         "id": localStorage.getItem('id_article'),
         "preview": localStorage.getItem("image_article")
     }
-    container_product_div = document.getElementById("containerProduct");
     create_see_article(my_article);
 });
 /**
@@ -74,6 +67,7 @@ function create_see_article(article) {
      * - box_select_minus : a <button> to reduce the quantity wanted for an article of 1
      * - box_select_plus : a <button> to increase the quantity wanted for an article of 1
      */
+    let container_product_div = document.getElementById("containerProduct");
     let box_article = document.createElement('div');
     box_article.id = 'box';
     let imagediv = document.createElement('div');
@@ -168,14 +162,12 @@ function create_see_article(article) {
 
     * old_data_saved : the var that contains all the informations stored in the sessionStorage
     * quantity_article : the quantity of the item purchased
-    * tab : the array that contains all the json array to save into the sessionStorage.
     * article_already_in_cart : has the value true if the article already exist in the cart of false in the other way around.
     */
 
     add_btn.onclick = function () {
         let quantity_article = document.getElementById('quantity').value;
         let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-        let tab = [];
         let article_already_in_cart = false;
         if (old_data_saved != null) {
             for (i = 0; i < old_data_saved.length; i++) {
@@ -183,14 +175,14 @@ function create_see_article(article) {
                     old_data_saved[i].quantity = parseInt(old_data_saved[i].quantity) + parseInt(quantity_article);
                     article_already_in_cart = true;
                 }
-                tab.push(old_data_saved[i]);
             }
         }
+
         if (article_already_in_cart == false) {
-            tab.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantity_article });
+            old_data_saved.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantity_article });
             document.getElementById("nb_article_in_cart").textContent = tab.length;
         }
-        sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+        sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
         //Soit on affichera directement la pannier pour indiquer l'ajout soit on devra avoir un pop up
        // location.href = "cart.html";
 

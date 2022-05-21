@@ -3,11 +3,13 @@
  * It's a global var because it will be used when an article is created
  * and also when the quantity of the article is updated.
  * 
- * cart_div : use to access the div 'div_container_all_article_in_cart'
- * → contains all the future article from the cart.html
+ * grid_article_in_cart_deleted : use to delete the grid for an article in the cart
+ * once the "Yes" button has been clicked to confirm the deletion.
+ * line_deleted : same reasons as grid_article_in_cart_deleted
+  * id_article_deleted : we need to have the id of the article that will be deleted
+ * once the  "Yes" button has been clicked to confirm the deletion.
  */
 var total_price = 0;
-let cart_div;
 let id_article_deleted;
 let grid_article_in_cart_deleted;
 let line_deleted;
@@ -31,8 +33,6 @@ $(document).ready(function () {
         });
     })(jQuery);
 
-    cart_div = document.getElementById('div_container_all_article_in_cart');
-
     /*
      * We load the stuff saved in the sessionStorage and then we check if it's empty or not.
      * If this is empty : we create an image with a text saying that the cart is empty.
@@ -40,6 +40,7 @@ $(document).ready(function () {
      */
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     if (!old_data_saved || old_data_saved.length == 0) {
+        let cart_div = document.getElementById('div_container_all_article_in_cart');
         /*
          * img : the image that says there is nothing in the cart
          * img_cart_div: the div that contains the image
@@ -102,6 +103,7 @@ function createCart2(article) {
      * price_div : the div that contains the price of the article
      * quantite : the input that contains the quantity of the article
      */
+    let cart_div = document.getElementById('div_container_all_article_in_cart');
 
     let grid_article_in_cart = document.createElement('div');
     grid_article_in_cart.className = "grid-container";
@@ -282,13 +284,12 @@ You may also want to check but JSON.parse should automatically parse integer and
  * @param {any} elem : the input that contains the value of the quantity chosen for an article
  */
 function update_json_file(article, elem) {
+    'use strict';
     let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
-    var tab = [];
     for (let i = 0; i < old_data_saved.length; i++) {
         if (old_data_saved[i].id == article.id) {
             old_data_saved[i].quantity = elem.value;
         }
-        tab.push(old_data_saved[i]);
     }
-    sessionStorage.setItem('articleToCart2', JSON.stringify(tab));
+    sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
 }
