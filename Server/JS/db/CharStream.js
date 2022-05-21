@@ -51,7 +51,7 @@ class CharStream {
     }
 
     /**
-     * Get the current line number in the stream.
+     * Get the current line number in the stream. The first line is 1.
      * @returns {Number} the line number of the current character in the stream.
      */
     getLine() {
@@ -59,7 +59,7 @@ class CharStream {
     }
 
     /**
-     * Get the current column number in the stream.
+     * Get the current column number in the stream. The first column is 1.
      * @returns {Number} the column number of the current character in the stream.
      */
     getColumn() {

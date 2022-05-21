@@ -1,6 +1,6 @@
 const path = require("path");
 const CSVParser = require("./CSVParser.js");
-const NQLParser = require("./NQLParser.js");
+const {NQLParser} = require("./NQLParser.js");
 
 class DatabaseManager {
 
@@ -16,6 +16,7 @@ class DatabaseManager {
         }
 
         this._csv_parser = new CSVParser();
+        this._nql_parser = new NQLParser();
         this._meta = await this._loadMeta();
 
         this._init = true;
@@ -56,7 +57,7 @@ class DatabaseManager {
     async get(query) {
         await this.init();
 
-        const AST = NQLParser(query);
+        const AST = this._nql_parser.parse(query);
 
         for (let node of AST.SELECT) {
             this._qualifyTable(node, AST.FROM);

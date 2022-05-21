@@ -2,229 +2,305 @@ const CharStream = require("./CharStream.js");
 const TokenStream = require("./TokenStream.js");
 const tokenizers = require("./tokenizers.js");
 
-const PRECEDENCE = {
+class UnexpectedTokenError extends Error {}
+
+class NQLParser {
+
+    constructor() {
+        this._char_stream = null;
+        this._query = "";
+        this._token_stream = null;
+        this._tokenizers = [];
+    }
+
+    /**
+     * Parsing function. This function parse the NQL query and return an AST.
+     * @param {String} query the query to parse
+     * @returns an AST
+     */
+    parse(query) {
+        this._query = query;
+        this._char_stream = new CharStream(query);
+
+        this._token_stream = new TokenStream(
+            this._char_stream,
+            this._isWhiteSpace,
+            ...NQLParser.TOKENIZERS
+        );
+        if (this._token_stream.eof()) {
+            return {};
+        }
+
+        const AST = {};
+
+        if (this._token_stream.peek().value.toUpperCase() !== "SELECT") {
+            this._throw(this._token_stream.next(), "SELECT");
+        }
+
+        AST.SELECT = this._parse_select();
+
+        if (this._token_stream.peek().value.toUpperCase() !== "FROM") {
+            this._throw(this._token_stream.next(), "FROM");
+        }
+
+        this._token_stream.next(); // Skip FROM
+
+        if (this._token_stream.peek().type !== "identifier") {
+            this._throw(this._token_stream.next(), "a table identifier");
+        }
+
+        AST.FROM = this._token_stream.next().value;
+
+        // TODO : support JOIN
+        if (this._token_stream.peek().value.toUpperCase() !== "WHERE") {
+            this._throw(this._token_stream.next(), "WHERE");
+        }
+
+        AST.WHERE = this._parse_where();
+
+        if (!this._token_stream.eof()) {
+            this._throw(this._token_stream.next(), "end of query");
+        }
+
+        return AST;
+    }
+
+    //=====// Main parsing functions //=====//
+
+    /**
+     * This function parse the column identifier of the SELECT clause.
+     * @returns {object[]} the parsed identifiers
+     */
+    _parse_select() {
+        this._token_stream.next(); // Skip SELECT
+        let select = [];
+        while (this._token_stream.peek().type == "identifier") {
+            select.push(this._parse_identifier(this._token_stream.next().value));
+        }
+        if (select.length == 0) {
+            this._throw(this._token_stream.next(), "a column identifier");
+        }
+        return select;
+    }
+
+    _parse_where() {
+        this._token_stream.next(); // Skip WHERE
+        return this._parse_binary_expression(this._token_stream);
+    }
+
+    //=====// Generic parsing functions //=====//
+
+    /**
+     * Helper to parse an identifier
+     * @param {string} value the identifier to parse
+     * @returns {object} the parsed identifier
+     */
+    _parse_identifier(value) {
+        if (value.indexOf(".") > -1) {
+            value = value.split(".");
+            return {
+                type  : NQLParser.TYPES.IDENTIFIER,
+                column: value.pop(),
+                table : value.shift()
+            };
+        } else {
+            return {
+                type  : NQLParser.TYPES.IDENTIFIER,
+                column: value,
+                table : null
+            };
+        }
+    }
+
+    /**
+     * Helper function that parse the content of a parenthesis.
+     * @returns the parsed element found in the parenthesis, wrapped in an object.
+     */
+    _parse_parenthesis() {
+        if (this._token_stream.peek().value != "(") {
+            this._throw(this._token_stream.next(), "(");
+        }
+        let value = this._parse_binary_expression();
+        let token = this._token_stream.next();
+        if (token.value != ")") {
+            this._throw(token, ")");
+        }
+        value = {
+            type : NQLParser.TYPES.PARENTHESIS,
+            value: value
+        };
+        return value;
+    }
+
+    /**
+     * Helper function that parse the side of a simple binary expression.
+     * @returns the parsed side.
+     */
+    _parse_side() {
+        let token = this._token_stream.next();
+        if (token.type == "identifier") {
+            return this._parse_identifier(token.value);
+        } else if (token.type == "int" || token.type == "float" || token.type == "string") {
+            return token;
+        }
+        this._throw(token, "an identifier, a number or a string");
+    }
+
+    _parse_operator_expression() {
+        let value = {
+            type    : NQLParser.TYPES.BINARY_EXPRESSION,
+            left    : this._parse_side(),
+            operator: this._token_stream.next()
+        };
+
+        if (!value.operator) {
+            this._throw(null, "an operator");
+        }
+
+        // TODO : support IN
+        if (value.operator.type == "operator") {
+            value.right = this._parse_side();
+            value.operator = value.operator.value;
+            return value;
+        } else {
+            this._throw(value.operator, "an operator");
+        }
+    }
+
+    _parse_binary_expression() {
+        let value;
+
+        // TODO : support NOT
+        if (this._token_stream.peek().type == NQLParser.TYPES.PARENTHESIS) {
+            value = this._parse_parenthesis();
+        } else {
+            value = this._parse_operator_expression();
+        }
+
+        if (this._token_stream.eof()) {
+            return value;
+        }
+
+        if (this._token_stream.peek().type == "operator") {
+            this._throw(this._token_stream.next());
+        }
+        if (this._token_stream.peek().type == "keyword") {
+            if (this._token_stream.peek().value.toUpperCase() == "AND" || this._token_stream.peek().value.toUpperCase() == "OR") {
+                value = {
+                    type    : NQLParser.TYPES.BINARY_EXPRESSION,
+                    left    : value,
+                    operator: this._token_stream.next().value.toUpperCase(),
+                    right   : this._parse_binary_expression()
+                };
+
+                // The aims of those following lines is to ensure that the operators will be interprated in the right order.
+                value.precedence = NQLParser.PRECEDENCE[value.operator];
+                if (value.right.precedence && value.precedence > value.right.precedence) {
+                    value.right.left = {
+                        type    : NQLParser.TYPES.BINARY_EXPRESSION,
+                        left    : value.left,
+                        operator: value.operator,
+                        right   : value.right.left
+                    };
+                    value = value.right;
+                }
+            }
+        }
+        return value;
+    }
+
+    //=====// Generic helpers //=====//
+
+    /**
+     * Helper function that build an error message an then throw an {@link UnexpectedTokenError}
+     * @param {object} token the unexpected token, can be null.
+     * @param {string} expected optional string that contains the expected tokens if known.
+     */
+    _throw(token, expected = null) {
+        let message;
+        if (token) {
+            let column = this._char_stream.getColumn() - token.value.length;
+
+            message = `Unexpected token ${token.value} at` +
+                `line ${this._char_stream.getLine()} column ${this._char_stream.getColumn()}`;
+
+            if (expected) {
+                message += `, expected ${expected}`;
+            }
+
+            message += "\n" + this._query.split("\n")[this._char_stream.getLine() - 1] + "\n";
+
+            for (let i = 0;i < column - 1;i++) {
+                message += " ";
+            }
+            for (let i = 0;i < token.value.length;i++) {
+                message += "^";
+            }
+
+            throw new UnexpectedTokenError(message);
+        } else {
+            message = `Unexpected end of query at` +
+                `line ${this._char_stream.getLine()} column ${this._char_stream.getColumn()}`;
+
+            if (expected) {
+                message += `, expected ${expected}`;
+            }
+
+            throw new UnexpectedTokenError(message);
+        }
+    }
+
+    _isWhiteSpace(char) {
+        // TODO : benchmark this function
+        return char == " " || char == "\t" || char == "\n" || char == "\r";
+    }
+
+}
+
+NQLParser.PRECEDENCE = {
     "OR" : 2,
     "AND": 3
 };
 
-function getPosition(stream, token) {
-    return `line ${stream.getLine()}, column ${stream.getColumn() - token ? token.length : 0}`;
-}
+NQLParser.TYPES = {
+    IDENTIFIER       : "identifier",
+    PARENTHESIS      : "parenthesis",
+    BINARY_EXPRESSION: "binary_expression"
+};
 
-function parseIdentifier(value) {
-    if (value.indexOf(".") > -1) {
-        value = value.split(".");
-        return {
-            column: value.pop(),
-            table : value.shift()
-        };
-    } else {
-        return {
-            column: value,
-            table : null
-        };
-    }
-}
-
-function parseSelect(token_stream) {
-    let token = token_stream.next();
-    let select = [];
-    while (token.type == "identifier") {
-        select.push(parseIdentifier(token.value));
-        token = token_stream.next();
-    }
-    if (select.length == 0) {
-        unexpectedToken(token_stream, token.value);
-    }
-    return {select, token};
-}
-
-function parseWhere(token_stream) {
-    let token = token_stream.peek();
-    let where = {};
-    if (token.type == "parenthesis") {
-        token_stream.next();
-        if (token.value == "(") {
-            where.right = parseParenthesis(token_stream);
-        } else {
-            unexpectedToken(token_stream, token.value);
+NQLParser.TOKENIZERS = [
+    new tokenizers.stringTokenizer(),
+    new tokenizers.numberTokenizer(),
+    new tokenizers.keywordTokenizer(
+        [
+            "SELECT",
+            "FROM",
+            "WHERE",
+            "AND",
+            "OR"
+        ],
+        (kw, list) => {
+            return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
         }
-    } else {
-        where = parseBinaryExpression(token_stream);
-    }
+    ),
+    new tokenizers.OperatorTokenizer(),
+    new tokenizers.keywordTokenizer(
+        [
+            "(",
+            ")"
+        ],
+        tokenizers.keywordTokenizer.DEFAULT_PREDICATE,
+        NQLParser.TYPES.PARENTHESIS
+    )
+];
 
-    return where;
-}
-
-function parseParenthesis(token_stream) {
-    let value = parseBinaryExpression(token_stream);
-    let token = token_stream.next();
-    if (token.value != ")") {
-        unexpectedToken(token_stream, token.value);
-    }
-    value = {
-        type : "parenthesis",
-        value: value
-    };
-    return value;
-}
-
-function parseBinaryExpression(token_stream) {
-    let token = token_stream.peek();
-    let value;
-    if (token.type == "parenthesis") {
-        if (token.value == "(") {
-            token_stream.next();
-            value = parseParenthesis(token_stream);
-        }
-    }
-    value = parseOperatorExpression(token_stream);
-
-    if (token_stream.eof()) {
-        return value;
-    }
-
-    token = token_stream.peek();
-
-    if (token.type == "operator") {
-        unexpectedToken(token_stream, token.value);
-    }
-    if (token.type == "keyword") {
-        if (token.value.toUpperCase() == "AND" || token.value.toUpperCase() == "OR") {
-            token_stream.next();
-            value = {
-                left    : value,
-                operator: token.value.toUpperCase(),
-                right   : parseBinaryExpression(token_stream)
-            };
-            value.precedence = PRECEDENCE[value.operator];
-            if (value.right.precedence && value.precedence > value.right.precedence) {
-                value.right.left = {
-                    left    : value.left,
-                    operator: value.operator,
-                    right   : value.right.left
-                };
-                value = value.right;
-            }
-        }
-    }
-    return value;
-}
-
-function parseOperatorExpression(token_stream) {
-    let value = {
-        left    : parseSide(token_stream),
-        operator: token_stream.next()
-    };
-
-    if (!value.operator) {
-        unexpectedToken(token_stream, {value: value.operator.value});
-    }
-
-    if (value.operator.type == "operator") {
-        value.right = parseSide(token_stream);
-        value.operator = value.operator.value;
-        return value;
-    } else {
-        unexpectedToken(token_stream, value.operator.value);
-    }
-}
-
-function parseSide(token_stream) {
-    let token = token_stream.next();
-    if (token.type == "identifier") {
-        return parseIdentifier(token.value);
-    } else if (token.type == "parenthesis") {
-        if (token.value == "(") {
-            return parseParenthesis(token_stream);
-        } else {
-            unexpectedToken(token_stream, token.value);
-        }
-    } else if (token.type == "int" || token.type == "float" || token.type == "string") {
-        return token;
-    }
-
-}
-
-function unexpectedToken(stream, token) {
-    throw new Error("Unexpected token: " + token.value + " at " + getPosition(stream, token.value));
-}
-
-/**
- * @param {String} nql the query to parse
- * @returns an AST
- */
-function parseNQL(nql) {
-    let char_stream = new CharStream(nql);
-
-    // TODO externalize the tokenizers construction to reduce memory usage
-    let token_stream = new TokenStream(
-        char_stream,
-        char => " \t\n\r".indexOf(char) !== -1,
-        new tokenizers.stringTokenizer(),
-        new tokenizers.numberTokenizer(),
-        new tokenizers.keywordTokenizer(
-            [
-                "SELECT",
-                "FROM",
-                "WHERE",
-                "AND",
-                "OR"
-            ],
-            (kw, list) => {
-                return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
-            }
-        ),
-        new tokenizers.OperatorTokenizer(),
-        new tokenizers.keywordTokenizer(
-            [
-                "(",
-                ")"
-            ],
-            tokenizers.keywordTokenizer.DEFAULT_PREDICATE,
-            "parenthesis"
-        )
-    );
-    if (token_stream.eof()) {
-        return {};
-    }
-    const AST = {};
-    let token = token_stream.next();
-    if (token.value.toUpperCase() !== "SELECT") {
-        unexpectedToken(token_stream, token.value);
-    }
-
-    token = parseSelect(token_stream);
-    AST.SELECT = token.select;
-    token = token.token;
-    if (token.value.toUpperCase() !== "FROM") {
-        unexpectedToken(token_stream, token.value);
-    }
-
-    token = token_stream.next();
-    if (token.type !== "identifier") {
-        unexpectedToken(token_stream, token.value);
-    }
-
-    AST.FROM = token.value;
-    token = token_stream.next();
-    if (token.value.toUpperCase() !== "WHERE") {
-        unexpectedToken(token_stream, token.value);
-    }
-    AST.WHERE = parseWhere(token_stream);
-
-    return AST;
-
-}
 
 //TODO :
-// - refactor to class
 // - benchmark
 // - add tests
-// - add documentation
 // - support JOINS
 // - support LIKE
 // - support IN
 // - support NOT
-// - improove Error Handling
-module.exports = parseNQL;
+
+module.exports = {NQLParser, UnexpectedTokenError};
