@@ -208,6 +208,6 @@ class DatabaseManager {
 // - support IN, LIKE, NOT
 // - reformat the code that interprete WHERE
 // - add documentation
-
+// - Parse floats and ints + check if when recieved they are already parsed
 
 module.exports = DatabaseManager;

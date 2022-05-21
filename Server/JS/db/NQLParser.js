@@ -226,4 +226,5 @@ function parseNQL(nql) {
 // - support LIKE
 // - support IN
 // - support NOT
+// - improove Error Handling
 module.exports = parseNQL;

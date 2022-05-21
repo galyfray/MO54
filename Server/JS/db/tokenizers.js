@@ -3,44 +3,50 @@ const Tokenizer = require("./Tokenizer");
 class stringTokenizer extends Tokenizer {
 
     constructor() {
-        super();
+        super("string");
     }
 
     canTokenize(char) {
         return char === "'";
     }
 
+    _canContinueTokenization(char) {
+        return !this.canTokenize(char);
+    }
+
     tokenize(charStream) {
         charStream.next();
-        return {
-            value: this._readWhile(charStream, char => !this.canTokenize(char)),
-            type : "string"
-        };
+        return super.tokenize(charStream);
     }
 }
 
 class numberTokenizer extends Tokenizer {
 
     constructor() {
-        super();
+        super("int");
+        this._isFloat = false;
     }
 
     canTokenize(char) {
         return char >= "0" && char <= "9";
     }
 
-    tokenize(charStream) {
-        let isFloat = false;
-        let value = this._readWhile(charStream, char => this.canTokenize(char) || char === "." && !isFloat && (isFloat = true));
+    _canContinueTokenization(char) {
+        return this.canTokenize(char) || char === "." && !this._isFloat && (this._isFloat = true);
+    }
 
-        if (isFloat) {
+    tokenize(charStream) {
+        this._isFloat = false;
+        let value = super.tokenize(charStream);
+
+        if (this._isFloat) {
             return {
-                value: parseFloat(value),
+                value: parseFloat(value.value),
                 type : "float"
             };
         } else {
             return {
-                value: parseInt(value),
+                value: parseInt(value.value),
                 type : "int"
             };
         }
@@ -50,18 +56,15 @@ class numberTokenizer extends Tokenizer {
 class identifierTokenizer extends Tokenizer {
 
     constructor() {
-        super();
+        super("identifier");
     }
 
     canTokenize(char) {
         return char >= "a" && char <= "z" || char >= "A" && char <= "Z" || char === "_";
     }
 
-    tokenize(charStream) {
-        return {
-            value: this._readWhile(charStream, char => this.canTokenize(char) || char == "."),
-            type : "identifier"
-        };
+    _canContinueTokenization(char) {
+        return this.canTokenize(char) || char == ".";
     }
 }
 
@@ -98,17 +101,13 @@ keywordTokenizer.DEFAULT_PREDICATE = (kw, list) => list.includes(kw);
 
 class OperatorTokenizer extends Tokenizer {
 
+    constructor() {
+        super("operator");
+    }
+
     canTokenize(char) {
         //TODO check if we can make this faster
         return char == "+" || char == "-" || char == "*" || char == "/" || char == "=" || char == ">" || char == "<" || char == "!";
-    }
-
-    // TODO: remove duplicated code
-    tokenize(charStream) {
-        return {
-            value: this._readWhile(charStream, char => this.canTokenize(char)),
-            type : "operator"
-        };
     }
 
 }

@@ -3,12 +3,29 @@
 class Tokenizer {
 
     /**
+     * @param {string} type the type of the tokens that will be created
+     */
+    constructor(type) {
+        this._type = type;
+    }
+
+    /**
      * This method check if the tokenizer can tokenize the stream starting from the given character.
-     * @param {*} char the character to test
-     * @returns {Boolean} true if the tokenizer can tokenize from the character, false otherwise.
+     * @param {string} char the character to test
+     * @returns {boolean} true if the tokenizer can tokenize from the character, false otherwise.
      */
     canTokenize(char) {
-        return false;
+        throw new Error("tokenizer not implemented");
+    }
+
+    /**
+     * This method check if the tokenizer can continue to tokenize the stream according to the next character.
+     * by default this method return the result from {@link canTokenize}
+     * @param {string} char the character to test
+     * @returns {boolean} true if the tokenizer can continue tokenizing from the character, false otherwise.
+     */
+    _canContinueTokenization(char) {
+        return this.canTokenize(char);
     }
 
     /**Private method.
@@ -35,7 +52,10 @@ class Tokenizer {
      * @returns {Token} the token extracted from the stream.
     */
     tokenize(charStream) {
-        throw new Error("tokenizer not implemented");
+        return {
+            value: this._readWhile(charStream, char => this._canContinueTokenization(char)),
+            type : this._type
+        };
     }
 }
 
