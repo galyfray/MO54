@@ -105,22 +105,17 @@ button a:focus {
 @media(min-width: 651px) {
     .number-input input[type=number] {
         padding: .40px;
-        font-size: 17px;
         height: 22px;
     }
 }
 
-
 @media(min-width: 851px) {
     #box {
         width: 60%;
-        margin: auto;
         display: grid;
         grid-template-columns: 1fr;
     }
-
     #imageSection {
-        width: 70%;
         text-align: center;
     }
 
@@ -130,41 +125,12 @@ button a:focus {
         float: none;
     }
 
-    #productDetails {
-        width: 100%;
-    }
-
     #button {
         text-align: center;
     }
 }
-
-
-@media(min-width: 901px) {
-    #box {
-        display: grid;
-        grid-gap: 0px;
-        background-color: rgb(245,245,245);
-        border-radius: 25px;
-        grid-template-areas:
-            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace'
-            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace';
-        padding-top: 20px;
-        padding-left: 0px;
-    }
-
-    #imageSection {
-        grid-area: imagePlace;
-        padding: 2px;
-        width: 250px;
-    }
-
-    #imageSection > img {
-        width: 250px;
-        height: 250px;
-        padding: 0px;
-    }
-
+/*When the width is > 901px, we use a grid*/
+@media(min-width: 901px){
     #productDetails { /*Infodiv*/
         grid-area: productDetailsPlace;
         background-color: darkblue;
@@ -178,24 +144,46 @@ button a:focus {
             'detail detail detail';
         padding-top: 20px;
     }
+    #box {
+        grid-gap: 0px;
+        background-color: rgb(245,245,245);
+        border-radius: 25px;
+        grid-template-areas:
+            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace'
+            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace';
+        padding-top: 20px;
+        padding-left: 0px;
+    }
 
+    #imageSection {
+        grid-area: imagePlace;
+    }
     #detailDivId {
         grid-area: detail;
         padding-top: 10px;
     }
-
     #nameId {
         grid-area: name;
         font-size: 30px;
         padding: 0px;
         margin: 0px;
     }
-
     #brandId {
         grid-area: brand;
         font-size: 25px;
     }
-
+    #quantity {
+        grid-area: select;
+        padding: 0px;
+    }
+    #emptydiv {
+        grid-area: empty;
+    }
+    #btn_add_article_to_cart {
+        grid-area: add;
+        width: 180px;
+        padding: 5px;
+    }
     #button {
         background-color: red;
         padding-top: 10px;
@@ -210,27 +198,17 @@ button a:focus {
             'empty empty empty empty empty';
         padding-top: 20px;
     }
-
-    #descriptionP {
-    }
-
     #price {
         font-size: 30px;
     }
-
-    #quantity {
-        grid-area: select;
+    #imageSection {
+        padding: 2px;
+        width: 250px;
+    }
+    #imageSection > img {
+        width: 250px;
+        height: 250px;
         padding: 0px;
-    }
-
-    #emptydiv {
-        grid-area: empty;
-    }
-
-    #btn_add_article_to_cart {
-        grid-area: add;
-        width: 180px;
-        padding: 5px;
     }
 }
 
@@ -239,168 +217,29 @@ button a:focus {
         font-size: 18px;
         height: 25px;
     }
-
-    #imageSection {
-        width: 70%;
-        text-align: center;
-    }
-
-    #imageSection img {
-        text-align: center;
-        width: 70%;
-        float: none;
-    }
 }
 
-
 @media(min-width: 1070px) {
-    #box {
-        display: grid;
-        grid-gap: 0px;
-        background-color: rgb(245,245,245);
-        border-radius: 25px;
-        grid-template-areas:
-            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace'
-            'imagePlace imagePlace imagePlace imagePlace productDetailsPlace';
-        padding-top: 20px;
-        padding-left: 0px;
-    }
-
     #imageSection {
-        grid-area: imagePlace;
-        padding: 2px;
         width: 300px;
     }
-
     #imageSection > img {
         width: 300px;
         height: 300px;
-        padding: 0px;
-    }
-
-    #productDetails { /*Infodiv*/
-        grid-area: productDetailsPlace;
-        background-color: darkblue;
-        padding: 5px;
-        display: grid;
-        background-color: rgb(245,245,245);
-        border-radius: 25px;
-        grid-template-areas:
-            'name name name'
-            'brand brand brand'
-            'detail detail detail';
-        padding-top: 20px;
-    }
-
-    #detailDivId {
-        grid-area: detail;
-        padding-top: 10px;
-    }
-
-    #nameId {
-        grid-area: name;
-        font-size: 30px;
-        padding: 0px;
-        margin: 0px;
-    }
-
-    #brandId {
-        grid-area: brand;
-        font-size: 25px;
-    }
-
-    #button {
-        background-color: red;
-        padding-top: 10px;
-        background-color: darkblue;
-        padding: 5px;
-        display: grid;
-        background-color: rgb(245,245,245);
-        border-radius: 25px;
-        grid-template-areas:
-            'select add add add add'
-            'select add add add add'
-            'empty empty empty empty empty';
-        padding-top: 20px;
-    }
-
-    #descriptionP {
-    }
-
-    #price {
-        font-size: 30px;
-    }
-
-    #quantity {
-        grid-area: select;
-        padding: 0px;
-    }
-
-    #emptydiv {
-        grid-area: empty;
-    }
-
-    #btn_add_article_to_cart {
-        grid-area: add;
-        width: 180px;
-        padding: 5px;
-    }
+    } 
 }
 
-
-@media(max-width: 1170px) and (min-width: 1071px) {
-    button a {
-        font-size: 15px;
-    }
-
-    h4, p {
-        font-size: 13px;
-    }
-
-    h3 {
-        font-size: 15px;
-    }
-}
-
-
-
-@media(max-width: 1300px) and (min-width: 1171px) {
-    button {
-        padding: 8px 13px;
-        background-color: rgb(3, 122, 122);
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+@media(min-width: 1171px) {
 }
 
 @media(min-width : 1301px) {
     #box {
         width: 90%;
     }
-
-    #imageSection {
-        width: 80%;
-        margin: auto;
-    }
-
-    #imageSection img {
-        width: 100%;
-        float: right;
-        border-radius: 10px;
-        box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
-    }
-
     .number-input input[type=number] {
-        font-family: sans-serif;
         padding: .50px;
-        border: none;
-        border-width: 0 2px;
         font-size: 20px;
         height: 30px;
-        font-weight: bold;
-        text-align: center;
-        color: #9be3df;
     }
 }
 

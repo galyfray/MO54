@@ -6,6 +6,12 @@
 
 .img_cart {
     grid-area: img;
+    width: 60px;
+    height: 60px;
+}
+.img_cart_empty {
+    width: 250px;
+    margin: 0 auto;
 }
 
 .name_cart {
@@ -14,8 +20,6 @@
     font-size: 16px;
     font-weight: bold;
 }
-
-
 
 .info_cart {
     grid-area: info;
@@ -47,13 +51,6 @@
     border-radius: 5px;
 }
 
-
-.img_cart {
-    width: 60px;
-    height: 60px;
-}
-
-
 #div_container_all_article_in_cart {
     align-content: center;
     width: 95%; /*80*/
@@ -61,27 +58,15 @@
     padding: 10px;
 }
 
-
-
-
-
 .brand_div_cart, .prix_cart {
     color: sandybrown;
     font-size: 15px;
     text-align: left;
 }
 
-
-
-
 .del_text_div {
     font-style: italic;
     color: rgb(220,220,220);
-}
-
-.img_cart_empty {
-    width: 250px;
-    margin: 0 auto;
 }
 
 .number-input button {
@@ -126,32 +111,6 @@
         -> the font-size & width of h1 is redefined according to the device width
         -> the width of the div is redefined as well
     */
-
-
-@media(max-width: 505px) {
-    .name_cart {
-        font-size: 16px;
-    }
-
-    .brand_div_cart, .prix_cart {
-        font-size: 15px;
-    }
-
-    #div_container_all_article_in_cart {
-        align-content: center;
-        width: 95%;
-        margin: 0 auto;
-    }
-
-    .img_cart {
-        width: 60px;
-        height: 60px;
-    }
-
-    .img_cart_empty {
-        width: 250px;
-    }
-}
 
 @media(max-width: 600px) and (min-width: 506px) {
     .name_cart {
@@ -236,68 +195,40 @@
     }
 }
 
-@media(max-width: 1070px)and (min-width: 851px) {
-    .prix_cart, .brand_div_cart {
-        font-size: 21px;
+@media (min-width: 851px){
+    .img_cart_empty {
+        width: 400px;
     }
-
     .name_cart {
         font-size: 22px;
     }
-
     #div_container_all_article_in_cart {
         width: 85%;
     }
+    .number-input input[type=number] {
+        max-width: 45px;
+        padding: .45px;
+        font-size: 18px;
+        height: 25px;
+    }
+    .prix_cart, .brand_div_cart {
+        font-size: 21px;
+    }
+}
 
+@media(max-width: 1070px)and (min-width: 851px) {
     .img_cart {
         width: 120px;
         height: 120px;
     }
-
-    .number-input input[type=number] {
-        max-width: 45px;
-        padding: .45px;
-        font-size: 18px;
-        height: 25px;
-    }
-
-    .img_cart_empty {
-        width: 400px;
-    }
 }
 
 @media(min-width: 1071px) {
-    .prix_cart, .brand_div_cart {
-        font-size: 21px;
-    }
-
-    .name_cart {
-        font-size: 22px;
-    }
-
-    #div_container_all_article_in_cart {
-        width: 85%;
-    }
-
     .img_cart {
         width: 150px;
         height: 150px;
     }
-
-    .number-input input[type=number] {
-        max-width: 45px;
-        padding: .45px;
-        font-size: 18px;
-        height: 25px;
-    }
-
-    .img_cart_empty {
-        width: 400px;
-    }
 }
-
-
-
 
 /*Part to show the pop up*/
 * {
@@ -314,7 +245,7 @@
     opacity: 0.8;
 }
 
-    .form-container .btn:hover,
-    .open-button:hover {
-        opacity: 1;
-    }
+.form-container .btn:hover,
+.open-button:hover {
+    opacity: 1;
+}
