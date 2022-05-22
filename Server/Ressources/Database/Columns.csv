@@ -1,8 +1,10 @@
 name;type;table_id
 name;string;0
 price;float;0
+ht_price;float;0
 description;string;0
 available_quantity;int;0
+ref;string;0
 delivery_date;date;0
 image_url;string;0
 id;int;0
