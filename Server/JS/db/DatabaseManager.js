@@ -37,7 +37,7 @@ class DatabaseManager {
     /**
      * This method interprets the given NQL query and returns the asked data taken from the database.
      * @param {string} query the NQL query to interpret.
-     * @returns {*[]} the result of the query.
+     * @returns {Promise<*[]>} the result of the query.
      * @throws {InterpreterError} if the query is not valid.
      * @throws {UnexpectedTokenError} if the query is not valid.
      */
@@ -116,19 +116,21 @@ class DatabaseManager {
      */
     _make_mapper(SELECT) {
         // TODO : make the mapper parse float and int.
-        const map = {};
+        const name_map = {};
+        const mapper = {};
         for (let node of SELECT) {
             if (node.table == null) {
-                map[node.qualifyied] = node.column;
+                name_map[node.qualifyied] = node.column;
             } else {
-                map[node.qualifyied] = node.qualifyied;
+                name_map[node.qualifyied] = node.qualifyied;
             }
+            mapper[node.qualifyied] = DatabaseManager.MAPPERS[this._get_column_type(node)];
         }
         return element => {
             let new_elem = {};
 
-            for (let key in map) {
-                new_elem[map[key]] = element[key];
+            for (let key in name_map) {
+                new_elem[name_map[key]] = mapper[key](element[key]);
             }
 
             return new_elem;

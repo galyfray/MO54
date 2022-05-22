@@ -36,17 +36,12 @@ const AJAX = {
 
         let promise = new Promise((resolve, reject) => {
             req.onreadystatechange = () => {
-                try {
-                    if (req.readyState === XMLHttpRequest.DONE) {
-                        if (req.status === 200) {
-                            resolve(req);
-                        }
-                    } else {
-                        reject(req);
+                if (req.readyState === XMLHttpRequest.DONE) {
+                    if (req.status === 200) {
+                        resolve(req);
                     }
-                } catch (e) {
-                    console.log(e, "WTF");
-                    reject(e);
+                } else {
+                    reject(req);
                 }
             };
         });
@@ -63,10 +58,10 @@ const AJAX = {
 document.onreadystatechange = function() {
     if (document.readyState === "complete") {
         AJAX.send({
-            "url"   : "https://localhost:8000/api/parse",
+            "url"   : "https://localhost:8000/api/reuqest",
             "method": "GET",
             "MIME"  : "application/json",
-            "query" : "SELECT name price FROM product WHERE id >= 0"
+            "query" : "SELECT name price delivery_date FROM product WHERE id >= 0"
         }).then(req => {
             console.log(req.responseText);
         });
