@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    'use strict';
     /*
     *This code is used to get the number of article in the cart from the view "display_article"
     */

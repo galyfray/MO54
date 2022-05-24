@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- The page is named-->
     <title>Mon panier - ourWebSite.fr</title>
-    <!-- We create a link between the HTML file and the css, js files
-    <!-- SCRIPTS [(hc_|cart_).*\.js] -->
+    <!-- We create a link between the HTML file and the css, js files -->
+    <!-- SCRIPTS [(hc-|cart).*\.js] -->
     <!-- STYLES [(common_|cart_).*\.css] -->
 
 </head>
@@ -229,9 +229,9 @@
 
 </body>
 
-<div id="overlay_alert" style="display : none">
+<div id="overlay_alert" class="hidden">
     <div class="alert-popup">
-        <div id="popupAlert">
+        <div id="popupAlert" class="hidden">
             <form class="form-container">
                 <h2>Voulez vous retirer cet article du panier?</h2>
                 <button type="button" class="btn" id="overlay_alert_btn_yes">Oui</button>
@@ -240,7 +240,4 @@
         </div>
     </div>
 </div>
-
-
-
 </html>

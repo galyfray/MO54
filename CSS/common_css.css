@@ -102,7 +102,6 @@ input[type="number"] {
     top: 50%;
 }
 #popupAlert {
-    display: none;
     position: fixed;
     left: 45%;
     top: 30%;
@@ -183,4 +182,8 @@ Media query:
         padding: 20px;
         font-weight: 700;
     }
+}
+
+.hidden{
+    display:none;
 }

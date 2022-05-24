@@ -16,7 +16,7 @@ const path = require("path");
  * @param {String} dir the name of the directory to iterate through.
  */
 async function getAllFiles(dir) {
-    return fs.promises.readdir(dir).then(files => {
+    return fs.promises.readdir(dir).then(async files => {
         const allFiles = [];
         for (let file of files) {
 
@@ -58,6 +58,7 @@ async function getAllFiles(dir) {
         const JS_SOURCES = (await getAllFiles(process.argv[3])).map(file => path.relative(process.argv[3],file));
         const CSS_SOURCES = (await getAllFiles(process.argv[4])).map(file => path.relative(process.argv[4],file));
 
+        let regexp = null;
         // The filtering/mapping functions are declared here to avoid the overhead of creating new lambdas every time.
         const FILTER = (source) => regexp.test(source);
         const JS_MAPER = (source) => `${indent}<script src="${source}"></script>\n`;
@@ -81,7 +82,7 @@ async function getAllFiles(dir) {
             ); // Replacing the matched section with the new content
         };
         
-        let content = "", match = 0, indent = "", regexp = null, filename;
+        let content = "", match = 0, indent = "", filename;
 
         for(let file of HTML_SOURCES){
             BUFFER.push(`[INFO] processing ${file}`);

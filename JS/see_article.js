@@ -177,8 +177,11 @@ function create_see_article(article) {
                 }
             }
         }
+        else {
+            old_data_saved = [];
+        }
 
-        if (article_already_in_cart == false) {
+        if (!article_already_in_cart) {
             old_data_saved.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantity_article });
             document.getElementById("nb_article_in_cart").textContent = tab.length;
         }
@@ -186,14 +189,14 @@ function create_see_article(article) {
         //Soit on affichera directement la pannier pour indiquer l'ajout soit on devra avoir un pop up
        // location.href = "cart.html";
 
-        document.getElementById("overlay_alert").style.display = "block";
-        document.getElementById("popupAlert").style.display = "block";
+        document.getElementById("overlay_alert").classList.remove('hidden');
+        document.getElementById("popupAlert").classList.remove('hidden');
         setTimeout(alertClosed, 1500);
     }
     return box_article
 }
 
 function alertClosed() {
-    document.getElementById('overlay_alert').style.display = "none";
-    document.getElementById("popupAlert").style.display = "none";
+    document.getElementById("overlay_alert").classList.add('hidden');
+    document.getElementById("popupAlert").classList.add('hidden');
 }

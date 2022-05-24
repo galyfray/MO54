@@ -52,7 +52,7 @@ $(document).ready(function () {
         grid_article_in_cart.style = "border: 2px solid rgb(230,230,230);  border-radius : 20px; ";
 
         let img = document.createElement('img');
-        img.src = "../Ressource/nothing_in_cart.png";
+        img.src = "nothing_in_cart.png";
         img.className = "img_cart_empty";
 
         let img_cart_div = document.createElement('div');
@@ -164,8 +164,8 @@ function createCart2(article) {
      * We also update the component that show the number of article in the cart.
     */
     del_text_div.onclick = function () {
-        document.getElementById("overlay_alert").style.display = "block";
-        document.getElementById("popupAlert").style.display = "block";
+        document.getElementById("overlay_alert").classList.remove("hidden");
+        document.getElementById("popupAlert").classList.remove("hidden");
         id_article_deleted = article.id;
         grid_article_in_cart_deleted = grid_article_in_cart;
         line_deleted = line;
@@ -179,7 +179,8 @@ function createCart2(article) {
         sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
         document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
         nb_article_in_cart.textContent = old_data_saved.length; 
-        document.getElementById("overlay_alert").style.display = "none";
+        document.getElementById("overlay_alert").classList.add("hidden");
+        document.getElementById("popupAlert").classList.add("hidden");
 
 
 
@@ -213,7 +214,7 @@ function createCart2(article) {
     }
 
     document.getElementById("overlay_alert_btn_no").onclick = function () {
-        document.getElementById("overlay_alert").style.display = "none";
+        document.getElementById("overlay_alert").classList.add("hidden");
     }
 
     /*

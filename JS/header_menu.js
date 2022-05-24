@@ -1,7 +1,7 @@
 $(document).ready(function () {
     (function ($) {
         'use strict';
-        var Nav = new hcOffcanvasNav('#main-nav', {
+        let Nav = new hcOffcanvasNav('#main-nav', {
             disableAt: false,
             customToggle: '.menu_icon',
             levelSpacing: 40,
