@@ -64,7 +64,7 @@ async function getAllFiles(dir) {
         const JS_MAPER = (source) => `${indent}<script src="${source}"></script>\n`;
         const CSS_MAPER = (source) => `${indent}<link rel="stylesheet" href="${source}">\n`;
 
-        const replaceSource = (fileContent,match,mapper,source)=>{
+        const replaceSource = (fileContent,match,mapper,sources)=>{
             match = content.substring(match,content.indexOf("\n",match) + 1 ); // isolating the matched section
             indent = match.substring(0,match.indexOf("<")); // isolating the indentation
 
@@ -72,13 +72,12 @@ async function getAllFiles(dir) {
                 match.substring(
                     match.indexOf("[")+1,
                     match.lastIndexOf("]")
-                ),
-                "g"
+                )
             ); // Creating the regexp to match the filenames
 
             return content.replace(
                 match,
-                source.filter(FILTER).map(mapper).join("")
+                sources.filter(FILTER).map(mapper).join("")
             ); // Replacing the matched section with the new content
         };
         
