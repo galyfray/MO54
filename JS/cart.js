@@ -73,15 +73,7 @@ function createCart2(article) {
     let name_cart_div = myArticle.create_name();
     let brand_div = myArticle.create_brand();
     let { price_div, price } = myArticle.create_price();
-    let box_selectdiv = document.createElement('div');
-    box_selectdiv.className = "number-input";
-    let box_select_minus = document.createElement('button');
-    let box_select_plus = document.createElement('button');
-    box_select_plus.className = "plus";
-    let box_select_value = myArticle.create_plus_input();
-    box_selectdiv.appendChild(box_select_minus);
-    box_selectdiv.appendChild(box_select_value);
-    box_selectdiv.appendChild(box_select_plus);
+    let { box_selectdiv, box_select_minus, box_select_value, box_select_plus } = myArticle.create_the_input_component();
     let del_text_div = myArticle.create_del_option();
     let info_cart_div = document.createElement('div');
     info_cart_div.className = "info_cart";  
@@ -93,7 +85,6 @@ function createCart2(article) {
         grid_article_in_cart_deleted = grid_article_in_cart;
         line_deleted = line;
     });
-
     document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
         cart_div.removeChild(grid_article_in_cart_deleted);
         cart_div.removeChild(line_deleted);
@@ -108,16 +99,12 @@ function createCart2(article) {
         if (old_data_saved.length == 0) {
             empty_cart_displayed(cart_div);
         }
-
     });
-
     document.getElementById("overlay_alert_btn_no").addEventListener('click', function () {
         document.getElementById("overlay_alert").classList.add("hidden");
     });
-
     //We update the sessionStorage and re-calculate the price of the article with the new quantity.
     box_select_plus.addEventListener('click', function () {
-
         let elem = document.getElementById('quantity_id' + article.id);
         elem.value = parseInt(elem.value) + 1;        
         total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
@@ -137,7 +124,6 @@ function createCart2(article) {
             update_json_file(article, elem);
         }
     });
-
     //We update the sessionStorage and re-calculate the price of the article with the new quantity.
     box_select_value.addEventListener('input', function () {
         total_price = total_price - parseFloat(price.textContent) + article.price * this.value;
@@ -214,16 +200,6 @@ class Cart_article {
         del_text_div.className = "del_text_div";
         return del_text_div;
     }
-    /*Method used to create the component linked to the plus input of an article*/
-    create_plus_input() {
-        let box_select_value = document.createElement('input');
-        box_select_value.className = "quantity";
-        box_select_value.type = "number";
-        box_select_value.min = "1";
-        box_select_value.id = "quantity_id" + this.id;
-        box_select_value.value = this.quantity;
-        return box_select_value;
-    }
     /*Method used to create the component linked to the brand of an article*/
     create_brand() {
         let brand = document.createTextNode(this.brand);
@@ -239,6 +215,24 @@ class Cart_article {
         price_div.className = "prix_cart";
         price_div.appendChild(price);
         return { price_div, price };
+    }
+    /*Method used to create the components linked to the input for the quantity of an article*/
+    create_the_input_component() {
+        let box_select_value = document.createElement('input');
+        box_select_value.className = "quantity";
+        box_select_value.type = "number";
+        box_select_value.min = "1";
+        box_select_value.id = "quantity_id" + this.id;
+        box_select_value.value = this.quantity;
+        let box_selectdiv = document.createElement('div');
+        box_selectdiv.className = "number-input";
+        let box_select_minus = document.createElement('button');
+        let box_select_plus = document.createElement('button');
+        box_select_plus.className = "plus";
+        box_selectdiv.appendChild(box_select_minus);
+        box_selectdiv.appendChild(box_select_value);
+        box_selectdiv.appendChild(box_select_plus);
+        return { box_selectdiv, box_select_minus, box_select_value, box_select_plus };
     }
 }
 /**
