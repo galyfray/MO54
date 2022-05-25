@@ -1,5 +1,5 @@
 const INDEX = require("./utils/Index.js");
-const ROUTER = require("express")();
+const ROUTER = require("express").Router();
 const fs = require("fs");
 const path = require("path");
 const utils = require("./utils/utils.js");
@@ -7,9 +7,9 @@ const utils = require("./utils/utils.js");
 function requireDir(dir) {
     let resolved = utils.resolve(dir);
     return fs.promises.readdir(resolved).then(files => {
-        files.forEach(file => {
-            require(path.join(resolved, file));
-        });
+        return Promise.all(files.map(file => {
+            return require(path.join(resolved, file));
+        }));
     });
 }
 
@@ -19,6 +19,7 @@ const PENDINGS = [
 ];
 
 const POPULATE = () => {
+
     for (let element of INDEX.index) {
         switch (element.type) {
         case "get":
