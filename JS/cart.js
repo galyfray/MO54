@@ -12,6 +12,8 @@ var total_price = 0;
 let id_article_deleted;
 let grid_article_in_cart_deleted;
 let line_deleted;
+let myCart;//used to avoid the calls to the sessionStorage
+
 
 $(document).ready(function () {
     'use strict';
@@ -36,6 +38,7 @@ $(document).ready(function () {
      * If not : we create all the articles to show them.
      */
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    myCart = new Cart(old_data_saved);
     if (!old_data_saved || old_data_saved.length == 0) {
         let cart_div = document.getElementById('div_container_all_article_in_cart');
         empty_cart_displayed(cart_div); 
@@ -88,7 +91,8 @@ function createCart2(article) {
     document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
         cart_div.removeChild(grid_article_in_cart_deleted);
         cart_div.removeChild(line_deleted);
-        let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+
+        let old_data_saved = myCart.dataStored;
         old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
         sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
         document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
@@ -150,7 +154,7 @@ function createCart2(article) {
  */
 function update_json_file(article, elem) {
     'use strict';
-    let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    let old_data_saved = myCart.dataStored;
     for (let i = 0; i < old_data_saved.length; i++) {
         if (old_data_saved[i].id == article.id) {
             old_data_saved[i].quantity = elem.value;
@@ -159,6 +163,11 @@ function update_json_file(article, elem) {
     sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
 }
 
+class Cart {
+    constructor(data) {
+        this.dataStored = data;
+    }
+}
 class Cart_article {
     /**
      * The constructor and the method is used to create all articles that need to be displayed in the cart.
