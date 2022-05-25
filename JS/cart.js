@@ -163,27 +163,25 @@ function createCart2(article) {
      * We update the SessionStorage by deleting an entry .
      * We also update the component that show the number of article in the cart.
     */
-    del_text_div.onclick = function () {
+    del_text_div.addEventListener('click', function () {
         document.getElementById("overlay_alert").classList.remove("hidden");
         document.getElementById("popupAlert").classList.remove("hidden");
         id_article_deleted = article.id;
         grid_article_in_cart_deleted = grid_article_in_cart;
         line_deleted = line;
-    }
+    });
 
-    document.getElementById("overlay_alert_btn_yes").onclick = function () {
+
+    document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
         cart_div.removeChild(grid_article_in_cart_deleted);
         cart_div.removeChild(line_deleted);
         let old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
         old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
         sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
         document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-        nb_article_in_cart.textContent = old_data_saved.length; 
+        nb_article_in_cart.textContent = old_data_saved.length;
         document.getElementById("overlay_alert").classList.add("hidden");
         document.getElementById("popupAlert").classList.add("hidden");
-
-
-
         //If the cart is empty, we show the image for it.
         if (old_data_saved.length == 0) {
             let grid_article_in_cart = document.createElement('div');
@@ -211,24 +209,27 @@ function createCart2(article) {
             document.getElementById("nb_article_in_cart").textContent = 0;
             return cart_div;
         }
-    }
 
-    document.getElementById("overlay_alert_btn_no").onclick = function () {
+    });
+
+
+    document.getElementById("overlay_alert_btn_no").addEventListener('click', function () {
         document.getElementById("overlay_alert").classList.add("hidden");
-    }
+    });
 
     /*
     * We update the sessionStorage with the new quantity.
     * We re-calculate the price of the article according to the new quantity
     */
-    box_select_plus.onclick = function () {
+    box_select_plus.addEventListener('click', function () {
+
         let elem = document.getElementById('quantity_id' + article.id);
         elem.value = parseInt(elem.value) + 1;        
         total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
         price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
         update_json_file(article, elem);
-    };
+    });
 
  /*
 there is a lot of call to JSON.parse and JSON.stringify, without counting the numberof parseInt|Float. 
@@ -241,28 +242,29 @@ You may also want to check but JSON.parse should automatically parse integer and
     * We update the sessionStorage with the new quantity.
     * We re-calculate the price of the article according to the new quantity
     */
-    box_select_minus.onclick = function () {
+    box_select_minus.addEventListener('click', function () {
         let elem = document.getElementById('quantity_id' + article.id);
         elem.value = parseInt(elem.value);
         if (elem.value - 1 != 0) {
             elem.value = elem.value - 1;
             total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
             price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
-            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";   
+            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
             update_json_file(article, elem);
         }
-    };
+    });
 
     /*
    * We update the sessionStorage with the new quantity.
    * We re-calculate the price of the article according to the new quantity
    */
-    box_select_value.oninput = function () {      
+    box_select_value.addEventListener('input', function () {
         total_price = total_price - parseFloat(price.textContent) + article.price * this.value;
         price.nodeValue = (article.price * this.value).toFixed(2) + "€";
         document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
         update_json_file(article, this);
-    };
+    })
+
 
     brand_div.appendChild(brand);
     price_div.appendChild(price);

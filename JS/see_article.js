@@ -183,7 +183,7 @@ function create_see_article(article) {
 
         if (!article_already_in_cart) {
             old_data_saved.push({ 'id': article.id, 'name': article.name, 'price': article.price, 'brand': article.brand, 'description': article.description, 'preview': article.preview, 'quantity': quantity_article });
-            document.getElementById("nb_article_in_cart").textContent = tab.length;
+            document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
         }
         sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
         //Soit on affichera directement la pannier pour indiquer l'ajout soit on devra avoir un pop up
