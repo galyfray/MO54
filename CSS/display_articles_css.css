@@ -40,6 +40,11 @@
     padding: 0 15px;
 }
 
+.link_to_show_article {
+    text-decoration: none;
+}
+
+
 /*
 Media query:
     - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page

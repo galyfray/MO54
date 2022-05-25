@@ -62,7 +62,7 @@ function create_list_article(article) {
     let html_component_article_brand = document.createElement("h4");
     let html_component_article_price = document.createElement("h2");
     let link_to_show_article = document.createElement("a");
-    link_to_show_article.style="text-decoration:none;";
+    link_to_show_article.classList.add("link_to_show_article");
     link_to_show_article.href="see_article.html";
 
     html_component_div_container.appendChild(link_to_show_article);
@@ -104,29 +104,3 @@ function create_list_article(article) {
 //    return html_component_div_container;
     div_container_all_article.appendChild(html_component_div_container);
 }
-
-//We create a XMLHttpRequest to read the articles.
-let httpRequest = new XMLHttpRequest();
-httpRequest.onreadystatechange = function () {
-    if (httpRequest.DONE) {
-        // status = 200 mean that the statut of the XMLHttpRequest is OK (everything is going well)
-        if (this.status == 200) {
-            let result_http_request = JSON.parse(this.responseText);
-            //For each element, the code add dynamically with the function create_list_article the article to the component "div_container_all_article"
-            for (let i = 0; i < result_http_request.length; i++) {
-                div_container_all_article.appendChild(
-                    create_list_article(result_http_request[i])
-            );
-        }
-        } else {
-            console.log("fail");
-        }
-    }
-};
-// The code take the data from a json file saved on github.
-httpRequest.open(
-    "GET",
-    "",
-    true
-);
-httpRequest.send();       
