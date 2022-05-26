@@ -8,7 +8,7 @@
   * id_article_deleted : we need to have the id of the article that will be deleted
  * once the  "Yes" button has been clicked to confirm the deletion.
  */
-var total_price = 0;
+let total_price = 0;
 let id_article_deleted;
 let grid_article_in_cart_deleted;
 let line_deleted;
@@ -39,19 +39,8 @@ $(document).ready(function () {
      */
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     myCart = new Cart(old_data_saved);
-    if (!old_data_saved || old_data_saved.length == 0) {
-        let cart_div = document.getElementById('div_container_all_article_in_cart');
-        empty_cart_displayed(cart_div); 
-    }
-    else {
-        for (let i = 0; i < old_data_saved.length; i++) {
-            createCart2(old_data_saved[i]);
-            total_price = total_price + parseFloat(old_data_saved[i].price) * parseInt(old_data_saved[i].quantity);
-        }
-        document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-        document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-        nb_article_in_cart.textContent = old_data_saved.length;
-    }    
+    myCart.check_content();
+    
 });
 
 /**
@@ -59,94 +48,9 @@ $(document).ready(function () {
  * @param article : the object we are working on. It has for now those properties: name, image, description, brand and price.
  */
 function createCart2(article) {
-    /* 
-     * grid_article_in_cart: the grid that contains all the information for an article
-     * img_cart_div : the div that contains the image of the article    
-     * name_cart_div : the div that contains the name of the article
-     * info_cart_div : the div that contains the other informations about an article (brand, price, quantity)
-     * brand_div : the div that contains the brand of the article
-     * price : the price of the article
-     * price_div : the div that contains the price of the article
-     */
-    let cart_div = document.getElementById('div_container_all_article_in_cart');
-    let grid_article_in_cart = document.createElement('div');
-    grid_article_in_cart.className = "grid-container";
-    myArticle = new Cart_article(article);
-    let img_cart_div = myArticle.create_image();
-    let name_cart_div = myArticle.create_name();
-    let brand_div = myArticle.create_brand();
-    let { price_div, price } = myArticle.create_price();
-    let { box_selectdiv, box_select_minus, box_select_value, box_select_plus } = myArticle.create_the_input_component();
-    let del_text_div = myArticle.create_del_option();
-    let info_cart_div = document.createElement('div');
-    info_cart_div.className = "info_cart";  
-    //We update the SessionStorage (deletion) and update the number of article in the cart.
-    del_text_div.addEventListener('click', function () {
-        document.getElementById("overlay_alert").classList.remove("hidden");
-        document.getElementById("popupAlert").classList.remove("hidden");
-        id_article_deleted = article.id;
-        grid_article_in_cart_deleted = grid_article_in_cart;
-        line_deleted = line;
-    });
-    document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
-        cart_div.removeChild(grid_article_in_cart_deleted);
-        cart_div.removeChild(line_deleted);
-
-        let old_data_saved = myCart.dataStored;
-        old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
-        sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
-        document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-        nb_article_in_cart.textContent = old_data_saved.length;
-        document.getElementById("overlay_alert").classList.add("hidden");
-        document.getElementById("popupAlert").classList.add("hidden");
-        //If the cart is empty, we show the image for it.
-        if (old_data_saved.length == 0) {
-            empty_cart_displayed(cart_div);
-        }
-    });
-    document.getElementById("overlay_alert_btn_no").addEventListener('click', function () {
-        document.getElementById("overlay_alert").classList.add("hidden");
-    });
-    //We update the sessionStorage and re-calculate the price of the article with the new quantity.
-    box_select_plus.addEventListener('click', function () {
-        let elem = document.getElementById('quantity_id' + article.id);
-        elem.value = parseInt(elem.value) + 1;        
-        total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
-        price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
-        document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-        update_json_file(article, elem);
-    });
-    //We ensure that the quantity is still > 0 & update sessionStorage with the new quantity & calculate the price of the article.
-    box_select_minus.addEventListener('click', function () {
-        let elem = document.getElementById('quantity_id' + article.id);
-        elem.value = parseInt(elem.value);
-        if (elem.value - 1 != 0) {
-            elem.value = elem.value - 1;
-            total_price = total_price - parseFloat(price.textContent) + article.price * elem.value;
-            price.nodeValue = (article.price * elem.value).toFixed(2) + "€";
-            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-            update_json_file(article, elem);
-        }
-    });
-    //We update the sessionStorage and re-calculate the price of the article with the new quantity.
-    box_select_value.addEventListener('input', function () {
-        total_price = total_price - parseFloat(price.textContent) + article.price * this.value;
-        price.nodeValue = (article.price * this.value).toFixed(2) + "€";
-        document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-        update_json_file(article, this);
-    })
-    grid_article_in_cart.appendChild(img_cart_div);
-    info_cart_div.appendChild(brand_div);
-    info_cart_div.appendChild(price_div);
-    info_cart_div.appendChild(box_selectdiv);
-    info_cart_div.appendChild(del_text_div);
-    grid_article_in_cart.appendChild(name_cart_div);
-    grid_article_in_cart.appendChild(info_cart_div);
-    cart_div.appendChild(grid_article_in_cart);
-    let line = document.createElement('div');
-    line.className = "line_in_cart";
-    cart_div.appendChild(line);
-}
+    myArticle = new CartArticle(article);
+    myArticle.create_the_article_in_the_cart();
+    }
 /**
  * Function used when we change the quantity of an article to save the changes into the sessionStorage
  * @param {any} article : object that contains the article
@@ -164,11 +68,53 @@ function update_json_file(article, elem) {
 }
 
 class Cart {
+
     constructor(data) {
         this.dataStored = data;
     }
+    check_content() {
+        if (!this.dataStored || this.dataStored.length == 0) {
+            let cart_div = document.getElementById('div_container_all_article_in_cart');
+            this.#draw_empty_cart(cart_div);
+        }
+        else {
+            for (let i = 0; i < this.dataStored.length; i++) {
+                createCart2(this.dataStored[i]);
+                total_price = total_price + parseFloat(this.dataStored[i].price) * parseInt(this.dataStored[i].quantity);
+            }
+            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
+            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + this.dataStored.length + ")";
+            nb_article_in_cart.textContent = this.dataStored.length;
+        } 
+    }
+
+    #draw_empty_cart(cart_div) {
+    /*
+    * img : the image that says there is nothing in the cart
+    * img_cart_div: the div that contains the image
+    * warning: the text for the warning_div 'Il n'y a aucun article dans le panier'
+    * warning_div : the div that contain the text written in warning
+    */
+    let grid_article_in_cart = document.createElement('div');
+    grid_article_in_cart.className = "grid-container";
+    let img = document.createElement('img');
+    img.src = "../Ressource/nothing_in_cart.png";
+    img.className = "img_cart_empty";
+    let img_cart_div = document.createElement('div');
+    img_cart_div.appendChild(img);
+    img_cart_div.className = "img_cart_empty";
+    let warning = document.createTextNode("Il n'y a aucun article dans le panier");
+    let warning_div = document.createElement('div');
+    warning_div.className = "name_cart";
+    warning_div.appendChild(warning);
+    cart_div.appendChild(img_cart_div);
+    cart_div.appendChild(warning_div);
+    document.getElementById("nb_object_in_cart").textContent = "Hum...";
+    document.getElementById("total_to_pay").textContent = "";
+    document.getElementById("nb_article_in_cart").textContent = 0;
+    }
 }
-class Cart_article {
+class CartArticle {
     /**
      * The constructor and the method is used to create all articles that need to be displayed in the cart.
      * @param {any} article : the object containing all the information we need to create an article in the cart
@@ -181,8 +127,100 @@ class Cart_article {
         this.id = article.id;
         this.quantity = article.quantity;
     }
+
+    create_the_article_in_the_cart() {
+        /* 
+     * grid_article_in_cart: the grid that contains all the information for an article
+     * img_cart_div : the div that contains the image of the article    
+     * name_cart_div : the div that contains the name of the article
+     * info_cart_div : the div that contains the other informations about an article (brand, price, quantity)
+     * brand_div : the div that contains the brand of the article
+     * price : the price of the article
+     * price_div : the div that contains the price of the article
+     */
+    
+        let myArticleTemp = myArticle; // Won't work without it for the input
+        let cart_div = document.getElementById('div_container_all_article_in_cart');
+        let grid_article_in_cart = document.createElement('div');
+        grid_article_in_cart.className = "grid-container";
+        let img_cart_div = myArticleTemp.#create_image();
+        let name_cart_div = myArticleTemp.#create_name();
+        let brand_div = myArticleTemp.#create_brand();
+        let { price_div, price } = myArticleTemp.#create_price();
+        let { box_selectdiv, box_select_minus, box_select_value, box_select_plus } = myArticleTemp.#create_the_input_component();
+        let del_text_div = myArticleTemp.#create_del_option();
+        let info_cart_div = document.createElement('div');
+        info_cart_div.className = "info_cart";
+        //We update the SessionStorage (deletion) and update the number of article in the cart.
+        del_text_div.addEventListener('click', function () {
+            document.getElementById("overlay_alert").classList.remove("hidden");
+            document.getElementById("popupAlert").classList.remove("hidden");
+            id_article_deleted = myArticle.id;
+            grid_article_in_cart_deleted = grid_article_in_cart;
+            line_deleted = line;
+        });
+        document.getElementById("overlay_alert_btn_yes").addEventListener('click', function () {
+            cart_div.removeChild(grid_article_in_cart_deleted);
+            cart_div.removeChild(line_deleted);
+
+            let old_data_saved = myCart.dataStored;
+            old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
+            sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
+            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
+            nb_article_in_cart.textContent = old_data_saved.length;
+            document.getElementById("overlay_alert").classList.add("hidden");
+            document.getElementById("popupAlert").classList.add("hidden");
+            //If the cart is empty, we show the image for it.
+            if (old_data_saved.length == 0) {
+                empty_cart_displayed(cart_div);
+            }
+        });
+        document.getElementById("overlay_alert_btn_no").addEventListener('click', function () {
+            document.getElementById("overlay_alert").classList.add("hidden");
+        });
+        //We update the sessionStorage and re-calculate the price of the article with the new quantity.
+        box_select_plus.addEventListener('click', function () {
+            let elem = document.getElementById('quantity_id' + myArticleTemp.id);
+            elem.value = parseInt(elem.value) + 1;
+            total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
+            price.nodeValue = (myArticleTemp.price * elem.value).toFixed(2) + "€";
+            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
+            update_json_file(myArticle, elem);
+        });
+        //We ensure that the quantity is still > 0 & update sessionStorage with the new quantity & calculate the price of the article.
+        box_select_minus.addEventListener('click', function () {
+            let elem = document.getElementById('quantity_id' + myArticleTemp.id);
+            elem.value = parseInt(elem.value);
+            if (elem.value - 1 != 0) {
+                elem.value = elem.value - 1;
+                total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
+                price.nodeValue = (myArticleTemp.price * elem.value).toFixed(2) + "€";
+                document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
+                update_json_file(myArticle, elem);
+            }
+        });
+        //We update the sessionStorage and re-calculate the price of the article with the new quantity.
+        box_select_value.addEventListener('input', function () {
+            total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * this.value;
+            price.nodeValue = (myArticleTemp.price * this.value).toFixed(2) + "€";
+            document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
+            update_json_file(myArticle, this);
+        })
+        grid_article_in_cart.appendChild(img_cart_div);
+        info_cart_div.appendChild(brand_div);
+        info_cart_div.appendChild(price_div);
+        info_cart_div.appendChild(box_selectdiv);
+        info_cart_div.appendChild(del_text_div);
+        grid_article_in_cart.appendChild(name_cart_div);
+        grid_article_in_cart.appendChild(info_cart_div);
+        cart_div.appendChild(grid_article_in_cart);
+        let line = document.createElement('div');
+        line.className = "line_in_cart";
+        cart_div.appendChild(line);
+    }
+
     /*Method used to create the component linked to the image of an article*/
-    create_image() {
+    #create_image() {
         let img = document.createElement('img');
         img.src = this.image;
         img.className = "img_cart";
@@ -193,7 +231,7 @@ class Cart_article {
         return img_cart_div;
     }
     /*Method used to create the component linked to the name of an article*/
-    create_name() {
+    #create_name() {
         let name = document.createTextNode(this.name);
         let name_cart_div = document.createElement('div');
         name_cart_div.className = "name_cart";
@@ -201,7 +239,7 @@ class Cart_article {
         return name_cart_div;
     }
     /*Method used to create the component linked to the deletion of an article*/
-    create_del_option() {
+    #create_del_option() {
         let delt_text = document.createElement('h4');
         delt_text.textContent = "Supprimer du pannier";
         let del_text_div = document.createElement('div');
@@ -210,7 +248,7 @@ class Cart_article {
         return del_text_div;
     }
     /*Method used to create the component linked to the brand of an article*/
-    create_brand() {
+    #create_brand() {
         let brand = document.createTextNode(this.brand);
         let brand_div = document.createElement('div');
         brand_div.className = "brand_div_cart";
@@ -218,7 +256,7 @@ class Cart_article {
         return brand_div;
     }
     /*Method used to create the component linked to the price of an article*/
-    create_price() {
+    #create_price() {
         let price = document.createTextNode((this.price * this.quantity).toFixed(2) + "€");
         let price_div = document.createElement('div');
         price_div.className = "prix_cart";
@@ -226,7 +264,7 @@ class Cart_article {
         return { price_div, price };
     }
     /*Method used to create the components linked to the input for the quantity of an article*/
-    create_the_input_component() {
+    #create_the_input_component() {
         let box_select_value = document.createElement('input');
         box_select_value.className = "quantity";
         box_select_value.type = "number";
