@@ -1,5 +1,5 @@
 /*
- * total_price : variable used to know the final price to pay for the cart.
+ * Total_price : variable used to know the final price to pay for the cart.
  * It's a global var because it will be used when an article is created
  * and also when the quantity of the article is updated.
  * grid_article_in_cart_deleted : use to delete the grid for an article in the cart
@@ -12,23 +12,26 @@ let total_price = 0;
 let id_article_deleted;
 let grid_article_in_cart_deleted;
 let line_deleted;
-let myCart;//used to avoid the calls to the sessionStorage
+let myCart;//Used to avoid the calls to the sessionStorage
+let myArticle;
+let nb_article_in_cart;
 
-
-$(document).ready(function () {
+$(document).ready(function() {
     'use strict';
+
     //The function to make the navigation works
-    (function ($) {
+    (function() {
         'use strict';
-        var Nav = new hcOffcanvasNav('#main-nav', {
-            disableAt: false,
-            customToggle: '.menu_icon',
-            levelSpacing: 40,
-            navTitle: 'All',
-            levelTitles: true,
+        // eslint-disable-next-line no-undef
+        new hcOffcanvasNav('#main-nav', {
+            disableAt       : false,
+            customToggle    : '.menu_icon',
+            levelSpacing    : 40,
+            navTitle        : 'All',
+            levelTitles     : true,
             levelTitleAsBack: true,
-            pushContent: '#container',
-            labelClose: false
+            pushContent     : '#container',
+            labelClose      : false
         });
     })(jQuery);
 
@@ -40,7 +43,7 @@ $(document).ready(function () {
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     myCart = new Cart(old_data_saved);
     myCart.check_content();
-    
+
 });
 
 /**
@@ -50,7 +53,8 @@ $(document).ready(function () {
 function createCart2(article) {
     myArticle = new CartArticle(article);
     myArticle.create_the_article_in_the_cart();
-    }
+}
+
 /**
  * Function used when we change the quantity of an article to save the changes into the sessionStorage
  * @param {any} article : object that contains the article
@@ -59,7 +63,7 @@ function createCart2(article) {
 function update_json_file(article, elem) {
     'use strict';
     let old_data_saved = myCart.dataStored;
-    for (let i = 0; i < old_data_saved.length; i++) {
+    for (let i = 0;i < old_data_saved.length;i++) {
         if (old_data_saved[i].id == article.id) {
             old_data_saved[i].quantity = elem.value;
         }
@@ -72,46 +76,46 @@ class Cart {
     constructor(data) {
         this.dataStored = data;
     }
+
     check_content() {
         if (!this.dataStored || this.dataStored.length == 0) {
             let cart_div = document.getElementById('div_container_all_article_in_cart');
-            this.#draw_empty_cart(cart_div);
-        }
-        else {
-            for (let i = 0; i < this.dataStored.length; i++) {
+            this._draw_empty_cart(cart_div);
+        } else {
+            for (let i = 0;i < this.dataStored.length;i++) {
                 createCart2(this.dataStored[i]);
-                total_price = total_price + parseFloat(this.dataStored[i].price) * parseInt(this.dataStored[i].quantity);
+                total_price += parseFloat(this.dataStored[i].price) * parseInt(this.dataStored[i].quantity);
             }
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
             document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + this.dataStored.length + ")";
             nb_article_in_cart.textContent = this.dataStored.length;
-        } 
+        }
     }
 
-    #draw_empty_cart(cart_div) {
+    _draw_empty_cart(cart_div) {
     /*
-    * img : the image that says there is nothing in the cart
+    * Img : the image that says there is nothing in the cart
     * img_cart_div: the div that contains the image
     * warning: the text for the warning_div 'Il n'y a aucun article dans le panier'
     * warning_div : the div that contain the text written in warning
     */
-    let grid_article_in_cart = document.createElement('div');
-    grid_article_in_cart.className = "grid-container";
-    let img = document.createElement('img');
-    img.src = "../Ressource/nothing_in_cart.png";
-    img.className = "img_cart_empty";
-    let img_cart_div = document.createElement('div');
-    img_cart_div.appendChild(img);
-    img_cart_div.className = "img_cart_empty";
-    let warning = document.createTextNode("Il n'y a aucun article dans le panier");
-    let warning_div = document.createElement('div');
-    warning_div.className = "name_cart";
-    warning_div.appendChild(warning);
-    cart_div.appendChild(img_cart_div);
-    cart_div.appendChild(warning_div);
-    document.getElementById("nb_object_in_cart").textContent = "Hum...";
-    document.getElementById("total_to_pay").textContent = "";
-    document.getElementById("nb_article_in_cart").textContent = 0;
+        let grid_article_in_cart = document.createElement('div');
+        grid_article_in_cart.className = "grid-container";
+        let img = document.createElement('img');
+        img.src = "../Ressource/nothing_in_cart.png";
+        img.className = "img_cart_empty";
+        let img_cart_div = document.createElement('div');
+        img_cart_div.appendChild(img);
+        img_cart_div.className = "img_cart_empty";
+        let warning = document.createTextNode("Il n'y a aucun article dans le panier");
+        let warning_div = document.createElement('div');
+        warning_div.className = "name_cart";
+        warning_div.appendChild(warning);
+        cart_div.appendChild(img_cart_div);
+        cart_div.appendChild(warning_div);
+        document.getElementById("nb_object_in_cart").textContent = "Hum...";
+        document.getElementById("total_to_pay").textContent = "";
+        document.getElementById("nb_article_in_cart").textContent = 0;
     }
 }
 class CartArticle {
@@ -129,37 +133,40 @@ class CartArticle {
     }
 
     create_the_article_in_the_cart() {
-        /* 
-     * grid_article_in_cart: the grid that contains all the information for an article
-     * img_cart_div : the div that contains the image of the article    
+        /*
+     * Grid_article_in_cart: the grid that contains all the information for an article
+     * img_cart_div : the div that contains the image of the article
      * name_cart_div : the div that contains the name of the article
      * info_cart_div : the div that contains the other informations about an article (brand, price, quantity)
      * brand_div : the div that contains the brand of the article
      * price : the price of the article
      * price_div : the div that contains the price of the article
      */
-    
+
         let myArticleTemp = myArticle; // Won't work without it for the input
         let cart_div = document.getElementById('div_container_all_article_in_cart');
         let grid_article_in_cart = document.createElement('div');
         grid_article_in_cart.className = "grid-container";
-        let img_cart_div = myArticleTemp.#create_image();
-        let name_cart_div = myArticleTemp.#create_name();
-        let brand_div = myArticleTemp.#create_brand();
-        let { price_div, price } = myArticleTemp.#create_price();
-        let { box_selectdiv, box_select_minus, box_select_value, box_select_plus } = myArticleTemp.#create_the_input_component();
-        let del_text_div = myArticleTemp.#create_del_option();
+        let img_cart_div = myArticleTemp._create_image();
+        let name_cart_div = myArticleTemp._create_name();
+        let brand_div = myArticleTemp._create_brand();
+        let {price_div, price} = myArticleTemp._create_price();
+        let {
+            box_selectdiv, box_select_minus, box_select_value, box_select_plus
+        } = myArticleTemp._create_the_input_component();
+        let del_text_div = myArticleTemp._create_del_option();
         let info_cart_div = document.createElement('div');
         info_cart_div.className = "info_cart";
+
         //We update the SessionStorage (deletion) and update the number of article in the cart.
-        del_text_div.addEventListener('click', function () {
+        del_text_div.addEventListener('click', function() {
             document.getElementById("overlay_alert").classList.remove("hidden");
             document.getElementById("popupAlert").classList.remove("hidden");
             id_article_deleted = myArticle.id;
             grid_article_in_cart_deleted = grid_article_in_cart;
             line_deleted = line;
         });
-        document.getElementById("overlay_alert_btn_yes").addEventListener('click', function () {
+        document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
             cart_div.removeChild(grid_article_in_cart_deleted);
             cart_div.removeChild(line_deleted);
 
@@ -170,16 +177,18 @@ class CartArticle {
             nb_article_in_cart.textContent = old_data_saved.length;
             document.getElementById("overlay_alert").classList.add("hidden");
             document.getElementById("popupAlert").classList.add("hidden");
+
             //If the cart is empty, we show the image for it.
             if (old_data_saved.length == 0) {
                 empty_cart_displayed(cart_div);
             }
         });
-        document.getElementById("overlay_alert_btn_no").addEventListener('click', function () {
+        document.getElementById("overlay_alert_btn_no").addEventListener('click', function() {
             document.getElementById("overlay_alert").classList.add("hidden");
         });
+
         //We update the sessionStorage and re-calculate the price of the article with the new quantity.
-        box_select_plus.addEventListener('click', function () {
+        box_select_plus.addEventListener('click', function() {
             let elem = document.getElementById('quantity_id' + myArticleTemp.id);
             elem.value = parseInt(elem.value) + 1;
             total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
@@ -187,8 +196,9 @@ class CartArticle {
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
             update_json_file(myArticle, elem);
         });
+
         //We ensure that the quantity is still > 0 & update sessionStorage with the new quantity & calculate the price of the article.
-        box_select_minus.addEventListener('click', function () {
+        box_select_minus.addEventListener('click', function() {
             let elem = document.getElementById('quantity_id' + myArticleTemp.id);
             elem.value = parseInt(elem.value);
             if (elem.value - 1 != 0) {
@@ -199,13 +209,14 @@ class CartArticle {
                 update_json_file(myArticle, elem);
             }
         });
+
         //We update the sessionStorage and re-calculate the price of the article with the new quantity.
-        box_select_value.addEventListener('input', function () {
+        box_select_value.addEventListener('input', function() {
             total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * this.value;
             price.nodeValue = (myArticleTemp.price * this.value).toFixed(2) + "€";
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
             update_json_file(myArticle, this);
-        })
+        });
         grid_article_in_cart.appendChild(img_cart_div);
         info_cart_div.appendChild(brand_div);
         info_cart_div.appendChild(price_div);
@@ -220,7 +231,7 @@ class CartArticle {
     }
 
     /*Method used to create the component linked to the image of an article*/
-    #create_image() {
+    _create_image() {
         let img = document.createElement('img');
         img.src = this.image;
         img.className = "img_cart";
@@ -230,16 +241,20 @@ class CartArticle {
         img_cart_div.appendChild(img);
         return img_cart_div;
     }
+
+
     /*Method used to create the component linked to the name of an article*/
-    #create_name() {
+    _create_name() {
         let name = document.createTextNode(this.name);
         let name_cart_div = document.createElement('div');
         name_cart_div.className = "name_cart";
         name_cart_div.appendChild(name);
         return name_cart_div;
     }
+
+
     /*Method used to create the component linked to the deletion of an article*/
-    #create_del_option() {
+    _create_del_option() {
         let delt_text = document.createElement('h4');
         delt_text.textContent = "Supprimer du pannier";
         let del_text_div = document.createElement('div');
@@ -247,24 +262,30 @@ class CartArticle {
         del_text_div.className = "del_text_div";
         return del_text_div;
     }
+
+
     /*Method used to create the component linked to the brand of an article*/
-    #create_brand() {
+    _create_brand() {
         let brand = document.createTextNode(this.brand);
         let brand_div = document.createElement('div');
         brand_div.className = "brand_div_cart";
         brand_div.appendChild(brand);
         return brand_div;
     }
+
+
     /*Method used to create the component linked to the price of an article*/
-    #create_price() {
+    _create_price() {
         let price = document.createTextNode((this.price * this.quantity).toFixed(2) + "€");
         let price_div = document.createElement('div');
         price_div.className = "prix_cart";
         price_div.appendChild(price);
-        return { price_div, price };
+        return {price_div, price};
     }
+
+
     /*Method used to create the components linked to the input for the quantity of an article*/
-    #create_the_input_component() {
+    _create_the_input_component() {
         let box_select_value = document.createElement('input');
         box_select_value.className = "quantity";
         box_select_value.type = "number";
@@ -279,16 +300,19 @@ class CartArticle {
         box_selectdiv.appendChild(box_select_minus);
         box_selectdiv.appendChild(box_select_value);
         box_selectdiv.appendChild(box_select_plus);
-        return { box_selectdiv, box_select_minus, box_select_value, box_select_plus };
+        return {
+            box_selectdiv, box_select_minus, box_select_value, box_select_plus
+        };
     }
 }
+
 /**
  * Create the component to show to the user that the cart is empty
  * @param {any} cart_div : the div that will contain the html component for the empty cart
  */
 function empty_cart_displayed(cart_div) {
 /*
-    * img : the image that says there is nothing in the cart
+    * Img : the image that says there is nothing in the cart
     * img_cart_div: the div that contains the image
     * warning: the text for the warning_div 'Il n'y a aucun article dans le panier'
     * warning_div : the div that contain the text written in warning

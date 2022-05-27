@@ -103,7 +103,7 @@
             "env": {
                 "jquery": true
             }
-        }
+        },
         {
             // Override for the folders which contains script runned with nodejs. 
             "files": ["Server/**/*","Scripts/**/*"],
@@ -111,7 +111,7 @@
                 "ecmaVersion": 11
             },
             "env": {
-                "node": true,
+                "node": true
             }
         },
         {

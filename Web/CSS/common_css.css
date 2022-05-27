@@ -187,3 +187,27 @@ Media query:
 .hidden{
     display:none;
 }
+
+.fa{
+    font-size: 24px; 
+    float: right; 
+    color: teal; 
+    padding: 2px;
+}
+#nb_article_in_cart{
+    font-size: 12px; 
+    background: orange; 
+    color: white; 
+    padding: 0 5px; 
+    vertical-align: top; 
+    margin-left: -10px; 
+    float: right; 
+    border-radius: 5px;
+}
+
+#web_site_name{
+    font-size: 20px ;
+    color: teal;
+    text-align: center;
+    vertical-align: central;
+}
