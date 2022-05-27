@@ -101,41 +101,25 @@ class seeArticle {
         let name = myArticleTemp.#createName();
         let brand = myArticleTemp.#createBrand();
         let box_selectdiv = myArticleTemp.#create_the_input_component();
+        let price = myArticleTemp.#createPrice();
+        let descriptionP = myArticleTemp.#createDescription();
+
+
         let container_product_div = document.getElementById("containerProduct");
         let box_article = document.createElement('div');
         box_article.id = 'box';
-
         let infoDiv = document.createElement('div');
         infoDiv.id = 'productDetails';
         let detailsDiv = document.createElement('div');
         detailsDiv.id = "detailDivId";
         let buttonDiv = document.createElement('div');
         buttonDiv.id = 'button';
-
         let emptydiv = document.createElement('div');
-        emptydiv.id = "emptydiv";
-
-
-        let price = document.createElement('h3');
-        price.id = 'price';
-        let priceContent = document.createTextNode((parseFloat(this.price)).toFixed(2) + "€");
-
-
-        let descriptionP = document.createElement('p');
-        let descriptionPContent = document.createTextNode("Description : " + this.description);
-        addText(descriptionP, this.description);
-        descriptionP.id = 'descriptionP';
-
+        emptydiv.id = "emptydiv";       
         let add_btn = document.createElement('button');
         add_btn.id = "btn_add_article_to_cart";
         let add_btnContent = document.createTextNode('Ajouter au pannier');
-
         container_product_div.appendChild(box_article);
-
-
-        
-        price.appendChild(priceContent);
-        descriptionP.appendChild(descriptionPContent);
         box_article.appendChild(imagediv);
         box_article.appendChild(infoDiv);
         infoDiv.appendChild(name);
@@ -182,9 +166,6 @@ class seeArticle {
                 document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
             }
             sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
-            //Soit on affichera directement la pannier pour indiquer l'ajout soit on devra avoir un pop up
-            // location.href = "cart.html";
-
             document.getElementById("overlay_alert").classList.remove('hidden');
             document.getElementById("popupAlert").classList.remove('hidden');
             setTimeout(alertClosed, 1500);
@@ -194,6 +175,21 @@ class seeArticle {
 
     }
 
+    #createDescription() {
+        let descriptionP = document.createElement('p');
+        let descriptionPContent = document.createTextNode("Description : " + this.description);
+        addText(descriptionP, this.description);
+        descriptionP.id = 'descriptionP';
+        descriptionP.appendChild(descriptionPContent);
+        return descriptionP;
+    }
+    #createPrice() {
+        let price = document.createElement('h3');
+        price.id = 'price';
+        let priceContent = document.createTextNode((parseFloat(this.price)).toFixed(2) + "€");
+        price.appendChild(priceContent);
+        return price;
+    }
     #createImg() {
         let imagediv = document.createElement('div');
         imagediv.id = 'imageSection';
