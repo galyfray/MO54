@@ -137,11 +137,14 @@ class seeArticle {
              This function add to the cart the article by taking the following informations:
              - what is the article
              - in what quantity is the item purchased
-             → Since our cart is saved in the sessionStorage, in order to have all the stuff put in there, we need to read the sessionStorage and then add the new element after verifying if it alreay exist in the cart or not
+             → Since our cart is saved in the sessionStorage, in order to have all the stuff put in there, 
+             we need to read the sessionStorage and then add the new element after verifying if it alreay exist 
+             in the cart or not
         
             * old_data_saved : the var that contains all the informations stored in the sessionStorage
             * quantity_article : the quantity of the item purchased
-            * article_already_in_cart : has the value true if the article already exist in the cart of false in the other way around.
+            * article_already_in_cart : has the value true if the article already exist in the cart of false in the other
+            *  way around.
             */
 
         add_btn.onclick = function () {

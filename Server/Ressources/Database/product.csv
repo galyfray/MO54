@@ -1,2 +1,10 @@
 name;price;ht_price;description;available_quantity;ref;delivery_date;image_url;id;brand;category_id
 chat mignon;2.5;2;un petit félin tout à fait adorable;5;CM000;2022-05-19T18:44:23.143Z;https://static.comment-economiser.fr/images/photos_astuces/chat-scottish-noir-mignon-8172.jpg;0;Felix;-1
+Pneu michelin;50;42;un pneu d'hiver michelin;35;PNMI01;2022-06-19T18:44:23.143Z;https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg;1;Michelin;-1
+Pneu Michelin 244;49.99;45.99;un pneu;35;PNMI01;2022-06-19T18:44:23.143Z;https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg;2;Michelin;-1
+Pneu d'été;49.99;45.99;un pneu;35;PNMI01;2022-06-19T18:44:23.143Z;https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg;3;Michelin;-1
+Pneu d'hiver;59.99;45.99;un pneu;35;PNMI01;2022-06-19T18:44:23.143Z;https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg;4;Michelin;-1
+Pneu d'hiver Michelin;62.50; 52; Pneu Michelin;35;PNMI01;2022-06-19T18:44:23.143Z;https://bcdn.1001pneus.fr/media/catalog/category/MICHELIN_ALPIN_5.jpg;5;Michelin;-1
+Pneu again; 65; 51;Pneu Michelin;35;PNMI01;2022-06-19T18:44:23.143Z;https://mistervsp.fr/wp-content/uploads/2019/06/pneu-1456013-mistervsp.jpg;6;Michelin;-1
+Pneu FIRESTONE Multiseason Gen 02; 62; 61;Pneu Michelin; 35;PNMI01;2022-06-19T18:44:23.143Z;7;https://s2.medias-norauto.fr/images_produits/michelin-alpin-a4/650x650/pneu-michelin-alpin-a4-215-65-r15-96-h--410230.jpg;Michelin;-1
+
