@@ -178,8 +178,7 @@ async function mapSources(BUFFER, HTML_SOURCES, CSS_SOURCES, JS_SOURCES, WEB_DIR
                 match.substring(
                     match.indexOf("[") + 1,
                     match.lastIndexOf("]")
-                ),
-                "g"
+                )
             );
 
             // Replacing the matched section with the new content

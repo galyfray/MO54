@@ -102,7 +102,7 @@ class Cart {
         let grid_article_in_cart = document.createElement('div');
         grid_article_in_cart.className = "grid-container";
         let img = document.createElement('img');
-        img.src = "../Ressource/nothing_in_cart.png";
+        img.src = "./nothing_in_cart.png";
         img.className = "img_cart_empty";
         let img_cart_div = document.createElement('div');
         img_cart_div.appendChild(img);
@@ -320,7 +320,7 @@ function empty_cart_displayed(cart_div) {
     let grid_article_in_cart = document.createElement('div');
     grid_article_in_cart.className = "grid-container";
     let img = document.createElement('img');
-    img.src = "../Ressource/nothing_in_cart.png";
+    img.src = ".nothing_in_cart.png";
     img.className = "img_cart_empty";
     let img_cart_div = document.createElement('div');
     img_cart_div.appendChild(img);
