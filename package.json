@@ -1,19 +1,31 @@
 {
   "name": "mo54",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "scripts": {
-    "build": "node ./Scripts/devEnv.js HTML JS CSS"
+    "build": "node ./Scripts/devEnv.js",
+    "build-serv": "node ./Scripts/devEnv.js server",
+    "build-web": "node ./Scripts/devEnv.js web",
+    "prestart-serv": "npm run build-serv",
+    "start-serv": "node ./build/dev/server/server.js"
   },
   "dependencies": {
     "as-wasi": "^0.4.6",
-    "assemblyscript": "^0.19.9"
+    "assemblyscript": "^0.20.6",
+    "compression": "^1.7.4",
+    "express": "^4.18.1",
+    "spdy": "^4.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/runtime": "^7.15.4",
-    "jshint": "^2.13.4",
+    "@html-eslint/eslint-plugin": "^0.13.1",
+    "@html-eslint/parser": "^0.13.1",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.15.0",
+    "typescript": "^4.6.4",
     "uglify-js": "^3.14.2"
   }
 }
