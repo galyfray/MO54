@@ -7,6 +7,7 @@
         "browser": true,
         "es2021": true
     },
+    "ignorePatterns":["Libs/"],
     "rules": {
         "for-direction": "off",
         "no-await-in-loop": "warn",
@@ -50,7 +51,7 @@
         "jsx-quotes": ["warn", "prefer-double"],
         "key-spacing": ["warn", { "beforeColon": false, "afterColon": true,"align": "colon" }],
         "keyword-spacing": ["warn", { "before": true, "after": true }],
-        "linebreak-style": ["warn", "windows"],
+        "linebreak-style": ["warn"],
         "lines-around-comment": ["warn", {
             "beforeBlockComment": true,
             "beforeLineComment": true,
