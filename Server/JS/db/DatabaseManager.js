@@ -48,17 +48,28 @@ class DatabaseManager {
 
         this._tables = [AST.FROM];
 
-        for (let node of AST.SELECT) {
+        for (let node of AST.SELECT.ids) {
             this._qualify_table(node);
         }
         const mapper = this._make_mapper(AST.SELECT);
 
+        let limit;
+
+        if (AST.SELECT.limit !== null) {
+            let counter = 0;
+            limit = () => {
+                counter++;
+                return counter <= AST.SELECT.limit;
+            };
+        } else {
+            limit = () => true;
+        }
 
         const condition = this._interprate_where(AST.WHERE);
 
         try {
             const data = await this._csv_parser.parse(path.join(this._folder, AST.FROM + ".csv"), AST.FROM + ".");
-            return data.filter(condition).map(mapper);
+            return data.filter(elem => condition(elem) && limit()).map(mapper);
         } catch (e) {
             throw new InterpreterError(`Table ${AST.FROM} does not exist`);
         }
@@ -115,10 +126,9 @@ class DatabaseManager {
      * @returns {function(object):*} the mapper function.
      */
     _make_mapper(SELECT) {
-        // TODO : make the mapper parse float and int.
         const name_map = {};
         const mapper = {};
-        for (let node of SELECT) {
+        for (let node of SELECT.ids) {
             if (node.table == null) {
                 name_map[node.qualifyied] = node.column;
             } else {

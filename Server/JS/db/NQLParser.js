@@ -75,6 +75,15 @@ class NQLParser {
      */
     _parse_select() {
         this._token_stream.next(); // Skip SELECT
+        let limit = null;
+        if (this._token_stream.peek().value.toUpperCase() == "LIMIT") {
+            this._token_stream.next(); // Skip LIMIT
+            if (this._token_stream.peek().type == "int") {
+                limit = this._token_stream.next().value;
+            } else {
+                this._throw(this._token_stream.next(), "an integer");
+            }
+        }
         let select = [];
         while (this._token_stream.peek().type == "identifier") {
             select.push(this._parse_identifier(this._token_stream.next().value));
@@ -82,7 +91,7 @@ class NQLParser {
         if (select.length == 0) {
             this._throw(this._token_stream.next(), "a column identifier");
         }
-        return select;
+        return {ids: select, limit: limit};
     }
 
     _parse_where() {
@@ -280,7 +289,8 @@ NQLParser.TOKENIZERS = [
             "FROM",
             "WHERE",
             "AND",
-            "OR"
+            "OR",
+            "LIMIT"
         ],
         (kw, list) => {
             return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
@@ -302,8 +312,6 @@ NQLParser.TOKENIZERS = [
 // - benchmark
 // - add tests
 // - support JOINS
-// - support LIKE
 // - support IN
-// - support NOT
 
 module.exports = {NQLParser, UnexpectedTokenError};
