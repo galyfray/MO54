@@ -1,0 +1,189 @@
+/*
+    This files contains all the css that the views have in common.
+    - style of body, div, span, header, ul, li, a
+    - style of h1 to h4
+    - style of the input number component
+
+*/
+html, body, div, span, header, ul, li, a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    vertical-align: baseline;
+}
+html {
+    height: 100%;
+}
+/*Style of the body : we use the same background color & font-family for each view */
+body {
+    /*    margin: 0;*/
+    font-family: 'Lato', sans-serif;
+    background-color: rgb(253,253,253);
+}
+/*Customization of h1 & h2 & h4*/
+h1 {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    font-weight: 700;
+}
+h2 {
+    color: rgb(180, 150, 180);
+}
+h4 {
+    font-weight: 100;
+}
+h3 {
+    margin: 0;
+    font-size: 16px;
+}
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.number-input {
+    border: 0;
+    display: inline-flex;
+}
+.number-input, .number-input * {
+    box-sizing: border-box;
+}
+/*In order to have a + */
+.number-input button.plus:after {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+/*Button inside + or - */
+.number-input button:before, .number-input button:after {
+    display: inline-block;
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 2px;
+    background-color: blueviolet;
+    transform: translate(-50%, -50%);
+}
+/*For the pop up when we choose an article to add to the cart or when we delete one
+    overlay_alert
+    overlay_alert_btn_yes
+    overlay_alert_btn_no
+    alert-popup
+    popupAlert 
+    form-container
+*/
+#overlay_alert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    z-index: 9999;
+    opacity: 5;
+    background-color: rgba(0,0,0,0.4);
+}
+#overlay_alert_btn_yes {
+    background-color: lawngreen;
+    width: 45%;
+    padding: 5px;
+    height: 30px;
+}
+#overlay_alert_btn_no {
+    background-color: red;
+    width: 45%;
+    padding: 5px;
+    height: 30px;
+}
+.alert-popup {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    top: 50%;
+}
+#popupAlert {
+    position: fixed;
+    left: 45%;
+    top: 30%;
+    transform: translate(-45%, 5%);
+    border: 2px solid #666;
+    z-index: 9;
+}
+.form-container {
+    max-width: 300px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+/*
+Media query:
+    - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page
+    -> width>= 850px : 5 columns of articles (grid-template-columns: repeat(5, 1fr);)
+    -> width>= 505px &  width< 850px : 3 columns of articles (grid-template-columns: repeat(3, 1fr);)
+    -> width< 505px : 2 columns of articles (grid-template-columns: repeat(2, 1fr);)
+    -> the font-size & width of h1 is redefined according to the device width
+    -> the width of the div is redefined as well
+ */
+
+@media(min-width: 506px) {
+    h1 {
+        width: 80%;
+    }
+}
+@media(min-width: 601px) {
+    h1 {
+        font-size: 20px;
+        width: 90%;
+    }
+    .number-input button {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+    }
+    .number-input button:before, .number-input button:after {
+        width: 9px;
+        height: 2px;
+    }
+}
+@media(min-width: 651px) {
+    h1 {
+        width: 80%;
+    }
+    .number-input button {
+        width: 22px;
+        height: 22px;
+        margin: 0;
+    }
+
+    .number-input button:before, .number-input button:after {
+        width: 11px;
+        height: 2px;
+    }
+}
+@media(min-width: 851px) {
+    h1 {
+        font-size: 25px;
+    }
+    .number-input button {
+        width: 25px;
+        height: 25px;
+        margin: 0;
+    }
+
+    .number-input button:before, .number-input button:after {
+        width: 13px;
+        height: 2px;
+    }
+}
+@media(min-width : 1171px){
+    h1 {
+        width: 90%;
+        margin: auto;
+        padding: 20px;
+        font-weight: 700;
+    }
+}
+
+.hidden{
+    display:none;
+}

@@ -1,0 +1,150 @@
+/*
+    This code is used to give properties to the div containing all the articles.
+    Here, the css code create 5 columns -> we have 5 articles by line.
+    -> It will change according to the width of the device used (see the media querry part)
+ */
+#div_container_all_article {
+    display: grid;
+    grid-gap: 70px 20px;
+    grid-template-columns: repeat(2, 1fr);
+    width: 90%;
+    margin: auto;
+    padding-bottom: 40px;
+}
+
+/*
+    We defined the box properties:
+        - shadow with the cursos hover or not
+        - the border radius of an article "box" : div in which there are the name, price, brand and image of an article
+    We also defined the properties of the image of an article with a border radius.
+*/
+#box {
+    width: 100%;
+    background-color: rgb(240,240,240);
+    align-content: center;
+    border-radius: 15px;
+    box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+}
+
+#box:hover {
+    box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
+}
+
+#div_container_all_article img {
+    width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#details {
+    padding: 0 15px;
+}
+
+.link_to_show_article {
+    text-decoration: none;
+}
+
+
+/*
+Media query:
+    - according to the width of the device used, the css resize the label in h1 and the div that contains all thr article on the page
+    -> width>= 850px : 5 columns of articles (grid-template-columns: repeat(5, 1fr);)
+    -> width>= 505px &  width< 850px : 3 columns of articles (grid-template-columns: repeat(3, 1fr);)
+    -> width< 505px : 2 columns of articles (grid-template-columns: repeat(2, 1fr);)
+    -> the font-size & width of h1 is redefined according to the device width
+    -> the width of the div is redefined as well
+ */
+
+
+
+#image_of_article_in_display {
+    height: 30vh;
+    max-height: 150px;
+}
+
+@media(min-width: 506px) {
+    #div_container_all_article {
+        width: 70%;
+    }
+
+    #image_of_article_in_display {
+        height: 170px;
+        max-height: 150px;
+    }
+}
+
+@media(min-width: 601px) {
+    #div_container_all_article {
+        width: 90%;
+    }
+
+    #image_of_article_in_display {
+        height: 200px;
+        max-height: 150px;
+    }
+}
+
+@media(min-width: 651px) {
+    #div_container_all_article {
+        display: grid;
+        grid-gap: 70px 20px;
+        grid-template-columns: repeat(3, 1fr);
+        width: 80%;
+    }
+
+    #image_of_article_in_display {
+        height: 250px;
+        max-height: 150px;
+    }
+}
+
+@media(min-width: 851px) and (max-width: 1070px) {
+    #div_container_all_article {
+        width: 85%;
+        grid-gap: 10px;
+    }
+
+    #image_of_article_in_display {
+        height: 250px;
+        max-height: 250px;
+    }
+}
+
+@media(min-width: 1071px) and (max-width: 1170px) {
+    #div_container_all_article {
+        width: 85%;
+        grid-gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #image_of_article_in_display {
+        height: 260px;
+        max-height: 260px;
+    }
+}
+
+@media(min-width: 1171px) and (max-width: 1300px) {
+    #div_container_all_article {
+        width: 85%;
+        grid-gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #image_of_article_in_display {
+        height: 270px;
+        max-height: 270px;
+    }
+}
+
+@media(min-width: 1301px) {
+    #div_container_all_article {
+        width: 90%;
+        grid-gap: 10px;
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    #image_of_article_in_display {
+        height: 250px;
+        max-height: 250px;
+    }
+}

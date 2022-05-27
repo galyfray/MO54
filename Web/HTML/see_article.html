@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- The page is named-->
+    <title>Mon article - ourWebSite.fr</title>
+    <!-- We create a link between the HTML file and the css, js files-->
+    <!-- STYLES [(common_|see_).*\.css] -->
+    <!-- SCRIPTS [(hc-|see_).*\.js] -->
+
+
+</head>
+
+
+<body class="body_menu">
+    <div id="container">
+        <header style="background-color: rgb(230,230,230);">
+            <div class="wrapper cf">
+                <nav id="main-nav">
+                    <ul>
+                        <li>
+                            <a>Pneu</a>
+                            <ul>
+                                <li>
+                                    <a>Trouver un pneu</a>
+                                    <ul>
+                                        <li><a href="display_articles.html">Pneus été</a></li>
+                                        <li><a href="display_articles.html">Pneus 4 saisons</a></li>
+                                        <li><a href="display_articles.html">Pneus hiver</a></li>
+                                        <li><a href="display_articles.html">Pneu 4x4 et SUV</a></li>
+                                        <li><a href="display_articles.html">Pneus voiture de collection</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Accessoires pneus</a>
+                                </li>
+                            </ul>
+
+                        </li>
+
+                        <li>
+                            <a href="#">Pièce auto</a>
+                            <ul>
+                                <li>
+                                    <a href="#">Batterie et démarrage</a>
+                                    <ul>
+                                        <li><a href="#">Batteries</a></li>
+                                        <li><a href="#">Bougies</a></li>
+                                        <li><a href="#">Accessoires batterie</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Essuie glace</a>
+                                    <ul>
+                                        <li><a href="#">Balais d'essuie glace</a></li>
+                                        <li><a href="#">Lave glace</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">Ampoules et visibilité</a>
+                                    <ul>
+                                        <li><a href="#">Ampoules</a></li>
+                                        <li><a href="#">Coffret</a></li>
+                                        <li><a href="#">Mirroir de rétroviseur</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Entretien</a>
+                            <ul>
+                                <li>
+                                    <a href="#">Nettoyant intérieur</a>
+                                    <ul>
+                                        <li><a href="#">Nettoyant tissus</a></li>
+                                        <li><a href="#">Nettoyant plastique</a></li>
+                                        <li><a href="#">Nettoyant cuir</a></li>
+                                        <li><a href="#">Destructeur d'odeurs</a></li>
+                                        <li><a href="#">Nettoyant climatisation</a></li>
+                                        <li><a href="#">Nettoyant multi-usage</a></li>
+                                        <li><a href="#">Anti-buée</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="#">Nettoyant extérieur</a>
+                                    <ul>
+                                        <li><a href="#">Nettoyant jantes</a></li>
+                                        <li><a href="#">Nettoyant pneus</a></li>
+                                        <li><a href="#">Nettoyant moteur</a></li>
+                                        <li><a href="#">Nettoyant vitre voiture</a></li>
+                                        <li><a href="#">Anti-pluie</a></li>
+                                        <li><a href="#">Shampoing</a></li>
+                                    </ul>
+
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+                <a class="menu_icon">
+                    <span></span>
+                </a>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                <a href="cart.html">
+                    <i class="fa" style="font-size: 24px; float: right; color: teal; padding: 2px;">&#xf07a;</i>
+                    <span id='nb_article_in_cart' style="font-size: 12px; background: orange; color: white; padding: 0 5px; vertical-align: top; margin-left: -10px; float: right; border-radius: 5px;"> </span>
+                </a>
+                <span id='web_site_name' style="font-size: 20px" ; color: teal; text-align: center; vertical-align: central;> <h2>Our website</h2> </span>
+
+            </div>
+
+        </header>
+        <div style="height:20px;"></div>
+        <a href="display_articles.html" style="padding: 30px; text-decoration:none; color:teal">← Retour aux articles</a>
+        <div id="containerProduct">
+        </div>
+
+        <div id="overlay_alert" class="hidden">
+            <div class="alert-popup">
+                <div id="popupAlert" class="hidden">
+                    <form class="form-container">
+                        <h2 id="alert_popup_content">&#9989; L'article a bien été ajouté au panier</h2>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+</html>
+
