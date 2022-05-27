@@ -7,9 +7,10 @@ $(document).ready(function() {
     // var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     // document.getElementById("nb_article_in_cart").textContent = Object.keys(old_data_saved).length;
 
-    (function($) {
+    (function() {
         'use strict';
-        var Nav = new hcOffcanvasNav('#main-nav', {
+        // eslint-disable-next-line no-undef
+        new hcOffcanvasNav('#main-nav', {
             disableAt       : false,
             customToggle    : '.menu_icon',
             levelSpacing    : 40,
@@ -20,8 +21,6 @@ $(document).ready(function() {
             labelClose      : false
         });
     })(jQuery);
-
-    let div_container_all_article = document.getElementById("div_container_all_article");
 
     /*
      In order to populate the view without a database at first, we use the following line:
@@ -78,6 +77,7 @@ function create_list_article(article) {
     - html_component_article_info_div : a div that contains the component for the name, the brand and the price of an article.
     After the creation of the different component, we put the different component in the right place.
     */
+    let div_container_all_article = document.getElementById("div_container_all_article");
     let html_component_div_container = document.createElement("div");
     html_component_div_container.id = "box";
     let html_component_article_image = document.createElement("img");

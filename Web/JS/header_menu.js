@@ -1,7 +1,8 @@
 $(document).ready(function() {
-    (function($) {
+    (function() {
         'use strict';
-        let Nav = new hcOffcanvasNav('#main-nav', {
+        // eslint-disable-next-line no-undef
+        new hcOffcanvasNav('#main-nav', {
             disableAt       : false,
             customToggle    : '.menu_icon',
             levelSpacing    : 40,
