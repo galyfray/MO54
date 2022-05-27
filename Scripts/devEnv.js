@@ -249,7 +249,7 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
     BUFFER.push("[INFO][COPY] Copying files...");
     try {
         await Promise.all(SOURCES.map(async file => {
-            let filename = TRANSFORM(file);
+            let filename = TRANSFORM(file.replace(/\\/g, "/"));
             await fs.promises.mkdir(path.dirname(filename), {recursive: true}).then(() => {
                 return fs.promises.copyFile(
                     file,
