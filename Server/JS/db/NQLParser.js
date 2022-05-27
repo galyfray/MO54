@@ -51,16 +51,17 @@ class NQLParser {
         }
 
         AST.FROM = this._token_stream.next().value;
-
-        // TODO : support JOIN
-        if (this._token_stream.peek().value.toUpperCase() !== "WHERE") {
-            this._throw(this._token_stream.next(), "WHERE");
-        }
-
-        AST.WHERE = this._parse_where();
-
         if (!this._token_stream.eof()) {
-            this._throw(this._token_stream.next(), "end of query");
+            // TODO : support JOIN
+            if (this._token_stream.peek().value.toUpperCase() !== "WHERE") {
+                this._throw(this._token_stream.next(), "WHERE");
+            }
+
+            AST.WHERE = this._parse_where();
+
+            if (!this._token_stream.eof()) {
+                this._throw(this._token_stream.next(), "end of query");
+            }
         }
 
         return AST;
