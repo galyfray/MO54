@@ -127,7 +127,7 @@ Media query:
 
 @media(min-width: 506px) {
     h1 {
-        width: 70%;
+        width: 80%;
     }
 }
 @media(min-width: 601px) {
