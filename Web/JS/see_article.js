@@ -1,19 +1,21 @@
-(function() {
-    'use strict';
-    // eslint-disable-next-line no-undef
-    new hcOffcanvasNav('#main-nav', {
-        disableAt       : false,
-        customToggle    : '.menu_icon',
-        levelSpacing    : 40,
-        navTitle        : 'All',
-        levelTitles     : true,
-        levelTitleAsBack: true,
-        pushContent     : '#container',
-        labelClose      : false
-    });
-})(jQuery);
+
 
 $(document).ready(function() {
+    (function() {
+        'use strict';
+        // eslint-disable-next-line no-undef
+        new hcOffcanvasNav('#main-nav', {
+            disableAt       : false,
+            customToggle    : '.menu_icon',
+            levelSpacing    : 40,
+            navTitle        : 'All',
+            levelTitles     : true,
+            levelTitleAsBack: true,
+            pushContent     : '#container',
+            labelClose      : false
+        });
+    })(jQuery);
+
     /*The code show the number of article in the cart*/
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     if (old_data_saved) {

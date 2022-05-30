@@ -88,7 +88,9 @@ class Cart {
             }
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
             document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + this.dataStored.length + ")";
-            nb_article_in_cart.textContent = this.dataStored.length;
+
+            //Nb_article_in_cart.textContent = this.dataStored.length;
+            nb_article_in_cart = document.getElementById("nb_article_in_cart").textContent = this.dataStored.length;
         }
     }
 
