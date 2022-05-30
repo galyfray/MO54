@@ -185,7 +185,7 @@ class seeArticle {
 
     _createDescription() {
         let descriptionP = document.createElement('p');
-        let descriptionPContent = document.createTextNode("Description : " + this.description);
+        let descriptionPContent = document.createTextNode("");// + this.description);
         addText(descriptionP, this.description);
         descriptionP.id = 'descriptionP';
         descriptionP.appendChild(descriptionPContent);

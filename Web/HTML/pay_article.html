@@ -1,1 +1,188 @@
 <!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- The page is named-->
+        <title>Payement - ourWebSite.fr</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- SCRIPTS [(Libs/|pay_|create_).*\.js] -->
+        <!-- STYLES [(common_|pay_).*\.css] -->
+
+
+    </head>
+
+    <body class="body_menu">
+        <div id="container">
+            <header style="background-color: rgb(230,230,230);">
+                <div class="wrapper cf">
+                    <nav id="main-nav">
+                        <ul id="main-nav2">
+                        </ul>
+                    </nav>
+                    <a class="menu_icon">
+                        <span></span>
+                    </a>
+                    <a href="cart.html">
+                        <i class="fa">&#xf07a;</i>
+                        <span id="nb_article_in_cart"></span>
+                    </a>
+                    <span id="web_site_name">
+                        <h2>LaxyaCar</h2> </span>
+                </div>
+            </header>
+
+
+            <div id="before_selection_choice">
+                <span style="display: inline;   display: table; margin: 0 auto;">
+                    <input type="button" value="Créer un compte" id="button_create_account">
+                    <input type="button" value="S'identifier" id="button_login">
+                    <input type="button" value="Invité" id="button_without_account">
+                </span>
+            </div>
+
+
+            <h2>Informations personelles</h2>
+
+            <div class="container" style="width:80%; margin: auto;">
+                <form>
+                    <h2>Information</h2>
+                    <div class="row" id="societe_div">
+                        <div class="col-25">
+                            <label for="fname">Nom de la société</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" placeholder="Votre société...">
+                        </div>
+                    </div>
+                    <div class="row" id="prenom_div">
+                        <div class="col-25">
+                            <label>Prénom</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" placeholder="Votre prénom...">
+                        </div>
+                    </div>
+                    <div class="row" id="nom_div">
+                        <div class="col-25">
+                            <label>Nom</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" placeholder="Votre nom...">
+                        </div>
+                    </div>
+                    <div class="row" id="mail_div">
+                        <div class="col-25">
+                            <label>Email</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="email" placeholder="Votre email...">
+                        </div>
+                    </div>
+                    <div class="row" id="mdp_div">
+                        <div class="col-25">
+                            <label>Mot de passe</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="password" id="mdp">
+                        </div>
+                    </div>
+                    <div class="row" id="tel_div">
+                        <div class="col-25">
+                            <label>Numéro de téléphone</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="tel" id="tel" placeholder="Votre numéro...">
+                        </div>
+                    </div>
+
+                    <div class="row" id="acces_div">
+                        <div class="col-25">
+                            <input type="checkbox"></input>
+                        </div>
+                        <div class="col-75">
+                            En continuant, vous acceptez nos Conditions générales.
+                    </br>Nous utiliserons vos données personnelles pour vous faire
+                            bénéficier pleinement de votre statut de membre.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+
+            <h2>Livraison</h2>
+            <div class="container" style="width:80%; margin: auto;">
+                <form>
+                    <h2>Addresse de facturation</h2>
+                    <p>Entrez votre addresse de facturation</p>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>Addresse (numéro, rue)</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" placeholder="Votre société...">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>Bâtiment, étage...</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" placeholder="Votre prénom...">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>Code postal</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" placeholder="Votre nom...">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>Ville</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="email" placeholder="Votre email...">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+                </br>
+            <h2>Payement</h2>
+            <div class="container" style="width:80%; margin: auto;">
+                <form>
+                    <h2>Paiement</h2>
+                    <div class="row">
+                        <div class="col-25"><label>Nom sur la carte</label></div>
+                        <div class="col-75"><input type="text"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25"><label >Numero de carte</label></div>
+                        <div class="col-75"><input type="text"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25"><label>Date d'expiration</label></div>
+                        <div class="col-25"><input type="date"></div>
+                        <div class="col-25"><label>Code de sécurité</label></div>
+                        <div class="col-25"><input type="number"></div>
+                    </div>
+                    <div class="row"><input type="submit" value="Payer"></div>
+                </form>
+            </div>
+
+
+        </div>
+    </body>
+</html>
