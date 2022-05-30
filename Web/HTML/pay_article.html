@@ -52,10 +52,10 @@
                     <h2>Information</h2>
                     <div class="row" id="societe_div">
                         <div class="col-25">
-                            <label for="fname">Nom de la société</label>
+                            <label>Nom de la société</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="Votre société...">
+                            <input type="text" placeholder="Votre société..." id="input_society">
                         </div>
                     </div>
                     <div class="row" id="prenom_div">
@@ -63,7 +63,7 @@
                             <label>Prénom</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="Votre prénom...">
+                            <input type="text" placeholder="Votre prénom..." id="input_firstname">
                         </div>
                     </div>
                     <div class="row" id="nom_div">
@@ -71,7 +71,7 @@
                             <label>Nom</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="Votre nom...">
+                            <input type="text" placeholder="Votre nom..." id="input_name">
                         </div>
                     </div>
                     <div class="row" id="mail_div">
@@ -79,7 +79,7 @@
                             <label>Email</label>
                         </div>
                         <div class="col-75">
-                            <input type="email" placeholder="Votre email...">
+                            <input type="email" placeholder="">
                         </div>
                     </div>
                     <div class="row" id="mdp_div">
@@ -87,7 +87,7 @@
                             <label>Mot de passe</label>
                         </div>
                         <div class="col-75">
-                            <input type="password" id="mdp">
+                            <input type="password" id="input_mdp">
                         </div>
                     </div>
                     <div class="row" id="tel_div">
@@ -95,13 +95,13 @@
                             <label>Numéro de téléphone</label>
                         </div>
                         <div class="col-75">
-                            <input type="tel" id="tel" placeholder="Votre numéro...">
+                            <input type="tel" id="input_phone" placeholder="Votre numéro...">
                         </div>
                     </div>
 
                     <div class="row" id="acces_div">
                         <div class="col-25">
-                            <input type="checkbox"></input>
+                            <input type="checkbox" id="input_checkbox"></input>
                         </div>
                         <div class="col-75">
                             En continuant, vous acceptez nos Conditions générales.
@@ -126,7 +126,7 @@
                             <label>Addresse (numéro, rue)</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="Votre société...">
+                            <input type="text" placeholder="Votre addresse..." id="input_address">
                         </div>
                     </div>
                     <div class="row">
@@ -134,7 +134,7 @@
                             <label>Bâtiment, étage...</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="Votre prénom...">
+                            <input type="text" placeholder="">
                         </div>
                     </div>
                     <div class="row">
@@ -142,7 +142,7 @@
                             <label>Code postal</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="Votre nom...">
+                            <input type="text" placeholder="Code Postal..." id="input_postal">
                         </div>
                     </div>
                     <div class="row">
@@ -150,7 +150,7 @@
                             <label>Ville</label>
                         </div>
                         <div class="col-75">
-                            <input type="email" placeholder="Votre email...">
+                            <input type="text" placeholder="Ville..." id="input_city">
                         </div>
                     </div>
 
@@ -166,17 +166,17 @@
                     <h2>Paiement</h2>
                     <div class="row">
                         <div class="col-25"><label>Nom sur la carte</label></div>
-                        <div class="col-75"><input type="text"></div>
+                        <div class="col-75"><input type="text" id="input_name_card"></div>
                     </div>
                     <div class="row">
                         <div class="col-25"><label >Numero de carte</label></div>
-                        <div class="col-75"><input type="text"></div>
+                        <div class="col-75"><input type="text" id="input_num_card"></div>
                     </div>
                     <div class="row">
                         <div class="col-25"><label>Date d'expiration</label></div>
-                        <div class="col-25"><input type="date"></div>
+                        <div class="col-25"><input type="date" id="input_date_card"></div>
                         <div class="col-25"><label>Code de sécurité</label></div>
-                        <div class="col-25"><input type="number"></div>
+                        <div class="col-25"><input type="number" id="input_security_code_card"></div>
                     </div>
                     <div class="row"><input type="submit" value="Payer"></div>
                 </form>

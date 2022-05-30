@@ -14,74 +14,31 @@
         <!-- SCRIPTS [(Libs/|display_|create_).*\.js] -->
         <!-- STYLES [(common_|display_).*\.css] -->
 
-
     </head>
 
     <body class="body_menu">
         <div id="container">
-            <header style="background-color: rgb(230,230,230);">
-                <div class="wrapper cf">
+            <header id="div_wrapper">
+                <div class="wrapper cf" id="g" style="width:100%;">
                     <nav id="main-nav">
                         <ul id="main-nav2">
-                            <li>
-                                <a>Pneu</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">Jantes et accessoires</a>
-                                        <ul>
-                                            <li><a href="#">Pack jantes et pneus</a></li>
-                                            <li><a href="#">Jantes tôles</a></li>
-                                            <li><a href="#">Jantes alu</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Pneu par marque</a>
-                                        <ul>
-                                            <li><a href="#">Pneu Continental</a></li>
-                                            <li><a href="#">Pneu Feu Vert</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Entretien</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">Nettoyant extérieur</a>
-                                        <ul>
-                                            <li><a href="#">Nettoyant jantes</a></li>
-                                            <li><a href="#">Nettoyant pneus</a></li>
-                                            <li><a href="#">Nettoyant moteur</a></li>
-                                            <li><a href="#">Nettoyant vitre voiture</a></li>
-                                            <li><a href="#">Anti-pluie</a></li>
-                                            <li><a href="#">Shampoing</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Accessoire de nettoyage</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Désodorisant</a>
-                                    </li>
-                                </ul>
-                            </li>
                         </ul>
                     </nav>
-                    <a class="menu_icon">
+                    <a class="menu_icon" style="">
                         <span></span>
                     </a>
                     <a href="cart.html">
-                        <i class="fa">&#xf07a;</i>
+                        <i class="fa" style="padding-right: 20px;">&#xf07a;</i>
                         <span id="nb_article_in_cart"></span>
                     </a>
                     <span id="web_site_name">
-                        <h2>Our website</h2> </span>
+                        <h2>LaxyaCar</h2> </span>
                 </div>
             </header>
             <!--The following div contain a title part (h1) and a div in which the code will create dynamically some
                 article for a random page-->
             <div id="mainContainer">
-                <h1>Tout les pneus</h1>
+                <h1 id="all_the_category">Tout les pneus</h1>
                 <div id="div_container_all_article"></div>
             </div>
         </div>

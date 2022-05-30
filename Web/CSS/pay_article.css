@@ -79,4 +79,10 @@ input[type=submit]:hover {
     padding: 5px;
     height: 35px;
     margin : 5px;
+    width: 200px;
+
+}
+
+#button_create_account:hover, #button_login:hover, #button_without_account:hover{
+    border-width: 2px;   
 }

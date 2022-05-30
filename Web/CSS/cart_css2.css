@@ -256,3 +256,24 @@
 .open-button:hover {
     opacity: 1;
 }
+
+
+#btn_to_pay{
+    width: 80%;
+    background-color: plum;
+    height: 50px;
+    padding: auto;
+    color: white;
+    border-radius: 10px;
+    border:none;
+    font-size: 18px;
+    margin: auto;
+}
+#btn_to_pay >a{
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+}
+#total_to_pay{
+    text-align: center;
+}
