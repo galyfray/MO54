@@ -63,7 +63,7 @@ SERVER.use((req, res, next) => {
         },
         SERVER
     ).listen(PORT, function() {
-        console.log(`Server listening on port ${PORT}`);
+        console.log(`Server started at https://localhost:${PORT}`);
     });
 
 })();

@@ -184,18 +184,22 @@ class DatabaseManager {
         return this._meta[node._table][node.column];
     }
 
+    _get_function_type(name) {
+        return DatabaseManager.FUNCTIONS[name].type;
+    }
+
     _interprate_identifier(node) {
         this._qualify_table(node);
         let type = this._get_column_type(node);
         return data => DatabaseManager.MAPPERS[type](data[node.qualifyied]);
     }
 
-    _interprate_upper(node) {
-        let arg = this._interprate_identifier(node.args[0]);
-        if (this._get_column_type(node.args[0]) != "string") {
-            throw new InterpreterError(`The argument of the upper function must be a string`);
+    _interprate_function(node) {
+        let args = [];
+        for (let arg of node.args) {
+            args.push(this._interprate_side(arg));
         }
-        return data => arg(data).toUpperCase();
+        return DatabaseManager.FUNCTIONS[node.value].factory(args);
     }
 
     /**
@@ -208,14 +212,46 @@ class DatabaseManager {
         if (side.type == NQLParser.TYPES.IDENTIFIER) {
             return this._interprate_identifier(side);
         } else if (side.type == NQLParser.TYPES.FUNCTION) {
-            switch (side.value) {
-            case "UPPER_CASE":
-                return this._interprate_upper(side);
-            default:
-                throw new InterpreterError(`The function ${side.name} is not supported`);
-            }
+            return this._interprate_function(side);
         } else {
             return () => side.value;
+        }
+    }
+
+    _get_node_type(node) {
+        if (node.type == NQLParser.TYPES.IDENTIFIER) {
+            return this._get_column_type(node);
+        } else if (node.type == NQLParser.TYPES.FUNCTION) {
+            return this._get_function_type(node.value);
+        } else {
+            return node.type;
+        }
+    }
+
+    _get_node_name(node) {
+        if (node.type == NQLParser.TYPES.IDENTIFIER) {
+            return node.qualifyied;
+        } else {
+            return node.value;
+        }
+    }
+
+    _check_function_args(node) {
+        if (DatabaseManager.FUNCTIONS[node.value] == null) {
+            throw new InterpreterError(`The function ${node.value} is not supported`);
+        }
+
+        let arg_type;
+        for (let i = 0;i < node.args.length;i++) {
+            this._qualify_table(node.args[i]);
+            arg_type = this._get_node_type(node.args[i]);
+
+            if (arg_type != DatabaseManager.FUNCTIONS[node.value].args[i]) {
+                throw new InterpreterError(
+                    `The argument ${i} of the function ${node.value} is expected` +
+                    ` to be of type ${this.FUNCTIONS[node.value].args[i]} but is ${arg_type}`
+                );
+            }
         }
     }
 
@@ -226,26 +262,21 @@ class DatabaseManager {
      * @throws {InterpreterError} if the two nodes have incompatible types.
      */
     _check_types(node1, node2) {
-        let type1, type2, value1, value2;
-        if (node1.type == NQLParser.TYPES.IDENTIFIER) {
-            this._qualify_table(node1);
-            type1 = this._get_column_type(node1);
-            value1 = node1.qualifyied;
-        } else {
-            type1 = node1.type;
-            value1 = node1.value;
+        let type1 = this._get_node_type(node1);
+        let type2 = this._get_node_type(node2);
+
+        if (node1.type == NQLParser.TYPES.FUNCTION) {
+            this._check_function_args(node1);
         }
-        if (node2.type == NQLParser.TYPES.IDENTIFIER) {
-            this._qualify_table(node2);
-            type2 = this._get_column_type(node2);
-            value2 = node2.qualifyied;
-        } else {
-            type2 = node2.type;
-            value2 = node2.value;
+
+        if (node2.type == NQLParser.TYPES.FUNCTION) {
+            this._check_function_args(node2);
         }
+
         if (type1 != type2) {
             throw new InterpreterError(
-                `Could not compare types ${type1} and ${type2} for ${value1} and ${value2}`
+                `Could not compare types ${type1} and ${type2}` +
+                ` for ${this._get_node_name(node1)} and ${this._get_node_name(node2)}`
             );
         }
     }
@@ -318,9 +349,17 @@ DatabaseManager.MAPPERS = {
     "int"   : val => parseInt(val)
 };
 
+DatabaseManager.FUNCTIONS = {
+    "UPPER_CASE": {
+        type   : "string",
+        args   : ["string"],
+        factory: args => data => args[0](data).toUpperCase()
+    }
+};
+
 // TODO :
 // - Add support for joins
 // - support IN, LIKE, NOT
-// - Parse floats and ints + check if when recieved they are already parsed
+// - re order methods to group them by utility
 
 module.exports = {DatabaseManager, InterpreterError};

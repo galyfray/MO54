@@ -109,8 +109,11 @@ class ParenthesisTokenizer extends Tokenizer {
         return char === "(" || char === ")";
     }
 
-    _canContinueTokenization() {
-        return false;
+    tokenize(charStream) {
+        return {
+            value: charStream.next(),
+            type : this._type
+        };
     }
 }
 

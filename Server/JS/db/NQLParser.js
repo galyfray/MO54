@@ -1,5 +1,5 @@
 const CharStream = require("./CharStream.js");
-const TokenStream = require("./TokenStream.js");
+const {TokenStream} = require("./TokenStream.js");
 const tokenizers = require("./tokenizers.js");
 
 class UnexpectedTokenError extends Error {}
@@ -150,11 +150,12 @@ class NQLParser {
     _parse_side() {
         let token = this._token_stream.next();
         if (token.type == "identifier") {
+            if (this._token_stream.peek().type == NQLParser.TYPES.PARENTHESIS) {
+                return this._parse_function(token);
+            }
             return this._parse_identifier(token.value);
         } else if (token.type == "int" || token.type == "float" || token.type == "string") {
             return token;
-        } else if (token.type == NQLParser.TYPES.FUNCTION) {
-            return this._parse_function(token);
         }
         this._throw(token, "an identifier, a number or a string");
     }
@@ -178,6 +179,8 @@ class NQLParser {
                 value: token.value.toUpperCase(),
                 args : [value]
             };
+        } else {
+            this._throw(token, "UPPER_CASE");
         }
     }
 
