@@ -184,6 +184,20 @@ class DatabaseManager {
         return this._meta[node._table][node.column];
     }
 
+    _interprate_identifier(node) {
+        this._qualify_table(node);
+        let type = this._get_column_type(node);
+        return data => DatabaseManager.MAPPERS[type](data[node.qualifyied]);
+    }
+
+    _interprate_upper(node) {
+        let arg = this._interprate_identifier(node.args[0]);
+        if (this._get_column_type(node.args[0]) != "string") {
+            throw new InterpreterError(`The argument of the upper function must be a string`);
+        }
+        return data => arg(data).toUpperCase();
+    }
+
     /**
      * Helper function that interprete on side of an operator expression.
      * @param {*} side an AST node representing a side of an operator expression.
@@ -192,9 +206,14 @@ class DatabaseManager {
      */
     _interprate_side(side) {
         if (side.type == NQLParser.TYPES.IDENTIFIER) {
-            this._qualify_table(side);
-            let type = this._get_column_type(side);
-            return data => DatabaseManager.MAPPERS[type](data[side.qualifyied]);
+            return this._interprate_identifier(side);
+        } else if (side.type == NQLParser.TYPES.FUNCTION) {
+            switch (side.value) {
+            case "UPPER_CASE":
+                return this._interprate_upper(side);
+            default:
+                throw new InterpreterError(`The function ${side.name} is not supported`);
+            }
         } else {
             return () => side.value;
         }
@@ -261,7 +280,12 @@ class DatabaseManager {
 
             if (node.left.type == node.right.type) {
                 throw new InterpreterError("Illegal statement in WHERE clause, could not compare two values of the same nature");
-            } else if (node.left.type != NQLParser.TYPES.IDENTIFIER && node.right.type != NQLParser.TYPES.IDENTIFIER) {
+            } else if (
+                node.left.type != NQLParser.TYPES.IDENTIFIER &&
+                node.right.type != NQLParser.TYPES.IDENTIFIER &&
+                node.left.type != NQLParser.TYPES.FUNCTION &&
+                node.right.type != NQLParser.TYPES.FUNCTION
+            ) {
                 throw new InterpreterError("Illegal statement in WHERE clause, could not compare two values of the same nature");
             }
 

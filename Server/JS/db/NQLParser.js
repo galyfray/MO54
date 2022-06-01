@@ -153,8 +153,32 @@ class NQLParser {
             return this._parse_identifier(token.value);
         } else if (token.type == "int" || token.type == "float" || token.type == "string") {
             return token;
+        } else if (token.type == NQLParser.TYPES.FUNCTION) {
+            return this._parse_function(token);
         }
         this._throw(token, "an identifier, a number or a string");
+    }
+
+    _parse_function(token) {
+        if (token.value.toUpperCase() == "UPPER_CASE") {
+            if (this._token_stream.peek().value != "(") {
+                this._throw(this._token_stream.next(), "(");
+            }
+            this._token_stream.next(); // Skip (
+            if (this._token_stream.peek().type != "identifier") {
+                this._throw(this._token_stream.next(), "an identifier");
+            }
+            let value = this._parse_identifier(this._token_stream.next().value);
+            if (this._token_stream.peek().value != ")") {
+                this._throw(this._token_stream.next(), ")");
+            }
+            this._token_stream.next(); // Skip )
+            return {
+                type : NQLParser.TYPES.FUNCTION,
+                value: token.value.toUpperCase(),
+                args : [value]
+            };
+        }
     }
 
     _parse_operator_expression() {
@@ -233,7 +257,7 @@ class NQLParser {
             let column = this._char_stream.getColumn() - token.value.length;
 
             message = `Unexpected token ${token.value} at` +
-                `line ${this._char_stream.getLine()} column ${this._char_stream.getColumn()}`;
+                ` line ${this._char_stream.getLine()} column ${this._char_stream.getColumn()}`;
 
             if (expected) {
                 message += `, expected ${expected}`;
@@ -277,7 +301,8 @@ NQLParser.TYPES = {
     IDENTIFIER         : "identifier",
     PARENTHESIS        : "parenthesis",
     BINARY_EXPRESSION  : "binary_expression",
-    OPERATOR_EXPRESSION: "operator"
+    OPERATOR_EXPRESSION: "operator",
+    FUNCTION           : "FUNCTION"
 };
 
 NQLParser.TOKENIZERS = [
@@ -296,15 +321,15 @@ NQLParser.TOKENIZERS = [
             return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
         }
     ),
-    new tokenizers.OperatorTokenizer(),
     new tokenizers.keywordTokenizer(
-        [
-            "(",
-            ")"
-        ],
-        tokenizers.keywordTokenizer.DEFAULT_PREDICATE,
-        NQLParser.TYPES.PARENTHESIS
-    )
+        ["UPPER_CASE"],
+        (kw, list) => {
+            return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
+        },
+        NQLParser.TYPES.FUNCTION
+    ),
+    new tokenizers.OperatorTokenizer(),
+    new tokenizers.ParenthesisTokenizer()
 ];
 
 

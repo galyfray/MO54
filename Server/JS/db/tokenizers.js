@@ -99,6 +99,21 @@ class keywordTokenizer extends identifierTokenizer {
 
 keywordTokenizer.DEFAULT_PREDICATE = (kw, list) => list.includes(kw);
 
+class ParenthesisTokenizer extends Tokenizer {
+
+    constructor() {
+        super("parenthesis");
+    }
+
+    canTokenize(char) {
+        return char === "(" || char === ")";
+    }
+
+    _canContinueTokenization() {
+        return false;
+    }
+}
+
 class OperatorTokenizer extends Tokenizer {
 
     constructor() {
@@ -117,5 +132,6 @@ module.exports = {
     numberTokenizer,
     identifierTokenizer,
     keywordTokenizer,
-    OperatorTokenizer
+    OperatorTokenizer,
+    ParenthesisTokenizer
 };

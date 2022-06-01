@@ -20,11 +20,12 @@ INDEX.add(
                     value: parsed
                 });
             } catch (e) {
-                if (typeof e === InterpreterError || typeof e === UnexpectedTokenError) {
+                if (e.constructor === InterpreterError || e.constructor === UnexpectedTokenError) {
                     res.status(400).json({error: e.message});
+                    return;
                 }
                 console.error(e);
-                res.status(500).json({error: e});
+                res.status(500).json({error: e.message});
             }
         },
         "route": "/request"
