@@ -93,7 +93,8 @@
                             <label>Numéro de téléphone</label>
                         </div>
                         <div class="col-75">
-                            <input type="tel" id="input_phone" placeholder="Votre numéro..." required>
+                            <input type="number" id="input_phone" placeholder="Votre numéro..."
+                                required>
                         </div>
                     </div>
 
@@ -195,21 +196,24 @@
                     </div>
                 </form>
             </div>
+            <div class="container" style="width:80%; margin: auto;">
+                <input id="btn_send_mail" type="button" value="Send Email" onclick="sendEmail()">
+            </div>
         </div>
     </body>
 </html>
 
 <script src="https://smtpjs.com/v3/smtp.js">
 </script>
-<input type="button" value="Send Email" onclick="sendEmail()">
+
 <script type="text/javascript">
     function sendEmail() {
       Email.send({
         Host: "smtp.gmail.com",
         Username: "sender@email_address.com",
         Password: "Enter your password",
-        To: 'yasmarila.n@gmail.com',
-        From: "yasmarila.n@gmail.com",
+        To: '',
+        From: "",
         Subject: "Sending Email using javascript",
         Body: "Well that was easy!!",
       })

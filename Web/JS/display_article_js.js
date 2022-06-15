@@ -1,7 +1,7 @@
 $(document).ready(function() {
     'use strict';
 
-    //SI VIDE ALORS AFFICHE 0 MAIS SI MEMOIRE AFFICHE VALEUR
+    //Si vide alors affiche 0 Mais si mémoire affiche valeur
     var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
     if (old_data_saved) {
         document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;

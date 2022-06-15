@@ -2,6 +2,22 @@
   box-sizing: border-box;
 }
 
+#before_selection_choice{
+  margin : 10px;
+}
+
+#btn_send_mail{
+  background-color: purple;
+  font-size: 18px;
+  border-radius: 10px;
+  color:white;
+  padding: 5px;
+  height: 35px;
+  margin : auto;
+  width: 200px;
+
+}
+
 input[type=text], select, textarea,input[type=email],input[type=tel],input[type=password] ,input[type=date],input[type=number]{
   width: 100%;
   padding: 12px;
@@ -159,3 +175,4 @@ input[type=submit]:hover {
         color: white;
       }
     }
+  
