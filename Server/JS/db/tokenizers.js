@@ -16,7 +16,9 @@ class stringTokenizer extends Tokenizer {
 
     tokenize(charStream) {
         charStream.next();
-        return super.tokenize(charStream);
+        let token = super.tokenize(charStream);
+        charStream.next();
+        return token;
     }
 }
 
