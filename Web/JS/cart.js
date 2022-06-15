@@ -164,11 +164,13 @@ class CartArticle {
         del_text_div.addEventListener('click', function() {
             document.getElementById("overlay_alert").classList.remove("hidden");
             document.getElementById("popupAlert").classList.remove("hidden");
-            id_article_deleted = myArticle.id;
+            id_article_deleted = myArticleTemp.id;
             grid_article_in_cart_deleted = grid_article_in_cart;
             line_deleted = line;
         });
         document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
+            document.getElementById("overlay_alert").classList.add("hidden");
+            document.getElementById("popupAlert").classList.add("hidden");
             cart_div.removeChild(grid_article_in_cart_deleted);
             cart_div.removeChild(line_deleted);
 
@@ -177,8 +179,7 @@ class CartArticle {
             sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
             document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
             nb_article_in_cart.textContent = old_data_saved.length;
-            document.getElementById("overlay_alert").classList.add("hidden");
-            document.getElementById("popupAlert").classList.add("hidden");
+
 
             //If the cart is empty, we show the image for it.
             if (old_data_saved.length == 0) {

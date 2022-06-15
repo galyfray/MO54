@@ -25,8 +25,6 @@
                     </nav>
                     <a href="display_articles.html">
                         <i class="fa fa-home" style="float: left;"></i>
-
-
                     </a>
                     <a href="cart.html">
                         <i class="fa">&#xf07a;</i>
@@ -79,7 +77,7 @@
                             <label>Email</label>
                         </div>
                         <div class="col-75">
-                            <input type="email" placeholder="" required>
+                            <input type="email" placeholder="" id="email_to_fill" required>
                         </div>
                     </div>
                     <div class="row" id="mdp_div">
@@ -111,17 +109,18 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <button class="learn-more"
-                            onclick="document.getElementById('information_div').style.display='block';">
-                            <span class="circle" aria-hidden="true">
-                                <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">Etape suivante</span>
-                        </button>
 
-                    </div>
                 </form>
+                <div class="row">
+                    <button class="learn-more"
+                        onclick="print_information_div();">
+                        <span class="circle" aria-hidden="true">
+                            <span class="icon arrow"></span>
+                        </span>
+                        <span class="button-text">Etape suivante</span>
+                    </button>
+
+                </div>
             </div>
         </br>
             <div class="container" style="width:80%; margin: auto; display: none;" id="information_div">
@@ -217,64 +216,3 @@
         </div>
     </body>
 </html>
-
-<script src="https://smtpjs.com/v3/smtp.js">
-</script>
-
-<script>
-    function payment_validated(){
-
-    //    setTimeout(location.href='display_articles.html', 4000);
-    let verified = verify_input_payment();
-    if(verified == true ){
-        document.getElementById("payement_validated").style.display ="block";
-        document.getElementById("form_part1").style.display ="none";
-        document.getElementById("information_div").style.display ="none";
-        document.getElementById("payement_div").style.display ="none";
-        document.getElementById("form_part4").style.display ="none";
-        document.getElementById("before_selection_choice").style.display="none";
-        setTimeout(() => {
-            location.href='display_articles.html';
-        }, 4000)
-    }
-
-
-    }
-</script>
-<script type="text/javascript">
-    function sendEmail() {
-      Email.send({
-        Host: "smtp.gmail.com",
-        Username: "sender@email_address.com",
-        Password: "Enter your password",
-        To: '',
-        From: "",
-        Subject: "Sending Email using javascript",
-        Body: "Well that was easy!!",
-      })
-        .then(function (message) {
-          alert("mail sent successfully")
-        });
-    }
-  </script>
-<script>
-    function verify_input_addresse(){
-        if (document.getElementById("input_address").value != ""
-        & document.getElementById("input_postal").value != ""
-        & document.getElementById("input_city").value != ""){
-            document.getElementById('payement_div').style.display='block';
-        }
-    }
-
-    function verify_input_payment(){
-        if (document.getElementById("input_name_card").value != ""
-        & document.getElementById("input_num_card").value != ""
-        & document.getElementById("input_date_card").value != ""
-        & document.getElementById("input_security_code_card").value != ""){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-</script>

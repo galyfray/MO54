@@ -99,10 +99,6 @@ $(document).ready(function() {
 });
 
 function show_the_article_by_category(id) {
-    console.log(location);
-    if (!location.href.endsWith("display_articles.html")) {
-        location.href = 'display_articles.html';
-    }
     let query_content = "SELECT name price ht_price description available_quantity ref delivery_date image_url id brand category_id FROM product WHERE category_id=" + id;
     console.log(query_content);
     let val = $.ajax({
