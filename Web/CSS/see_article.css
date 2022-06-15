@@ -153,6 +153,7 @@ button a:focus {
             'imagePlace imagePlace imagePlace imagePlace productDetailsPlace';
         padding-top: 20px;
         padding-left: 0px;
+        width: 90%;
     }
 
     #imageSection {

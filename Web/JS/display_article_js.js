@@ -1,6 +1,13 @@
 $(document).ready(function() {
     'use strict';
 
+    //SI VIDE ALORS AFFICHE 0 MAIS SI MEMOIRE AFFICHE VALEUR
+    var old_data_saved = JSON.parse(sessionStorage.getItem('articleToCart2'));
+    if (old_data_saved) {
+        document.getElementById("nb_article_in_cart").textContent = old_data_saved.length;
+
+    }
+
 
     let query_content = "SELECT name price ht_price description available_quantity ref delivery_date image_url id brand category_id FROM product WHERE category_id>0";
 
@@ -125,13 +132,14 @@ $(document).ready(function() {
                 console.log("has child");
             } else {
                 console.log("has no child : ");
-                to_find.onclick = function() {
+                to_find.addEventListener('click', () => {
                     let content_of_category = to_find.innerText;
 
                     //Cahcher le menu
-                    document.getElementById("main-nav2").style.display = "none";
+                    document.getElementById("main-nav").style.display = "none";
+
                     show_the_article_by_category(val2.value[i].id, content_of_category);
-                };
+                });
 
 
             }
@@ -245,4 +253,5 @@ function create_list_article(article) {
     //    return html_component_div_container;
     div_container_all_article.appendChild(html_component_div_container);
 }
+
 

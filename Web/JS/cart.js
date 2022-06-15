@@ -196,7 +196,7 @@ class CartArticle {
             total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
             price.nodeValue = (myArticleTemp.price * elem.value).toFixed(2) + "€";
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-            update_json_file(myArticle, elem);
+            update_json_file(myArticleTemp, elem);
         });
 
         //We ensure that the quantity is still > 0 & update sessionStorage with the new quantity & calculate the price of the article.
@@ -208,7 +208,7 @@ class CartArticle {
                 total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
                 price.nodeValue = (myArticleTemp.price * elem.value).toFixed(2) + "€";
                 document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-                update_json_file(myArticle, elem);
+                update_json_file(myArticleTemp, elem);
             }
         });
 
@@ -217,7 +217,7 @@ class CartArticle {
             total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * this.value;
             price.nodeValue = (myArticleTemp.price * this.value).toFixed(2) + "€";
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-            update_json_file(myArticle, this);
+            update_json_file(myArticleTemp, this);
         });
         grid_article_in_cart.appendChild(img_cart_div);
         info_cart_div.appendChild(brand_div);
