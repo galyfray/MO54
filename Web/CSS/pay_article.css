@@ -84,6 +84,11 @@ input[type=submit]:hover {
     margin-top: 0;
   }
 }
+@media screen and (min-width : 600px){
+  #button_create_account, #button_login, #button_without_account{
+  width: 200px;
+  }
+}
 
 .display_form_part{
 	display:block;
@@ -99,7 +104,7 @@ input[type=submit]:hover {
     padding: 5px;
     height: 35px;
     margin : 5px;
-    width: 200px;
+    /*width: 200px;*/
 
 }
 
@@ -123,60 +128,88 @@ input[type=submit]:hover {
     width: 12rem;
     height: auto;
   }
-    .circle {
-      position: relative;
-      display: block;
-      margin: 0;
-      width: 3rem;
-      height: 3rem;
-      background: purple;
-      border-radius: 1.625rem;
-    }
-      .icon {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-        background: white;
-      }
-        .arrow {
-          left: 0.625rem;
-          width: 1.125rem;
-          height: 0.125rem;
-          background: none;
-        }
-          .arrow::before {
-            position: absolute;
-            content: '';
-            top: -0.25rem;
-            right: 0.0625rem;
-            width: 0.625rem;
-            height: 0.625rem;
-            border-top: 0.125rem solid #fff;
-            border-right: 0.125rem solid #fff;
-            transform: rotate(45deg);
-          }
-  
-    .button-text {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 0.75rem 0;
-      margin: 0 0 0 1.85rem;
-      color: purple;
-      font-weight: 700;
-      line-height: 1.6;
-      text-align: center;
-    }
-  
-    .learn-more:hover {
-      .circle {
-        width: 100%;
-      }
-      .button-text {
-        color: white;
-      }
-    }
-  
+.circle {
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: purple;
+  border-radius: 1.625rem;
+}
+.icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: white;
+}
+.arrow {
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+.arrow::before {
+  position: absolute;
+  content: '';
+  top: -0.25rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+}
+
+.button-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: purple;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.learn-more:hover {
+  .circle {
+    width: 100%;
+  }
+  .button-text {
+    color: white;
+  }
+}
+
+@media(min-width: 506px) {
+  label, input {
+      width: 80%;
+  }
+}
+@media(min-width: 601px) {
+  label, input {
+      font-size: 20px;
+      width: 90%;
+  }
+}
+@media(min-width: 651px) {
+  label, input {
+      width: 80%;
+  }
+}
+@media(min-width: 851px) {
+  label, input {
+      font-size: 22px;
+  }
+}
+@media(min-width : 1171px){
+  label, input {
+      width: 90%;
+      margin: auto;
+      font-size: 24px;
+  }
+}

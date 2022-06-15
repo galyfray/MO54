@@ -1,3 +1,5 @@
+//Const express = require("express");
+
 $(document).ready(function() {
     document.getElementById("button_create_account").onclick = function() {
         create_account();
@@ -60,6 +62,50 @@ function payment_validated() {
         document.getElementById("payement_div").style.display = "none";
         document.getElementById("form_part4").style.display = "none";
         document.getElementById("before_selection_choice").style.display = "none";
+
+        //Vider le panier
+        //sessionStorage.clear();
+        //We need to make sure we saved what has been bought
+        /*let article_bought = JSON.parse(sessionStorage.getItem('articleToCart2'));
+        let best_sales = JSON.parse(sessionStorage.getItem('best_sales'));
+        console.log(best_sales);
+
+
+        //Tant qu'on a encore des entrées, on va vérifier si existe une fois ou non
+        let r = 0;
+        while (article_bought.length > r) {
+            r = r + 1;
+            let found = false;
+            if (best_sales != null || best_sales != []) {
+                for (let j = 0;j < best_sales.length;j++) {
+                    if (best_sales[j].id == article_bought[r].id) {
+                        found = true;
+                        best_sales[j].quantity = best_sales[j].quantity + article_bought[r].quantity;
+                    }
+                }
+
+            }
+            if (best_sales == null) {
+                best_sales = [];
+            }
+
+            if (found == false) {
+                best_sales.push({
+                    'id'         : article_bought[r].id,
+                    'name'       : article_bought[r].name,
+                    'price'      : article_bought[r].price,
+                    'brand'      : article_bought[r].brand,
+                    'description': article_bought[r].description,
+                    'preview'    : article_bought[r].image
+                });
+            }
+
+        }
+        console.log(best_sales);
+*/
+        sessionStorage.removeItem('articleToCart2');
+
+
         setTimeout(() => {
             location.href = 'display_articles.html';
         }, 4000);

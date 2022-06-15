@@ -10,11 +10,11 @@
  */
 let total_price = 0;
 let id_article_deleted;
-let grid_article_in_cart_deleted;
 let line_deleted;
 let myCart;//Used to avoid the calls to the sessionStorage
 let myArticle;
-let nb_article_in_cart;
+
+//Let nb_article_in_cart;
 
 $(document).ready(function() {
     'use strict';
@@ -74,7 +74,7 @@ class Cart {
             document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + this.dataStored.length + ")";
 
             //Nb_article_in_cart.textContent = this.dataStored.length;
-            nb_article_in_cart = document.getElementById("nb_article_in_cart").textContent = this.dataStored.length;
+            document.getElementById("nb_article_in_cart").textContent = "" + this.dataStored.length;
         }
     }
 
@@ -143,6 +143,7 @@ class CartArticle {
         let del_text_div = myArticleTemp._create_del_option();
         let info_cart_div = document.createElement('div');
         info_cart_div.className = "info_cart";
+        let grid_article_in_cart_deleted;
 
         //We update the SessionStorage (deletion) and update the number of article in the cart.
         del_text_div.addEventListener('click', function() {
@@ -151,24 +152,30 @@ class CartArticle {
             id_article_deleted = myArticleTemp.id;
             grid_article_in_cart_deleted = grid_article_in_cart;
             line_deleted = line;
-        });
-        document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
-            document.getElementById("overlay_alert").classList.add("hidden");
-            document.getElementById("popupAlert").classList.add("hidden");
-            cart_div.removeChild(grid_article_in_cart_deleted);
-            cart_div.removeChild(line_deleted);
-
-            let old_data_saved = myCart.dataStored;
-            old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
-            sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
-            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-            nb_article_in_cart.textContent = old_data_saved.length;
+            let listener = () => {
 
 
-            //If the cart is empty, we show the image for it.
-            if (old_data_saved.length == 0) {
-                empty_cart_displayed(cart_div);
-            }
+                document.getElementById("overlay_alert").classList.add("hidden");
+                document.getElementById("popupAlert").classList.add("hidden");
+                cart_div.removeChild(grid_article_in_cart_deleted);
+                cart_div.removeChild(line_deleted);
+
+                let old_data_saved = myCart.dataStored;
+                old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
+                sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
+                document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
+
+                //Nb_article_in_cart.textContent = "" + old_data_saved.length;
+                document.getElementById("nb_article_in_cart").textContent = "" + old_data_saved.length;
+
+
+                //If the cart is empty, we show the image for it.
+                if (old_data_saved.length == 0) {
+                    empty_cart_displayed(cart_div);
+                }
+                document.getElementById("overlay_alert_btn_yes").removeEventListener("click", listener);
+            };
+            document.getElementById("overlay_alert_btn_yes").addEventListener("click", listener);
         });
         document.getElementById("overlay_alert_btn_no").addEventListener('click', function() {
             document.getElementById("overlay_alert").classList.add("hidden");
