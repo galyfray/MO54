@@ -121,7 +121,5 @@ function show_the_article_by_category(id) {
                 "price"      : val.value[i].price
             });*/
         }
-
-
     });
 }

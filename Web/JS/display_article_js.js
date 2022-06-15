@@ -241,5 +241,3 @@ function create_list_article(article) {
     //    return html_component_div_container;
     div_container_all_article.appendChild(html_component_div_container);
 }
-
-

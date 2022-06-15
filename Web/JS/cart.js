@@ -19,22 +19,6 @@ let nb_article_in_cart;
 $(document).ready(function() {
     'use strict';
 
-    //The function to make the navigation works
-    (function() {
-        'use strict';
-        // eslint-disable-next-line no-undef
-        new hcOffcanvasNav('#main-nav', {
-            disableAt       : false,
-            customToggle    : '.menu_icon',
-            levelSpacing    : 40,
-            navTitle        : 'All',
-            levelTitles     : true,
-            levelTitleAsBack: true,
-            pushContent     : '#container',
-            labelClose      : false
-        });
-    })(jQuery);
-
     /*
      * We load the stuff saved in the sessionStorage and then we check if it's empty or not.
      * If this is empty : we create an image with a text saying that the cart is empty.
