@@ -77,8 +77,7 @@ $(document).ready(function() {
                 }
                 element_created.appendChild(element_content);
             } else if (document.getElementById("ul_under_root" + val2.value[i].header_category_id)) {
-                alert("here");
-                console.log("SUB SUB ROOT : " + val2.value[i].name);
+                //SUB SUB ROOT
                 let ul;
                 if (document.getElementById("li_ul" + val2.value[i].header_category_id)) {
                     ul = document.getElementById("li_ul" + val2.value[i].header_category_id);
@@ -89,7 +88,7 @@ $(document).ready(function() {
 
                 }
             } else {
-                //Console.log("SUB SUB ROOT");
+                //SUB SUB ROOT
                 let li_hover = document.getElementById(val2.value[i].header_category_id);
                 let li_sub_sub_root = document.createElement('li');
                 li_sub_sub_root.id = "li_sub_sub_root" + val2.value[i].header_category_id;
@@ -101,11 +100,8 @@ $(document).ready(function() {
                 element_created.appendChild(element_content);
             }
             element_content.click(function() {
-                if (element_content.hasChildNodes) {
-                    console.log("no searhc");
-                } else {
+                if (!element_content.hasChildNodes) {
                     show_the_article_by_category(val2.value[i].header_category_id);
-
                 }
             });
         }
@@ -128,20 +124,15 @@ $(document).ready(function() {
         })(jQuery);
         for (let i = 0;i < val2.value.length;i++) {
             let to_find = document.getElementById("a" + val2.value[i].id);
-            if (to_find.childNodes.length > 1) {
-                console.log("has child");
-            } else {
-                console.log("has no child : ");
+            if (!(to_find.childNodes.length > 1)) {
+                //There is no child
                 to_find.addEventListener('click', () => {
                     let content_of_category = to_find.innerText;
 
                     //Cahcher le menu
                     document.getElementById("main-nav").style.display = "none";
-
                     show_the_article_by_category(val2.value[i].id, content_of_category);
                 });
-
-
             }
         }
     });
@@ -149,7 +140,6 @@ $(document).ready(function() {
 
     function show_the_article_by_category(id, content_of_category) {
         let query_content = "SELECT name price ht_price description available_quantity ref delivery_date image_url id brand category_id FROM product WHERE category_id=" + id;
-        console.log(query_content);
         let val = $.ajax({
             url : "../api/request",
             type: "GET",
@@ -157,8 +147,6 @@ $(document).ready(function() {
         });
 
         val.then(val => {
-            console.log(val);
-
             //Verifier la page et si la page est la bonne alors TODO
             let div_container_all_article = document.getElementById("div_container_all_article");
             div_container_all_article.innerHTML = "";

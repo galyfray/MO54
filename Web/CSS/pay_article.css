@@ -5,6 +5,10 @@
 #before_selection_choice{
   margin : 10px;
 }
+#input_checkbox{
+  size: 2vh;
+}
+
 
 #btn_send_mail{
   background-color: purple;

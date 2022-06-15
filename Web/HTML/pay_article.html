@@ -9,7 +9,7 @@
         <!-- The page is named-->
         <title>Payement - ourWebSite.fr</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!-- SCRIPTS [(Libs/|pay_|create_).*\.js] -->
+        <!-- SCRIPTS [(Libs/|pay_).*\.js] -->
         <!-- STYLES [(common_|pay_).*\.css] -->
 
 
@@ -23,8 +23,10 @@
                         <ul id="main-nav2">
                         </ul>
                     </nav>
-                    <a class="menu_icon">
-                        <span></span>
+                    <a href="display_articles.html">
+                        <i class="fa fa-home" style="float: left;"></i>
+
+
                     </a>
                     <a href="cart.html">
                         <i class="fa">&#xf07a;</i>
@@ -45,7 +47,7 @@
             </div>
 
 
-            <div class="container" style="width:80%; margin: auto;">
+            <div id="form_part1" class="container" style="width:80%; margin: auto;">
                 <form>
                     <h2>Informations personelles</h2>
                     <div class="row" id="societe_div">
@@ -110,9 +112,14 @@
                     </div>
 
                     <div class="row">
-                        <input type="button"
-                            value="Etape suivante"
+                        <button class="learn-more"
                             onclick="document.getElementById('information_div').style.display='block';">
+                            <span class="circle" aria-hidden="true">
+                                <span class="icon arrow"></span>
+                            </span>
+                            <span class="button-text">Etape suivante</span>
+                        </button>
+
                     </div>
                 </form>
             </div>
@@ -134,7 +141,7 @@
                             <label>Bâtiment, étage...</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" placeholder="" required>
+                            <input type="text" placeholder="">
                         </div>
                     </div>
                     <div class="row">
@@ -154,21 +161,21 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <input type="submit" value="Submit" >
-                        <button class="learn-more">
-                            <span class="circle" aria-hidden="true">
-                                <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">Etape Suivante</span>
-                        </button>
-
-                    </div>
 
                 </form>
+                <div class="row">
+                    <button class="learn-more"
+                        onclick="verify_input_addresse();">
+                        <span class="circle" aria-hidden="true">
+                            <span class="icon arrow"></span>
+                        </span>
+                        <span class="button-text">Etape suivante</span>
+                    </button>
+
+                </div>
             </div>
                 </br>
-            <div class="container" style="width:80%; margin: auto;">
+            <div class="container" style="width:80%; margin: auto; display: none;" id="payement_div">
                 <form>
                     <h2>Payement</h2>
                     <div class="row">
@@ -185,20 +192,28 @@
                         <div class="col-25"><label>Code de sécurité</label></div>
                         <div class="col-25"><input type="number" id="input_security_code_card" required></div>
                     </div>
-                    <div class="row">
-                        <button class="learn-more" onclick="location.href='display_articles.html'">
-                            <span class="circle" aria-hidden="true">
-                                <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">Payer</span>
-                        </button>
 
-                    </div>
                 </form>
+                <div class="row">
+                    <button class="learn-more" onclick="payment_validated();">
+                        <span class="circle" aria-hidden="true">
+                            <span class="icon arrow"></span>
+                        </span>
+                        <span class="button-text">Payer</span>
+                    </button>
+
+                </div>
             </div>
-            <div class="container" style="width:80%; margin: auto;">
+            <div id="form_part4" class="container" style="width:80%; margin: auto;">
                 <input id="btn_send_mail" type="button" value="Send Email" onclick="sendEmail()">
             </div>
+        </div>
+
+        <div id="payement_validated" style="display:none; text-align: center;">
+            <br></br>
+            <h1>Le payement a été validé. Vous receverez votre commande sous peu
+                <p>Nous vous redirigeons au menu principal</p></h1>
+            <br></br>
         </div>
     </body>
 </html>
@@ -206,6 +221,26 @@
 <script src="https://smtpjs.com/v3/smtp.js">
 </script>
 
+<script>
+    function payment_validated(){
+
+    //    setTimeout(location.href='display_articles.html', 4000);
+    let verified = verify_input_payment();
+    if(verified == true ){
+        document.getElementById("payement_validated").style.display ="block";
+        document.getElementById("form_part1").style.display ="none";
+        document.getElementById("information_div").style.display ="none";
+        document.getElementById("payement_div").style.display ="none";
+        document.getElementById("form_part4").style.display ="none";
+        document.getElementById("before_selection_choice").style.display="none";
+        setTimeout(() => {
+            location.href='display_articles.html';
+        }, 4000)
+    }
+
+
+    }
+</script>
 <script type="text/javascript">
     function sendEmail() {
       Email.send({
@@ -222,3 +257,24 @@
         });
     }
   </script>
+<script>
+    function verify_input_addresse(){
+        if (document.getElementById("input_address").value != ""
+        & document.getElementById("input_postal").value != ""
+        & document.getElementById("input_city").value != ""){
+            document.getElementById('payement_div').style.display='block';
+        }
+    }
+
+    function verify_input_payment(){
+        if (document.getElementById("input_name_card").value != ""
+        & document.getElementById("input_num_card").value != ""
+        & document.getElementById("input_date_card").value != ""
+        & document.getElementById("input_security_code_card").value != ""){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+</script>
