@@ -16,7 +16,9 @@ class stringTokenizer extends Tokenizer {
 
     tokenize(charStream) {
         charStream.next();
-        return super.tokenize(charStream);
+        let token = super.tokenize(charStream);
+        charStream.next();
+        return token;
     }
 }
 
@@ -99,6 +101,24 @@ class keywordTokenizer extends identifierTokenizer {
 
 keywordTokenizer.DEFAULT_PREDICATE = (kw, list) => list.includes(kw);
 
+class ParenthesisTokenizer extends Tokenizer {
+
+    constructor() {
+        super("parenthesis");
+    }
+
+    canTokenize(char) {
+        return char === "(" || char === ")";
+    }
+
+    tokenize(charStream) {
+        return {
+            value: charStream.next(),
+            type : this._type
+        };
+    }
+}
+
 class OperatorTokenizer extends Tokenizer {
 
     constructor() {
@@ -117,5 +137,6 @@ module.exports = {
     numberTokenizer,
     identifierTokenizer,
     keywordTokenizer,
-    OperatorTokenizer
+    OperatorTokenizer,
+    ParenthesisTokenizer
 };

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <body style="display: flex;width: 100%;flex-flow: column;">
+        <textarea id="txt"></textarea>
+        <button id="btn">Click me</button>
+        <pre style= "overflow:scroll;margin-left:0px; line-height: 1.3; width: 100%;flex: 1 1 auto;">
+            <code id="result"></code>
+        </pre>
+        <script>
+        $('#btn').click(function(){
+            $.ajax({
+                url: '../api/request',
+                type: 'GET',
+                data: {
+                    'query': $('#txt').val()
+                },
+                success: function(data){
+                    $('#result').html(JSON.stringify(data,undefined,4));
+                },
+                error: function(data){
+                    $('#result').html(JSON.stringify(data,undefined,4));
+                }
+            });
+        });
+        </script>
+    </body>
+</html>

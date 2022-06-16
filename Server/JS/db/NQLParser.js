@@ -1,5 +1,5 @@
 const CharStream = require("./CharStream.js");
-const TokenStream = require("./TokenStream.js");
+const {TokenStream} = require("./TokenStream.js");
 const tokenizers = require("./tokenizers.js");
 
 class UnexpectedTokenError extends Error {}
@@ -51,16 +51,17 @@ class NQLParser {
         }
 
         AST.FROM = this._token_stream.next().value;
-
-        // TODO : support JOIN
-        if (this._token_stream.peek().value.toUpperCase() !== "WHERE") {
-            this._throw(this._token_stream.next(), "WHERE");
-        }
-
-        AST.WHERE = this._parse_where();
-
         if (!this._token_stream.eof()) {
-            this._throw(this._token_stream.next(), "end of query");
+            // TODO : support JOIN
+            if (this._token_stream.peek().value.toUpperCase() !== "WHERE") {
+                this._throw(this._token_stream.next(), "WHERE");
+            }
+
+            AST.WHERE = this._parse_where();
+
+            if (!this._token_stream.eof()) {
+                this._throw(this._token_stream.next(), "end of query");
+            }
         }
 
         return AST;
@@ -74,6 +75,15 @@ class NQLParser {
      */
     _parse_select() {
         this._token_stream.next(); // Skip SELECT
+        let limit = null;
+        if (this._token_stream.peek().value.toUpperCase() == "LIMIT") {
+            this._token_stream.next(); // Skip LIMIT
+            if (this._token_stream.peek().type == "int") {
+                limit = this._token_stream.next().value;
+            } else {
+                this._throw(this._token_stream.next(), "an integer");
+            }
+        }
         let select = [];
         while (this._token_stream.peek().type == "identifier") {
             select.push(this._parse_identifier(this._token_stream.next().value));
@@ -81,7 +91,7 @@ class NQLParser {
         if (select.length == 0) {
             this._throw(this._token_stream.next(), "a column identifier");
         }
-        return select;
+        return {ids: select, limit: limit};
     }
 
     _parse_where() {
@@ -140,11 +150,38 @@ class NQLParser {
     _parse_side() {
         let token = this._token_stream.next();
         if (token.type == "identifier") {
+            if (this._token_stream.peek().type == NQLParser.TYPES.PARENTHESIS) {
+                return this._parse_function(token);
+            }
             return this._parse_identifier(token.value);
         } else if (token.type == "int" || token.type == "float" || token.type == "string") {
             return token;
         }
         this._throw(token, "an identifier, a number or a string");
+    }
+
+    _parse_function(token) {
+        if (token.value.toUpperCase() == "UPPER_CASE") {
+            if (this._token_stream.peek().value != "(") {
+                this._throw(this._token_stream.next(), "(");
+            }
+            this._token_stream.next(); // Skip (
+            if (this._token_stream.peek().type != "identifier") {
+                this._throw(this._token_stream.next(), "an identifier");
+            }
+            let value = this._parse_identifier(this._token_stream.next().value);
+            if (this._token_stream.peek().value != ")") {
+                this._throw(this._token_stream.next(), ")");
+            }
+            this._token_stream.next(); // Skip )
+            return {
+                type : NQLParser.TYPES.FUNCTION,
+                value: token.value.toUpperCase(),
+                args : [value]
+            };
+        } else {
+            this._throw(token, "UPPER_CASE");
+        }
     }
 
     _parse_operator_expression() {
@@ -223,7 +260,7 @@ class NQLParser {
             let column = this._char_stream.getColumn() - token.value.length;
 
             message = `Unexpected token ${token.value} at` +
-                `line ${this._char_stream.getLine()} column ${this._char_stream.getColumn()}`;
+                ` line ${this._char_stream.getLine()} column ${this._char_stream.getColumn()}`;
 
             if (expected) {
                 message += `, expected ${expected}`;
@@ -267,7 +304,8 @@ NQLParser.TYPES = {
     IDENTIFIER         : "identifier",
     PARENTHESIS        : "parenthesis",
     BINARY_EXPRESSION  : "binary_expression",
-    OPERATOR_EXPRESSION: "operator"
+    OPERATOR_EXPRESSION: "operator",
+    FUNCTION           : "FUNCTION"
 };
 
 NQLParser.TOKENIZERS = [
@@ -279,21 +317,22 @@ NQLParser.TOKENIZERS = [
             "FROM",
             "WHERE",
             "AND",
-            "OR"
+            "OR",
+            "LIMIT"
         ],
         (kw, list) => {
             return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
         }
     ),
-    new tokenizers.OperatorTokenizer(),
     new tokenizers.keywordTokenizer(
-        [
-            "(",
-            ")"
-        ],
-        tokenizers.keywordTokenizer.DEFAULT_PREDICATE,
-        NQLParser.TYPES.PARENTHESIS
-    )
+        ["UPPER_CASE"],
+        (kw, list) => {
+            return tokenizers.keywordTokenizer.DEFAULT_PREDICATE(kw.toUpperCase(), list);
+        },
+        NQLParser.TYPES.FUNCTION
+    ),
+    new tokenizers.OperatorTokenizer(),
+    new tokenizers.ParenthesisTokenizer()
 ];
 
 
@@ -301,8 +340,6 @@ NQLParser.TOKENIZERS = [
 // - benchmark
 // - add tests
 // - support JOINS
-// - support LIKE
 // - support IN
-// - support NOT
 
 module.exports = {NQLParser, UnexpectedTokenError};

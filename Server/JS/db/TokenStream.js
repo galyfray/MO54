@@ -1,3 +1,5 @@
+class TokenizingException extends Error {}
+
 class TokenStream {
 
     /**
@@ -50,7 +52,7 @@ class TokenStream {
             }
         }
 
-        throw new Error("unable to tokenize character " + this.charStream.peek());
+        throw new TokenizingException("unable to tokenize character " + this.charStream.peek());
     }
 
     peek() {
@@ -67,4 +69,4 @@ class TokenStream {
 
 }
 
-module.exports = TokenStream;
+module.exports = {TokenStream, TokenizingException};
