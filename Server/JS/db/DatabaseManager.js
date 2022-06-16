@@ -155,6 +155,9 @@ class DatabaseManager {
      * @throws {InterpreterError} if the column is not part of the table or if the specifyed table is not selected.
      */
     _qualify_table(node) {
+        if (node._table !== undefined) {
+            return;
+        }
         if (node.table == null) {
             let tables = this._tables.filter(table => this._meta[table][node.column] != null);
             if (tables.length == 0) {
@@ -220,6 +223,7 @@ class DatabaseManager {
 
     _get_node_type(node) {
         if (node.type == NQLParser.TYPES.IDENTIFIER) {
+            this._qualify_table(node);
             return this._get_column_type(node);
         } else if (node.type == NQLParser.TYPES.FUNCTION) {
             return this._get_function_type(node.value);
