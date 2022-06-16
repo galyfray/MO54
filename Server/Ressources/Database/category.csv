@@ -25,3 +25,82 @@ id;name;header_category_id
 23;Répare-crevaison;19
 24;Démonte pneu;19
 25;Ecrous antivol;19
+26;Prestations et services;1
+27;Forfait pose d’un pneu ; 26
+28;Forfait pose d’un pneu; 26
+29;Montage pneu; 26
+30;Réparation pneu; 26
+31;Parallélisme et géométrie; 26
+32;Permutation été / hiver; 26
+33;Gardiennage pneu; 26
+34;Garantie pneu;26
+35;Gardiennage pneu;1
+36;Pneu par marque;1
+37;Pneu Continenta;36
+38;Pneu Michelin;36
+39;Pneu Hankook;36
+40;Pneu Laufenn;36
+41;Pneu Goodyear;36
+42;Pneu Pirelli;36
+43;Pneu Dunlop;36
+44;Pneu Nexen;36
+45;Pneu Nokian;36
+46;Pneu Falken;36
+47;Pneu Yokohama;36
+48;Pneu General Tire;36
+49;Pneu Uniroyal;36
+50;Pneu Rovelo;36
+51;Pneu Tracmax;36
+52;Pneu Feu Vert;36
+53;Pièce auto; -1
+54;Batterie et démarrage;53
+55;Batteries;54
+56;Bougies;54
+57;Bobines d'allumage;54
+58;Faisceaux d'allumage;54
+59;Chargeurs de batterie;54
+60;Câbles de démarrage;54
+61;Boosters de batterie;54
+62;Charge véhicule électrique;54
+63;Outillage démarrage et allumage;54
+64;Electricité pour batterie;54
+65;Accessoires batterie;54
+66;Essuis glace;53
+67;Balais d'essuie glace;66
+68;Lave glace;66
+69;Ampoule et visibilité;53
+70;Ampoules;69
+71;Coffret;69
+72;Mirroir de rétroviseur;69
+73;Entretien;-1
+74; Nettoyant intérieur;73
+75;Nettoyant tissus;74
+76;Nettoyant plastique;74
+77;Nettoyant cuir;74
+78;Destructeur d'odeurs;74
+79;Nettoyant climatisation;74
+80;Nettoyant multi-usage;74
+81;Anti-buée;74
+82;Nettoyant extérieur;73
+83;Nettoyant jantes;82
+84;Nettoyant pneus;82
+85;Nettoyant moteur;82
+86;Nettoyant vitre voiture;82
+87;Anti-pluie;82
+88;Shampoing;82
+89;Accessoire de nettoyage;73
+90;Désodorisant;73
+91;Renovation et protection;73
+92;Polish voiture;91
+93;Cire voiture;91
+94;Efface rayures;91
+95;Produit lustrage voiture;91
+96;Rénovateur chrome / alu;91
+97;Kit renovation phare;91
+98;Rénovateur pare-choc;91
+99;Anticorrosif;91
+100;Antirouille;91
+101;Insonorisant;91
+102;Bombe de peinture;91
+103;Autres produits;91
+104;Réparation carrosserie;73

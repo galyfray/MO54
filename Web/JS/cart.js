@@ -10,30 +10,14 @@
  */
 let total_price = 0;
 let id_article_deleted;
-let grid_article_in_cart_deleted;
 let line_deleted;
 let myCart;//Used to avoid the calls to the sessionStorage
 let myArticle;
-let nb_article_in_cart;
+
+//Let nb_article_in_cart;
 
 $(document).ready(function() {
     'use strict';
-
-    //The function to make the navigation works
-    (function() {
-        'use strict';
-        // eslint-disable-next-line no-undef
-        new hcOffcanvasNav('#main-nav', {
-            disableAt       : false,
-            customToggle    : '.menu_icon',
-            levelSpacing    : 40,
-            navTitle        : 'All',
-            levelTitles     : true,
-            levelTitleAsBack: true,
-            pushContent     : '#container',
-            labelClose      : false
-        });
-    })(jQuery);
 
     /*
      * We load the stuff saved in the sessionStorage and then we check if it's empty or not.
@@ -88,7 +72,9 @@ class Cart {
             }
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
             document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + this.dataStored.length + ")";
-            nb_article_in_cart.textContent = this.dataStored.length;
+
+            //Nb_article_in_cart.textContent = this.dataStored.length;
+            document.getElementById("nb_article_in_cart").textContent = "" + this.dataStored.length;
         }
     }
 
@@ -157,31 +143,39 @@ class CartArticle {
         let del_text_div = myArticleTemp._create_del_option();
         let info_cart_div = document.createElement('div');
         info_cart_div.className = "info_cart";
+        let grid_article_in_cart_deleted;
 
         //We update the SessionStorage (deletion) and update the number of article in the cart.
         del_text_div.addEventListener('click', function() {
             document.getElementById("overlay_alert").classList.remove("hidden");
             document.getElementById("popupAlert").classList.remove("hidden");
-            id_article_deleted = myArticle.id;
+            id_article_deleted = myArticleTemp.id;
             grid_article_in_cart_deleted = grid_article_in_cart;
             line_deleted = line;
-        });
-        document.getElementById("overlay_alert_btn_yes").addEventListener('click', function() {
-            cart_div.removeChild(grid_article_in_cart_deleted);
-            cart_div.removeChild(line_deleted);
+            let listener = () => {
 
-            let old_data_saved = myCart.dataStored;
-            old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
-            sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
-            document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
-            nb_article_in_cart.textContent = old_data_saved.length;
-            document.getElementById("overlay_alert").classList.add("hidden");
-            document.getElementById("popupAlert").classList.add("hidden");
 
-            //If the cart is empty, we show the image for it.
-            if (old_data_saved.length == 0) {
-                empty_cart_displayed(cart_div);
-            }
+                document.getElementById("overlay_alert").classList.add("hidden");
+                document.getElementById("popupAlert").classList.add("hidden");
+                cart_div.removeChild(grid_article_in_cart_deleted);
+                cart_div.removeChild(line_deleted);
+
+                let old_data_saved = myCart.dataStored;
+                old_data_saved = old_data_saved.filter(del => del.id != id_article_deleted);
+                sessionStorage.setItem('articleToCart2', JSON.stringify(old_data_saved));
+                document.getElementById("nb_object_in_cart").textContent = "Votre panier (" + old_data_saved.length + ")";
+
+                //Nb_article_in_cart.textContent = "" + old_data_saved.length;
+                document.getElementById("nb_article_in_cart").textContent = "" + old_data_saved.length;
+
+
+                //If the cart is empty, we show the image for it.
+                if (old_data_saved.length == 0) {
+                    empty_cart_displayed(cart_div);
+                }
+                document.getElementById("overlay_alert_btn_yes").removeEventListener("click", listener);
+            };
+            document.getElementById("overlay_alert_btn_yes").addEventListener("click", listener);
         });
         document.getElementById("overlay_alert_btn_no").addEventListener('click', function() {
             document.getElementById("overlay_alert").classList.add("hidden");
@@ -194,7 +188,7 @@ class CartArticle {
             total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
             price.nodeValue = (myArticleTemp.price * elem.value).toFixed(2) + "€";
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-            update_json_file(myArticle, elem);
+            update_json_file(myArticleTemp, elem);
         });
 
         //We ensure that the quantity is still > 0 & update sessionStorage with the new quantity & calculate the price of the article.
@@ -206,7 +200,7 @@ class CartArticle {
                 total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * elem.value;
                 price.nodeValue = (myArticleTemp.price * elem.value).toFixed(2) + "€";
                 document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-                update_json_file(myArticle, elem);
+                update_json_file(myArticleTemp, elem);
             }
         });
 
@@ -215,7 +209,7 @@ class CartArticle {
             total_price = total_price - parseFloat(price.textContent) + myArticleTemp.price * this.value;
             price.nodeValue = (myArticleTemp.price * this.value).toFixed(2) + "€";
             document.getElementById("total_to_pay").textContent = "Total : " + total_price.toFixed(2) + " €";
-            update_json_file(myArticle, this);
+            update_json_file(myArticleTemp, this);
         });
         grid_article_in_cart.appendChild(img_cart_div);
         info_cart_div.appendChild(brand_div);

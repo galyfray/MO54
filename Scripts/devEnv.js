@@ -249,7 +249,7 @@ async function copyAll(BUFFER, TRANSFORM, ...SOURCES) {
     BUFFER.push("[INFO][COPY] Copying files...");
     try {
         await Promise.all(SOURCES.map(async file => {
-            let filename = TRANSFORM(file);
+            let filename = TRANSFORM(file.replace(/\\/g, "/"));
             await fs.promises.mkdir(path.dirname(filename), {recursive: true}).then(() => {
                 return fs.promises.copyFile(
                     file,
@@ -278,12 +278,12 @@ async function buildWeb(BUFFER, WEB_DIR) {
             WEB_JS = "Web/JS",
             WEB_RESSOURCE = "Web/Ressources";
 
-        const HTML_SOURCES = await getAllFiles(WEB_HTML);
+        const HTML_SOURCES = (await getAllFiles(WEB_HTML)).map(file => file.replace(/\\/g, "/"));
 
         // We use path.relative to remove the root folder from the file name.
-        const JS_SOURCES = (await getAllFiles(WEB_JS)).map(file => path.relative(WEB_JS, file));
-        const CSS_SOURCES = (await getAllFiles(WEB_CSS)).map(file => path.relative(WEB_CSS, file));
-        const RESSOURCES = await getAllFiles(WEB_RESSOURCE);
+        const JS_SOURCES = (await getAllFiles(WEB_JS)).map(file => path.relative(WEB_JS, file).replace(/\\/g, "/"));
+        const CSS_SOURCES = (await getAllFiles(WEB_CSS)).map(file => path.relative(WEB_CSS, file).replace(/\\/g, "/"));
+        const RESSOURCES = (await getAllFiles(WEB_RESSOURCE)).map(file => file.replace(/\\/g, "/"));
 
         await lintFiles(
             BUFFER,
@@ -341,7 +341,7 @@ async function buildServer(BUFFER, SERVER_DIR) {
 
     try {
 
-        const JS_SOURCES = await getAllFiles(SERVER_JS);
+        const JS_SOURCES = (await getAllFiles(SERVER_JS)).map(file => file.replace(/\\/g, "/"));
 
         await lintFiles(
             BUFFER,
@@ -363,7 +363,7 @@ async function buildServer(BUFFER, SERVER_DIR) {
                 return path.join(SERVER_DIR, file);
             },
             ...JS_SOURCES,
-            ...await getAllFiles(SERVER_RESSOURCE)
+            ...(await getAllFiles(SERVER_RESSOURCE)).map(file => file.replace(/\\/g, "/"))
         );
 
     } catch (e) {

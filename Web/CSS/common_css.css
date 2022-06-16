@@ -193,6 +193,7 @@ Media query:
     float: right; 
     color: teal; 
     padding: 2px;
+    /*padding-left: 12px;*/
 }
 #nb_article_in_cart{
     font-size: 12px; 
@@ -203,6 +204,7 @@ Media query:
     margin-left: -10px; 
     float: right; 
     border-radius: 5px;
+    /*padding-left: 12px;*/
 }
 
 #web_site_name{
@@ -210,4 +212,19 @@ Media query:
     color: teal;
     text-align: center;
     vertical-align: central;
+}
+.wrapper cf > span{
+    text-align: left;
+}
+#g {
+    width: 100%;
+    margin:0;
+    padding:0;
+    position:relative;
+    /*background-color: aquamarine;*/
+}
+#div_wrapper{
+    width: 100%;
+    background-color: rgb(230,230,230);
+    margin:0;
 }
